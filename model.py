@@ -1,6 +1,6 @@
 """Models and database functions for Ratings project."""
 
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 
 
 # This is the connection to the SQLite database; we're getting this through
@@ -19,7 +19,7 @@ class User(db.Model):
 
 	user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	email = db.Column(db.String(64), nullable=False)
-	user_name = db.Column(db.String(64), nullable=False)
+	user_name = db.Column(db.String(64), nullable=True)
 	password = db.Column(db.String(64), nullable=False)
 	zipcode = db.Column(db.String(15), nullable=True)
 
@@ -57,9 +57,8 @@ class Wall(db.Model):
 	project_id = db.Column(db.Integer, db.ForeignKey('projects.project_id'), nullable=False) #nullable??
 	wall_name = db.Column(db.String(64), nullable=True)  
 	wall_width = db.Column(db.Integer, nullable=False) #will multiple x 1000
-	center_line = db.Column(db.Integer, default=58, 
-				nullable=True) #nullable for future customization | #will multiple x 1000
-
+	center_line = db.Column(db.Integer, default=58, nullable=True) #nullable for future customization | #will multiple x 1000
+	wall_img = db.Column(db.String(200), nullable=True)
 
 	# def __repr__(self):
 	# 	"""Provide helpful representation when printed"""
@@ -89,9 +88,11 @@ class Artwork(db.Model):
 
 	artwork_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	artwork_name = db.Column(db.String, nullable=True) 
+	#Change hang_devices_id to device_code
 	hang_devices_id = db.Column(db.Integer, db.ForeignKey('devices.device_code'), nullable=False) 
 	height = db.Column(db.Integer, nullable=False) #will multiple x 1000
 	width = db.Column(db.Integer, nullable=False) #will multiple x 1000
+	art_img = db.Column(db.String(200), nullable=True)
 
 	
 	# def __repr__(self):
@@ -108,7 +109,11 @@ class Hang_Device(db.Model):
 
 	__tablename__ = "devices"
 
-	device_code = db.Column(db.String, primary_key=True) #'1' , '2', corners, cleat
+	#'1' , '2', corners, cleat
+	
+	device_code = db.Column(db.String, primary_key=True) 
+
+	#measurements from device to top
 	one_screw = db.Column(db.Integer, nullable=True) #will multiple x 1000
 	two_screws = db.Column(db.Integer, nullable=True) #will multiple x 1000
 	corners = db.Column(db.Integer, nullable=True) #will multiple x 1000

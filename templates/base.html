@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title> Hang it </title>
+	<title> ArtUP </title>
 </head>
 <body>
 
@@ -9,6 +9,12 @@
 	<a href = '/login'>Login </a>
 	<a href = '/register'>Register </a>
 
+<!-- Show flashed messages -->
+    {% with messages = get_flashed_messages() %}
+      {% for message in messages %}
+          <div class="alert alert-warning">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
 
 	{% block content %}
 		put content here
