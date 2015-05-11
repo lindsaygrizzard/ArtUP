@@ -21,11 +21,43 @@ def index():
     return render_template("homepage.html")
 
 
+
+@app.route('/project')
+def project():
+    """Create new or select saved project"""
+
+    return render_template("project.html")
+
+
+    
+@app.route('/project-process')
+def project_process():
+    """redirect based on choice"""
+
+    new_project = request.args.get("project_opt") 
+    print new_project
+    
+    if new_project == "new":
+    	return redirect('/wallforms')
+
+    else:
+    	return redirect('/')
+
+    #get radio button choice
+    #if choice == new
+    	#redirect to /wallforms
+    #else:
+    	#redirect to project chosen 
+
+
+
 @app.route('/wallforms')
 def gather_wall_info():
     """Gather wall information"""
 
     return render_template("wall_forms.html")
+
+
 
 
 @app.route('/artforms')
@@ -114,13 +146,35 @@ def user_login():
     return render_template("login.html")
 
 
+@app.route("/login-process", methods=['POST'])
+def process_login():
+    """Route to process login for users."""
+
+    entered_username = request.form['user_name']
+    entered_pw = request.form['password']
+    
+    user = User.query.filter_by(user_name= entered_username).first()
+
+    if entered_pw == user.password:
+        session['user_name'] = request.form['user_name']
+        flash('You successfully logged in %s!' % session['user_name'])
+        return redirect("/")
+    else:
+        flash("That is not the correct password!")
+        return redirect('/login')
+
 
 
 @app.route("/logout")
 def process_logout():
     """Route to process logout for users."""
 
-    return render_template("logout.html")
+    # session.pop('user_name')
+    flash('You successfully logged out!')
+    print session
+    return redirect("/")
+
+
 
 
 

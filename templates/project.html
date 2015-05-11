@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1> Project Start Page! </h1>
+
+
+<form action ="/project-process">
+	<label> Is this project new or previously saved? </label>
+	    <br>
+	    <input type="radio" name="project_opt" value="new"> New Project 
+	    <br>
+	    <input type="radio" name="project_opt" value="saved"> Saved Project 
+	    <br>
+
+	<input type="submit" value="Submit">
+</form>
+
+
+
+
+{% endblock %}

@@ -26,7 +26,7 @@ class User(db.Model):
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
 
-		return "<User user_id:  %s email: %s>" % (self.user_id, self.email)
+		return "<User user_id:  %s user_name: %s>" % (self.user_id, self.user_name)
 
 
 
@@ -88,8 +88,7 @@ class Artwork(db.Model):
 
 	artwork_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	artwork_name = db.Column(db.String, nullable=True) 
-	#Change hang_devices_id to device_code
-	hang_devices_id = db.Column(db.Integer, db.ForeignKey('devices.device_code'), nullable=False) 
+	device_code = db.Column(db.Integer, db.ForeignKey('devices.device_code'), nullable=False) 
 	height = db.Column(db.Integer, nullable=False) #will multiple x 1000
 	width = db.Column(db.Integer, nullable=False) #will multiple x 1000
 	art_img = db.Column(db.String(200), nullable=True)
@@ -132,7 +131,7 @@ def connect_to_db(app):
     """Connect the database to our Flask app."""
 
     # Configure to use our SQLite database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hangit.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hangups.db'
     db.app = app
     db.init_app(app)
 
