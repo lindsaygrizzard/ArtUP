@@ -21,6 +21,10 @@ def index():
     return render_template("homepage.html")
 
 
+######################################
+		   #PROJECT STUFF
+######################################
+
 
 @app.route('/project')
 def project():
@@ -38,24 +42,72 @@ def project_process():
     print new_project
     
     if new_project == "new":
-    	return redirect('/wallforms')
+    	return redirect('/new-project')
 
     else:
     	return redirect('/')
 
-    #get radio button choice
-    #if choice == new
-    	#redirect to /wallforms
-    #else:
-    	#redirect to project chosen 
+ 
+
+@app.route('/new-project')
+def project_name():
+    """List new project name"""
+
+    return render_template("new_project.html")\
 
 
 
-@app.route('/wallforms')
+@app.route('/new-project-process')
+def process_project_name():
+    """Store new project name"""
+
+    
+    #store project name to db for specific user
+
+
+    if "user_name" in session:
+    	cur_user_name = session['user_name']
+    	user = User.query.filter_by(user_name=cur_user_name).first()
+    	print "user: ", user
+
+        new_project_name = request.args.get("new_project")
+        new_project = Project(user_id = user.user_id, project_name = new_project_name)
+        print "new_project_name: ", new_project_name
+        
+
+        db.session.add(new_project)
+        db.session.commit()
+
+
+    else:
+    	user = session['user_name'] = "guest"
+    
+    return render_template("new_wall.html")
+
+
+
+
+    
+
+
+
+######################################
+		   #WALL STUFF
+######################################
+
+
+
+@app.route('/new-wall')
 def gather_wall_info():
     """Gather wall information"""
 
-    return render_template("wall_forms.html")
+    return render_template("new_wall.html")
+
+
+
+######################################
+		   #ARTWORK STUFF
+######################################
 
 
 
@@ -65,6 +117,7 @@ def gather_art_info():
     """Gather artwork information"""
 
     return render_template("art_forms.html")
+
 
 
 
