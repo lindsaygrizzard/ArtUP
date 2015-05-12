@@ -1,12 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1> New Wall Page! </h1>
+<h1> New Wall Page for project </h1>
 
-<form action ="/">
+<form action ="/new-wall-process">
 	<label> New Wall Name  
-	    <input type="" name="">
-	 </label>
+	    <input type="text" name="new_wall"> <br>
+	</label>
+	<label> Wall Width 
+	    <input type="text" name="wall_width"> <br>
+	</label>
+
+	<label> Center Line (see tips for help)
+	    <input type="text" name="center_line"> <br>
+	</label>	 
 
 	<input type="submit" value="Submit">
 </form>

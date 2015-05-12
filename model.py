@@ -19,14 +19,13 @@ class User(db.Model):
 
 	user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	email = db.Column(db.String(64), nullable=False)
-	user_name = db.Column(db.String(64), nullable=True)
 	password = db.Column(db.String(64), nullable=False)
 	zipcode = db.Column(db.String(15), nullable=True)
 
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
 
-		return "<User user_id:  %s user_name: %s>" % (self.user_id, self.user_name)
+		return "<User user_id:  %s email: %s>" % (self.user_id, self.email)
 
 
 
@@ -38,7 +37,7 @@ class Project(db.Model):
 
 	project_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False) #nullable?? 
-	project_name = db.Column(db.String(64), nullable=True)
+	project_name = db.Column(db.String(64), nullable=True, default='Project')
 
 	# def __repr__(self):
 	# 	"""Provide helpful representation when printed"""
@@ -55,7 +54,7 @@ class Wall(db.Model):
 
 	wall_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	project_id = db.Column(db.Integer, db.ForeignKey('projects.project_id'), nullable=False) #nullable??
-	wall_name = db.Column(db.String(64), nullable=True)  
+	wall_name = db.Column(db.String(64), nullable=True, default='Wall')  
 	wall_width = db.Column(db.Integer, nullable=False) #will multiple x 1000
 	center_line = db.Column(db.Integer, default=58, nullable=True) #nullable for future customization | #will multiple x 1000
 	wall_img = db.Column(db.String(200), nullable=True)
@@ -87,7 +86,7 @@ class Artwork(db.Model):
 	__tablename__ = "artworks"
 
 	artwork_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	artwork_name = db.Column(db.String, nullable=True) 
+	artwork_name = db.Column(db.String, nullable=True, default='Artwork') 
 	device_code = db.Column(db.Integer, db.ForeignKey('devices.device_code'), nullable=False) 
 	height = db.Column(db.Integer, nullable=False) #will multiple x 1000
 	width = db.Column(db.Integer, nullable=False) #will multiple x 1000
@@ -131,7 +130,7 @@ def connect_to_db(app):
     """Connect the database to our Flask app."""
 
     # Configure to use our SQLite database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///hangups.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///artup.db'
     db.app = app
     db.init_app(app)
 

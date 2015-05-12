@@ -53,7 +53,7 @@ def project_process():
 def project_name():
     """List new project name"""
 
-    return render_template("new_project.html")\
+    return render_template("new_project.html")
 
 
 
@@ -64,10 +64,10 @@ def process_project_name():
     
     #store project name to db for specific user
 
-
-    if "user_name" in session:
-    	cur_user_name = session['user_name']
-    	user = User.query.filter_by(user_name=cur_user_name).first()
+    print session
+    if "email" in session:
+    	cur_email = session['email']
+    	user = User.query.filter_by(email=cur_email).first()
     	print "user: ", user
 
         new_project_name = request.args.get("new_project")
@@ -80,7 +80,8 @@ def process_project_name():
 
 
     else:
-    	user = session['user_name'] = "guest"
+    	user = session['email'] = None
+    	print "YOU ARE SIGNED IN AS A GUEST"
     
     return render_template("new_wall.html")
 
@@ -98,10 +99,44 @@ def process_project_name():
 
 
 @app.route('/new-wall')
-def gather_wall_info():
-    """Gather wall information"""
-
+def get_wall_info(new_project):
+    """Get wall information"""
     return render_template("new_wall.html")
+
+
+@app.route('/new-wall-process')
+def process_wall_info():
+    """Process wall information"""
+
+    new_wall_name = request.args.get("new_wall")
+    wall_width = request.args.get("wall_width")
+    center_line = request.args.get("center_line")
+    project_name = Project.query.filter_by()
+
+    if 'email' in session:
+    	print "Session: ", session
+    	cur_email = session['email']
+        new_wall = Wall(project_id = Project.project_id, 
+        				wall_name = new_wall_name,
+        				wall_width = wall_width,
+        				center_line = center_line)
+
+        print "new_wall_name: ", new_wall_name
+
+        db.session.add(new_wall)
+        db.session.commit()
+
+
+    # else: #####DO I NEED THESE ELSES FOR NOT LOGGED IN USER?????
+    # 	project = session['project_name'] = "temp"
+
+    # 	new_wall = Wall(project_id = project_name,
+    #     				wall_name = new_wall_name,
+    #     				wall_width = wall_width,
+    #     				center_line = center_line)
+    
+
+    return redirect('/artforms')
 
 
 
@@ -163,7 +198,6 @@ def process_signup():
     """Route to process login for users."""
 
     entered_email = request.form['email']
-    entered_username = request.form['user_name']
     entered_pw = request.form['password']
     entered_pw2 = request.form['password2']
     
@@ -171,17 +205,16 @@ def process_signup():
 
     if request.method == "POST":
         if user == None: # is not in User Table?
-            print user 
             if entered_pw != entered_pw2:  #validate passwords
                 flash("Your passwords did not match")
                 return redirect("/register")
             else:
             #update password into database
-                new_user = User(password = entered_pw, email= entered_email, user_name = entered_username) 
+                new_user = User(password = entered_pw, email= entered_email) 
                 db.session.add(new_user)
                 db.session.commit()
                 print 'creating new user in Database.'
-                print new_user, new_user.user_id
+                print new_user, new_user
                 session['email'] = entered_email
                 flash("You are signed up %s!" % entered_email) 
                 return redirect("/")
@@ -203,14 +236,16 @@ def user_login():
 def process_login():
     """Route to process login for users."""
 
-    entered_username = request.form['user_name']
+    entered_email = request.form['email']
     entered_pw = request.form['password']
     
-    user = User.query.filter_by(user_name= entered_username).first()
+    user = User.query.filter_by(email= entered_email).first()
 
     if entered_pw == user.password:
-        session['user_name'] = request.form['user_name']
-        flash('You successfully logged in %s!' % session['user_name'])
+        session['email'] = request.form['email']
+        print "session ", session
+        print "user ", user
+        flash('You successfully logged in %s!' % session['email'])
         return redirect("/")
     else:
         flash("That is not the correct password!")
@@ -222,9 +257,12 @@ def process_login():
 def process_logout():
     """Route to process logout for users."""
 
-    # session.pop('user_name')
+    
+
+    session.pop('user_id', None)
+    session.pop('email', None)
     flash('You successfully logged out!')
-    print session
+    print "End Session: ", session
     return redirect("/")
 
 
