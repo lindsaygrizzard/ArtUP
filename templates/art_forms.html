@@ -6,7 +6,7 @@
 <h5> Add demensions from left to right </h5>
 <p> If you need another artwork form, press my cool unexistant AJAX button </p>
 
-<form action ="/new-art-process">
+<form action ='/artforms-process'>
 	<label> Name of Piece   
 	    <input type="text" name="new_art"> <br>
 	</label>
@@ -15,7 +15,9 @@
 	    <input type="radio" name="device_code" value='wire'> Wire <br>
 	    <input type="radio" name="device_code" value='none'> None <br>
 	</label>
-
+	<label> If you answered "Wire", what is the distance from wire to top of piece?
+	    <input type="text" name="device_distance"> <br>
+	</label> 
 
 	<label> Height 
 	    <input type="text" name="art_height"> <br>

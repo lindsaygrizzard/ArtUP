@@ -122,9 +122,9 @@ def process_wall_info():
                 print "New wall name in session: ", session
                 cur_wall = Wall(
                                     wall_name = new_wall_name, 
-                                    wall_width = wall_width, 
-                                    center_line=center_line,
-                                    project_id = cur_project_id)
+                                    wall_width = int(wall_width), 
+                                    center_line= int(center_line),
+                                    project_id = int(cur_project_id))
                 db.session.add(cur_wall)
                 db.session.commit()
                 print "cur_wall", cur_wall
@@ -133,9 +133,9 @@ def process_wall_info():
                 session['wall_name'] = new_wall_name
                 cur_wall = Wall(
                                     wall_name = new_wall_name, 
-                                    wall_width = wall_width, 
-                                    center_line=center_line,
-                                    project_id = cur_project_id)
+                                    wall_width = int(wall_width), 
+                                    center_line= int(center_line),
+                                    project_id = int(cur_project_id))
                 db.session.add(cur_wall)
                 db.session.commit()
                 print "cur_wall", cur_wall
@@ -171,6 +171,7 @@ def process_art_info():
                 art_height = request.args.get("art_height")
                 art_width = request.args.get("art_width")
                 device = request.args.get("device_code")
+                device_distance = request.args.get("device_distance")
                 print "Device: ", device
 
                 if 'art_name' in session: 
@@ -179,14 +180,17 @@ def process_art_info():
                     print "New art name in session: ", session
                     cur_art = Artwork(
                         artwork_name = new_art_name,
-                        height = art_height,
-                        width = art_width,
-                        device = device_code,
-                        device_distance = device_distance)
+                        height = int(art_height),
+                        width = int(art_width),
+                        device_distance = int(device_distance),
+                        device_code = device_code))
                     db.session.add(cur_art)
                     db.session.commit()
+
+
                     print "Cur_art: ", cur_art
                     print "Session with Art: ", session
+
                     return redirect("/homepage")
                 
                 else:
@@ -194,14 +198,16 @@ def process_art_info():
                     print "New art name in session: ", session
                     cur_art = Artwork(
                         artwork_name = new_art_name,
-                        height = art_height,
-                        width = art_width,
-                        device = device_code,
-                        device_distance = device_distance)
+                        height = int(art_height),
+                        width = int(art_width),
+                        device_distance = int(device_distance),
+                        device_code = device_code))
                     db.session.add(cur_art)
                     db.session.commit()
+
                     print "Cur_art: ", cur_art
                     print "Session with Art: ", session
+                    print "Device Type: ", device_code
                     return redirect("/homepage")
 
     return redirect("/login")
