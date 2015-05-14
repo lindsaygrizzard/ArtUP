@@ -170,24 +170,32 @@ def process_art_info():
                 new_art_name = request.args.get("new_art")
                 art_height = request.args.get("art_height")
                 art_width = request.args.get("art_width")
-                device = request.args.get("device_code")
-                device_distance = request.args.get("device_distance")
-                print "Device: ", device
+                # device = request.args.get("device_code")
+                # device_distance = request.args.get("device_distance")
+
 
                 if 'art_name' in session: 
                     session.pop('art_name', None)
                     session['art_name'] = new_art_name
                     print "New art name in session: ", session
-                    cur_art = Artwork(
-                        artwork_name = new_art_name,
-                        height = int(art_height),
-                        width = int(art_width),
-                        device_distance = int(device_distance),
-                        device_code = device_code))
-                    db.session.add(cur_art)
+                    art_obj = Artwork.query.filter(Artwork.artwork_name == session['art_name']).first()
+                    db.session.add(art_obj)
                     db.session.commit()
 
+                    
+                    cur_art_id = art_obj.artwork_id
 
+
+                    cur_art = Artwork(
+                        artwork_id = cur_art_id,
+                        artwork_name = new_art_name,
+                        height = int(art_height),
+                        width = int(art_width))
+                    #     device_distance = int(device_distance),
+                    #     device_code = device_code
+
+                    db.session.add(cur_art)
+                    db.session.commit()
                     print "Cur_art: ", cur_art
                     print "Session with Art: ", session
 
@@ -196,20 +204,24 @@ def process_art_info():
                 else:
                     session['art_name'] = new_art_name
                     print "New art name in session: ", session
+                    art_obj = Artwork.query.filter(Artwork.artwork_name == session['art_name']).first()
+                    cur_art_id = art_obj.artwork_id
+
+
                     cur_art = Artwork(
+                        artwork_id = cur_art_id,
                         artwork_name = new_art_name,
                         height = int(art_height),
-                        width = int(art_width),
-                        device_distance = int(device_distance),
-                        device_code = device_code))
+                        width = int(art_width))
+                    #     device_distance = int(device_distance),
+                    #     device_code = device_code
+
                     db.session.add(cur_art)
                     db.session.commit()
-
                     print "Cur_art: ", cur_art
                     print "Session with Art: ", session
-                    print "Device Type: ", device_code
-                    return redirect("/homepage")
 
+                    return redirect("/homepage")
     return redirect("/login")
 
 
