@@ -17,7 +17,8 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
-  
+
+
     return render_template("homepage.html")
 
 
@@ -60,35 +61,32 @@ def project_name():
 @app.route('/new-project-process')
 def process_project_name():
     """Store new project name"""
+    
+    #needs 
+    user_obj = User.query.filter(User.email == session['email']).first()
+    cur_user_id = user_obj.user_id
+
+    if 'email' in session:
+        new_pro = request.args.get('new_project')
+        if 'project_name' in session: #if project seesion, replace with new session name
+            session.pop('project_name', None)
+            session['project_name'] = new_pro
+            print "No project session: ", session
+            cur_pro_name = Project(project_name = new_pro, user_id = cur_user_id)
+            db.session.add(cur_pro_name)
+            db.session.commit()
+        else:
+            session['project_name'] = new_pro
+            print session
+            cur_pro_name = Project(project_name = new_pro, user_id = cur_user_id)
+            db.session.add(cur_pro_name)
+            db.session.commit()
 
     
-    #store project name to db for specific user
 
-    print session
-    if "email" in session:
-    	cur_email = session['email']
-    	user = User.query.filter_by(email=cur_email).first()
-    	print "user: ", user
-
-        new_project_name = request.args.get("new_project")
-        new_project = Project(user_id = user.user_id, project_name = new_project_name)
-        print "new_project_name: ", new_project_name
-        
-
-        db.session.add(new_project)
-        db.session.commit()
-
-
-    else:
-    	user = session['email'] = None
-    	print "YOU ARE SIGNED IN AS A GUEST"
+    return redirect('/new-wall')
     
-    return render_template("new_wall.html")
 
-
-
-
-    
 
 
 
@@ -99,7 +97,7 @@ def process_project_name():
 
 
 @app.route('/new-wall')
-def get_wall_info(new_project):
+def get_wall_info():
     """Get wall information"""
     return render_template("new_wall.html")
 
@@ -108,35 +106,42 @@ def get_wall_info(new_project):
 def process_wall_info():
     """Process wall information"""
 
-    new_wall_name = request.args.get("new_wall")
-    wall_width = request.args.get("wall_width")
-    center_line = request.args.get("center_line")
-    project_name = Project.query.filter_by()
+    project_obj = Project.query.filter(Project.project_name == session['project_name']).first()
+    cur_project_id = project_obj.project_id
 
     if 'email' in session:
-    	print "Session: ", session
-    	cur_email = session['email']
-        new_wall = Wall(project_id = Project.project_id, 
-        				wall_name = new_wall_name,
-        				wall_width = wall_width,
-        				center_line = center_line)
+        if 'project_name' in session:
+            new_wall_name = request.args.get("new_wall")
+            wall_width = request.args.get("wall_width")
+            center_line = request.args.get("center_line")
+            #make unique names only be allowed
+            if 'wall_name' in session: #if project seesion, replace with new session name
+                session.pop('wall_name', None)
+                print "No wall in session: ", session
+                session['wall_name'] = new_wall_name
+                print "New wall name in session: ", session
+                cur_wall = Wall(
+                                    wall_name = new_wall_name, 
+                                    wall_width = wall_width, 
+                                    center_line=center_line,
+                                    project_id = cur_project_id)
+                db.session.add(cur_wall)
+                db.session.commit()
+                print "cur_wall", cur_wall
 
-        print "new_wall_name: ", new_wall_name
+            else:
+                session['wall_name'] = new_wall_name
+                cur_wall = Wall(
+                                    wall_name = new_wall_name, 
+                                    wall_width = wall_width, 
+                                    center_line=center_line,
+                                    project_id = cur_project_id)
+                db.session.add(cur_wall)
+                db.session.commit()
+                print "cur_wall", cur_wall
 
-        db.session.add(new_wall)
-        db.session.commit()
-
-
-    # else: #####DO I NEED THESE ELSES FOR NOT LOGGED IN USER?????
-    # 	project = session['project_name'] = "temp"
-
-    # 	new_wall = Wall(project_id = project_name,
-    #     				wall_name = new_wall_name,
-    #     				wall_width = wall_width,
-    #     				center_line = center_line)
-    
-
-    return redirect('/artforms')
+            
+            return redirect('/artforms')
 
 
 
@@ -145,13 +150,61 @@ def process_wall_info():
 ######################################
 
 
-
-
 @app.route('/artforms')
 def gather_art_info():
     """Gather artwork information"""
 
     return render_template("art_forms.html")
+
+
+@app.route('/artforms-process')
+def process_art_info():
+    """Process artwork information"""
+
+    wall_obj = Wall.query.filter(Wall.wall_name == session['wall_name']).first()
+    cur_wall_id = wall_obj.wall_id
+
+    if 'email' in session:
+        if 'project_name' in session:
+            if 'wall_name' in session:
+                new_art_name = request.args.get("new_art")
+                art_height = request.args.get("art_height")
+                art_width = request.args.get("art_width")
+                device = request.args.get("device_code")
+                print "Device: ", device
+
+                if 'art_name' in session: 
+                    session.pop('art_name', None)
+                    session['art_name'] = new_art_name
+                    print "New art name in session: ", session
+                    cur_art = Artwork(
+                        artwork_name = new_art_name,
+                        height = art_height,
+                        width = art_width,
+                        device = device_code,
+                        device_distance = device_distance)
+                    db.session.add(cur_art)
+                    db.session.commit()
+                    print "Cur_art: ", cur_art
+                    print "Session with Art: ", session
+                    return redirect("/homepage")
+                
+                else:
+                    session['art_name'] = new_art_name
+                    print "New art name in session: ", session
+                    cur_art = Artwork(
+                        artwork_name = new_art_name,
+                        height = art_height,
+                        width = art_width,
+                        device = device_code,
+                        device_distance = device_distance)
+                    db.session.add(cur_art)
+                    db.session.commit()
+                    print "Cur_art: ", cur_art
+                    print "Session with Art: ", session
+                    return redirect("/homepage")
+
+    return redirect("/login")
 
 
 
