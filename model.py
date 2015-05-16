@@ -25,7 +25,7 @@ class User(db.Model):
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
 
-		return "<User user_id:  %s email: %s>" % (self.user_id, self.email)
+		return "<User user_id:  %s | email: %s>" % (self.user_id, self.email)
 
 
 
@@ -76,31 +76,32 @@ class Wall_Art(db.Model):
 
 	wall_art_id = db.Column(db.Integer, autoincrement=True, primary_key=True) #necessary???
 	wall_id = db.Column(db.Integer, db.ForeignKey('walls.wall_id')) 
-	artwork_id = db.Column(db.Integer, db.ForeignKey('artworks.artwork_id'), nullable=False) 
+	art_id = db.Column(db.Integer, db.ForeignKey('arts.art_id'), nullable=False) 
+
+	def __repr__(self):
+		"""Provide helpful representation when printed"""
+		return "<Wall wall_art_id: %s | wall_id: %s | art_id: %s>" % (
+									self.wall_art_id, self.wall_id, self.art_id)
 
 
-
-
-class Artwork(db.Model):
+class Art(db.Model):
 	"""Data for individual dimensions of specific art pieces (calculating 
 		longitudinal margins)"""
 
-	__tablename__ = "artworks"
+	__tablename__ = "arts"
 
-	artwork_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	artwork_name = db.Column(db.String, nullable=True, default='Artwork') 
+	art_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+	art_name = db.Column(db.String, nullable=True, default='Stock Artwork') 
 	device_code = db.Column(db.Integer, db.ForeignKey('devices.device_code'))
-	device_distance = db.Column(db.Integer) #possibly get rid of later  
 	height = db.Column(db.Integer, nullable=False) #will multiple x 1000
 	width = db.Column(db.Integer, nullable=False) #will multiple x 1000
 	art_img = db.Column(db.String(200), nullable=True)
 
-	
 	def __repr__(self):
 		"""Provide helpful representation when printed"""
+		return "<Art art_id: %s | art_name: %s>" % (
+										self.art_id, self.art_name)
 
-		return "<Artworks artworks_id:  %s | artwork_name: %s| device_code: %s>" % (
-							self.artworks_id, self.artwork_name, self.device_code)
 
 	
 
@@ -114,8 +115,6 @@ class Hang_Device(db.Model): #possibly don't need
 	#'1' , '2', corners, cleat
 	
 	device_code = db.Column(db.String, primary_key=True) 
-
-	#measurements from device to top
 	one_screw = db.Column(db.Integer, nullable=True) #will multiple x 1000
 	two_screws = db.Column(db.Integer, nullable=True) #will multiple x 1000
 	corners = db.Column(db.Integer, nullable=True) #will multiple x 1000

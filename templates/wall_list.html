@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<h1>WALL LIST</h1>
+
+	<div id="wall-list" class="row">
+
+		<a href= '/saved-project-new-wall/{{ project_id }}'> <p>Add New Wall?</p> <br> </a>
+
+	      	{% for wall in wall_list %}
+
+			    <a href= '/calcdisplay/{{ wall.wall_id }}'>
+			    {{ wall.wall_name }} 
+			    <br>
+				</a>
+			    
+	      	{% endfor %} 
+	</div>
+
+{% endblock %}

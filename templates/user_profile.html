@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<h1>USER PROFILE</h1>
+
+	<div id="project-list" class="row">
+	    
+	    <a href= '/new-project'> <p>Add New Project?</p> <br> </a>
+
+	   		
+
+	      	{% for project in project_list %}
+
+			    <a href= '/project/{{ project.project_id }}'>
+			    {{ project.project_name }} 
+			    <br>
+				</a>
+			    
+	      	{% endfor %}
+	</div>
+
+{% endblock %}

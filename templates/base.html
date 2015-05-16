@@ -8,7 +8,10 @@
 	<a href = '/'> HangUP </a> <br>
 	<a href = '/logout'>Logout </a> <br>
 	<a href = '/login'>Login </a> <br>
-	<a href = '/register'>Register </a>
+	
+	{% if "email" not in session %}
+		<a href = '/register'>Register </a>
+	{% endif %}
 
 <!-- Show flashed messages -->
     {% with messages = get_flashed_messages() %}
