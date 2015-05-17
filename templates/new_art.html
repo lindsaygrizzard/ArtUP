@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1> Art Forms Page for Saved Wall! </h1>
+<h1> Art Forms Page for Saved Wall </h1>
+
 
 <h5> Add demensions from left to right </h5>
 <p> If you need another artwork form, press my cool unexistant AJAX button </p>
 
-<form action ='/saved-wall-new-art-process'>
+<form action ='/new-art-process'>
 	<label> Name of Piece   
 	    <input type="text" name="new_art"> <br>
 	</label>
@@ -26,7 +27,8 @@
 	    <input type="text" name="art_width"> <br>
 	</label> 
 
-	<input type="submit" value="Submit">
+	<input type="submit" name="submit" value="next form">
+	<input type="submit" name="submit" value="submit and display">
 </form>
 
 

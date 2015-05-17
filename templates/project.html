@@ -1,21 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1> Project Start Page! </h1>
 
+<h1>Project {{ project_id }} </h1>
 
-<form action ="/project-process">
-	<label> Is this project new or previously saved? </label>
-	    <br>
-	    <input type="radio" name="project_opt" value="new"> New Project 
-	    <br>
-	    <input type="radio" name="project_opt" value="saved"> Saved Project 
-	    <br>
+<h5> Wall List: </h5>
 
-	<input type="submit" value="Submit">
-</form>
+	<div id="wall-list" class="row">
 
+	<a href= '/project/{{ project_id }}/new-wall'> <p>Add New Wall?</p> <br> </a>
 
+	      	{% for wall in wall_list %}
 
+			    <a href= '/calcdisplay/{{ wall.wall_id }}'>
+			    {{ wall.wall_name }} 
+			    <br>
+				</a>
+			    
+	      	{% endfor %} 
+	</div>
 
 {% endblock %}

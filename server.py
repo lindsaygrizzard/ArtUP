@@ -10,6 +10,7 @@ app.jinja_env.undefined = StrictUndefined
 #########################################
 
 
+
 @app.route('/')
 def index():
     """Homepage."""
@@ -18,104 +19,72 @@ def index():
 
 @app.route('/user-profile')
 def list_projects():
-    """Homepage."""
+    """User Profile and list of projects"""
+    if 'email' in session:
+        # find current user id 
+        cur_user_obj = User.query.filter(User.email == session['email']).first()
+        cur_user_id = cur_user_obj.user_id
+        projects = Project.query.filter(Project.user_id == cur_user_id).all()
 
-    # find current user id 
-    cur_user_obj = User.query.filter(User.email == session['email']).first()
-    cur_user_id = cur_user_obj.user_id
-    projects = Project.query.filter(Project.user_id == cur_user_id).all()
+        print "project: ", projects
 
-    print "project: ", projects
-
-    return render_template("user_profile.html", 
-                        project_list=projects)
-
+        return render_template("user_profile.html", 
+                            project_list=projects)
+    else:
+        flash('You must Log In or Register before viewing projects')
+        return render_template('homepage.html')
 
 @app.route('/project/<int:project_id>')
 def show_project(project_id):
+    
+    """About project/ list of walls"""
+    
+    #### localhost:5000/project/[int] ######
 
     project_id = project_id
 
     walls = Wall.query.filter(Wall.project_id == project_id).all()
 
-    print "walls: ", walls
+    print "PROJECT ID: ", project_id
 
-    return render_template("wall_list.html", 
+    return render_template("project.html", 
                         wall_list=walls,
                         project_id= project_id)
 
-
-
-######################################
-           #PROJECT STUFF
-######################################
-
-@app.route('/new-project')
-def project_name():
-    """List new project name"""
-    return render_template("new_project.html")
-
-
-@app.route('/new-project-process')
-def process_project_name():
-    """Store new project name"""
-
-    if 'email' in session:
-        print 'session: ', session
-        user_obj = User.query.filter(User.email == session['email']).first()
-        cur_user_id = user_obj.user_id
-        new_pro = request.args.get('new_project')
-
-        session['project_name'] = new_pro
-        print session
-
-        cur_pro_name = Project(
-            project_name = new_pro, 
-            user_id = cur_user_id)
-
-        db.session.add(cur_pro_name)
-        db.session.commit()
-
-        project_obj = Project.query.filter(Project.project_name == session['project_name']).first()
-        print "PROJECT OBJECT: ", project_obj
-        cur_project_name = project_obj.project_name
-        print "PROJECT ID: ", cur_project_name
-
-        flash("You just created a NEW project named %s!" % cur_project_name)
-        return redirect('/user-profile')
-
-    else:
-        return redirect('/login')
 
 
     ################################
              #WALL STUFF
     ################################
 
-@app.route('/saved-project-new-wall/<project_id>')
-def get_saved_project_wall_info(project_id):
+@app.route('/project/<int:project_id>/new-wall')
+def get_wall_info(project_id):
     """Get wall information from saved project"""
 
+    project_id = project_id
     print "PROJECT_ID: ", project_id
-    project_obj = Project.query.filter_by(project_id = project_id).first()
+    project_obj = Project.query.filter(Project.project_id == project_id).first()
     cur_project_name = project_obj.project_name
     print "CURRENT PROJECT NAME: ", cur_project_name
 
-    return render_template("saved_pro_new_wall.html", 
+    return render_template("new_wall.html", 
+                        project_id = project_id,  
                         project_name = cur_project_name)
 
 
 
-@app.route('/saved-project-new-wall-process/project_name')
-def process_saved_project_wall_info():
+@app.route('/project/<int:project_id>/new-art')
+def process_wall_info(project_id):
     """Process wall information for saved project"""
 
-    project_obj = Project.query.filter(Project.project_name == project_name).first()
-    cur_project_id = project_obj.project_id
-    print "PROJECT ID ", cur_project_id
 
     if 'email' in session:
-
+        
+        project_obj = Project.query.filter(Project.project_id == project_id).first()
+        print "PROJECT OBJECT:   ", project_obj
+        cur_project_id = project_obj.project_id
+        print "PROJECT ID ", cur_project_id
+        
         new_wall_name = request.args.get("new_wall")
         wall_width = request.args.get("wall_width")
         center_line = request.args.get("center_line")
@@ -134,11 +103,33 @@ def process_saved_project_wall_info():
         db.session.commit()
         print "cur_wall", cur_wall
 
-        flash("You created a new wall in your NEW folder!")
-        return redirect('/user-profile')
+
+        # return redirect('/new-art')
+        cur_user_obj = User.query.filter(User.email == session['email']).first()
+        cur_user_id = cur_user_obj.user_id
+        projects = Project.query.filter(Project.user_id == cur_user_id).all()
+
+        walls = Wall.query.filter(project_id == Wall.project_id).all()
+        print "WALLS ******* : ", walls
+
+        """"""
+
+        wall_obj = Wall.query.filter(Wall.wall_name == session['wall_name']).first()
+        print "WALL OBJECT: ", wall_obj
+        # cur_wall_id = wall_obj.wall_id
+        # print "CURRENT WALL ID: ", cur_wall_id
+
+        """"""
+
+        # return redirect('/project/<cur_project_id>')
+        return render_template("new_art.html", 
+                            project_id = project_id)
+                            # wall_id = cur_wall_id)
 
     else:
-        return redirect('/login')
+        return redirect('/')
+
+
 
 
             ############################
@@ -146,15 +137,10 @@ def process_saved_project_wall_info():
             ############################
 
 
-@app.route('/saved-wall-new-art')
-def get_saved_wall_art_info():
-    """Process art information for saved wall"""
-
-    return render_template("saved_wall_new_art.html")
 
 
-@app.route('/saved-wall-new-art-process')
-def process_saved_wall_art_info():
+@app.route('/new-art-process')
+def process_art_info():
     """Process art information for saved wall"""
 
 
@@ -204,11 +190,68 @@ def process_saved_wall_art_info():
         print "NEW WALL ART ID: ", new_wall_art
 
         #ALSO ADD ART_ID TO WALL_ART TABLE
-        return redirect('/')
+
+        submit_option = request.args.get("submit")
+        print "submit_option: ", submit_option
+
+
+        if submit_option == "submit and display": 
+            return render_template('/calc_display.html')
+
+        else:
+            return render_template("new_art.html") 
+
+
 
 
     else:
         return redirect("/login")
+
+
+
+
+
+######################################
+           #PROJECT STUFF
+######################################
+
+@app.route('/new-project')
+def project_name():
+    """List new project name"""
+    return render_template("new_project.html")
+
+
+@app.route('/new-project-process')
+def process_project_name():
+    """Store new project name"""
+
+    if 'email' in session:
+        print 'session: ', session
+        user_obj = User.query.filter(User.email == session['email']).first()
+        cur_user_id = user_obj.user_id
+        new_pro = request.args.get('new_project')
+
+        session['project_name'] = new_pro
+        print session
+
+        cur_pro_name = Project(
+            project_name = new_pro, 
+            user_id = cur_user_id)
+
+        db.session.add(cur_pro_name)
+        db.session.commit()
+
+        project_obj = Project.query.filter(Project.project_name == session['project_name']).first()
+        print "PROJECT OBJECT: ", project_obj
+        cur_project_name = project_obj.project_name
+        print "PROJECT ID: ", cur_project_name
+
+        flash("You just created a NEW project named %s!" % cur_project_name)
+        return redirect('/user-profile')
+
+    else:
+        return redirect('/login')
+
 
 
 
