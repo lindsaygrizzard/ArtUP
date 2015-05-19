@@ -92,10 +92,11 @@ class Art(db.Model):
 
 	art_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	art_name = db.Column(db.String, nullable=True, default='Stock Artwork') 
-	device_code = db.Column(db.Integer, db.ForeignKey('devices.device_code'))
+	device_code = db.Column(db.String, db.ForeignKey('devices.device_code'))
 	wall_id = db.Column(db.Integer, db.ForeignKey('walls.wall_id')) 
 	height = db.Column(db.Integer, nullable=False) #will multiple x 1000
 	width = db.Column(db.Integer, nullable=False) #will multiple x 1000
+	device_distance = db.Column(db.Integer, nullable=True, default=0) 
 	art_img = db.Column(db.String(200), nullable=True)
 
 	def __repr__(self):
@@ -107,7 +108,7 @@ class Art(db.Model):
 	
 
 
-class Hang_Device(db.Model): #possibly don't need
+class Hang_Device(db.Model): #RENAME TO 'DEVICE'
 	"""Specifics for type of hanging devices for artworks 
 	and measurement from device to top of piece"""
 
@@ -116,11 +117,6 @@ class Hang_Device(db.Model): #possibly don't need
 	#'1' , '2', corners, cleat
 	
 	device_code = db.Column(db.String, primary_key=True) 
-	one_screw = db.Column(db.Integer, nullable=True) #will multiple x 1000
-	two_screws = db.Column(db.Integer, nullable=True) #will multiple x 1000
-	corners = db.Column(db.Integer, nullable=True) #will multiple x 1000
-	cleat = db.Column(db.Integer, nullable=True) #will multiple x 1000
-
 
 	def __repr__(self):
 		"""Provide helpful representation when printed"""

@@ -1,7 +1,8 @@
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from model import User, Project, Wall, Wall_Art, Art, connect_to_db, db 
+from model import User, Project, Wall, Wall_Art, Art, Hang_Device, connect_to_db, db 
+import json
 
 app = Flask(__name__)
 app.secret_key = "ABC"
@@ -26,7 +27,7 @@ def list_projects():
         cur_user_id = cur_user_obj.user_id
         projects = Project.query.filter(Project.user_id == cur_user_id).all()
 
-        print "project: ", projects
+        # print "project: ", proj4ects
 
         return render_template("user_profile.html", 
                             project_list=projects)
@@ -45,7 +46,7 @@ def show_project(project_id):
 
     walls = Wall.query.filter(Wall.project_id == project_id).all()
 
-    print "PROJECT ID: ", project_id
+    # print "PROJECT ID: ", project_id
 
     return render_template("project.html", 
                         wall_list=walls,
@@ -62,10 +63,10 @@ def get_wall_info(project_id):
     """Get wall information from saved project"""
 
     project_id = project_id
-    print "PROJECT_ID: ", project_id
+    # print "PROJECT_ID: ", project_id
     project_obj = Project.query.filter(Project.project_id == project_id).first()
     cur_project_name = project_obj.project_name
-    print "CURRENT PROJECT NAME: ", cur_project_name
+    # print "CURRENT PROJECT NAME: ", cur_project_name
 
     return render_template("new_wall.html", 
                         project_id = project_id,  
@@ -81,16 +82,16 @@ def process_wall_info(project_id):
     if 'email' in session:
         
         project_obj = Project.query.filter(Project.project_id == project_id).first()
-        print "PROJECT OBJECT:   ", project_obj
+        # print "PROJECT OBJECT:   ", project_obj
         cur_project_id = project_obj.project_id
-        print "PROJECT ID ", cur_project_id
+        # print "PROJECT ID ", cur_project_id
         
         new_wall_name = request.args.get("new_wall")
         wall_width = request.args.get("wall_width")
         center_line = request.args.get("center_line")
         #make unique names only be allowed
         session['wall_name'] = new_wall_name
-        print "SESSION: ", session
+        # print "SESSION: ", session
 
 
         cur_wall = Wall(
@@ -101,7 +102,7 @@ def process_wall_info(project_id):
 
         db.session.add(cur_wall)
         db.session.commit()
-        print "cur_wall", cur_wall
+        # print "cur_wall", cur_wall
 
 
         # return redirect('/new-art')
@@ -110,21 +111,21 @@ def process_wall_info(project_id):
         projects = Project.query.filter(Project.user_id == cur_user_id).all()
 
         walls = Wall.query.filter(project_id == Wall.project_id).all()
-        print "WALLS ******* : ", walls
+        # print "WALLS ******* : ", walls
 
         """"""
 
         wall_obj = Wall.query.filter(Wall.wall_name == session['wall_name']).first()
-        print "WALL OBJECT: ", wall_obj
-        # cur_wall_id = wall_obj.wall_id
+        # print "WALL OBJECT: ", wall_obj
+        cur_wall_id = wall_obj.wall_id
         # print "CURRENT WALL ID: ", cur_wall_id
 
         """"""
 
         # return redirect('/project/<cur_project_id>')
         return render_template("new_art.html", 
-                            project_id = project_id)
-                            # wall_id = cur_wall_id)
+                            project_id = project_id,
+                            wall_id = cur_wall_id)
 
     else:
         return redirect('/')
@@ -139,76 +140,146 @@ def process_wall_info(project_id):
 
 
 
-@app.route('/new-art-process')
-def process_art_info():
+@app.route('/new-art-process/<int:wall_id>')
+def process_art_info(wall_id):
     """Process art information for saved wall"""
 
 
+    current_wall_id = wall_id
     wall_obj = Wall.query.filter(Wall.wall_name == session['wall_name']).first()
     cur_wall_id = wall_obj.wall_id
     print "wall_obj: ", wall_obj
     print "cur_wall_id: ", cur_wall_id
     print "session: ", session
 
-    if 'email' in session:
-        
+    if 'email' in session:    
         new_art_name = request.args.get("new_art")
-        print "new_art_name: ", new_art_name
         art_height = request.args.get("art_height")
-        print "art_height: ", art_height
         art_width = request.args.get("art_width")
-        print "art_width: ", art_width
-        # device = request.args.get("device_code")
-        # device_distance = request.args.get("device_distance")
+        device_code = request.args.get("device_code")
+        device_distance = request.args.get("device_distance")
 
         session['art_name'] = new_art_name
-        print "New art name in session: ", session
-         #WHAT YOU KNOW WORK AND RETURN NONE?
 
-
+        #save info to Art table
         cur_art = Art(
             art_name = new_art_name,
             height = int(art_height),
-            width = int(art_width)) 
+            width = int(art_width),
+            device_code = device_code,
+            device_distance = int(device_distance)) 
         db.session.add(cur_art)
         db.session.commit()
-        print "Cur Art Obj: ", cur_art
+        # print "Cur Art Obj: ", cur_art
 
+
+        #get art object info just committed 
         art_obj = Art.query.filter(Art.art_name == cur_art.art_name).first()
-        print "ART OBJ: ", art_obj.art_id
-
+        # print "CURRENT ART ID: ", art_obj.art_id
         art_id = art_obj.art_id
-        # cur_art_obj = art_obj.art_id
 
-
+        #save info to Wall_art table
         new_wall_art = Wall_Art(
             art_id = art_id,
             wall_id = cur_wall_id)
 
         db.session.add(new_wall_art)
         db.session.commit()
-        print "NEW WALL ART ID: ", new_wall_art
-
-        #ALSO ADD ART_ID TO WALL_ART TABLE
+        # print "NEW WALL ART ID: ", new_wall_art
 
         submit_option = request.args.get("submit")
-        print "submit_option: ", submit_option
-
 
         if submit_option == "submit and display": 
-            return render_template('/calc_display.html')
-
+            session['walls_art_id'] = new_wall_art.wall_art_id
+            print "SESSION WITH WALL ART ID: ", session
+            return redirect('/calcdisplay')
         else:
-            return render_template("new_art.html") 
-
-
-
-
+            return render_template("new_art.html", wall_id = cur_wall_id)
     else:
         return redirect("/login")
 
 
+##################################
+  #Calc_display/ Calculations
+##################################
 
+
+@app.route('/calcdisplay')
+def calcs():
+    """Graphic Display of Calculations"""
+
+    # #Query for all 
+
+    #current ref obj
+    cur_ref_obj = Wall_Art.query.filter(
+                Wall_Art.wall_art_id == session['walls_art_id']).first()
+
+############### format wall object info #############
+
+    #current wall id
+    cur_wall_id = cur_ref_obj.wall_id 
+    # print "CUR WALL ID: ", cur_wall_id
+
+    cur_wall_obj = Wall.query.filter(Wall.wall_id == cur_wall_id).first()
+    # print "CURRENT WALL OBJECT: ", cur_wall_obj
+
+    ref_by_wall_obj = Wall_Art.query.filter(Wall_Art.wall_id == cur_wall_id).all()
+    # print "ALL REF OBJS BY CURRENT WALL ID: ", ref_by_wall_obj
+
+    wall_name = cur_wall_obj.wall_name
+    wall_width = cur_wall_obj.wall_width
+    center_line = cur_wall_obj.center_line
+
+############### format art object info #############
+
+    all_art_ids = []
+    for obj in ref_by_wall_obj:
+        art_id = obj.art_id
+        all_art_ids.append(art_id)
+    
+    art_ids = []
+    [art_ids.append(item) for item in all_art_ids if item not in art_ids]
+    # print "UNIQUE ART IDS: ", art_ids
+
+    art_objs = []
+    for num in art_ids:
+        art_obj = Art.query.filter(Art.art_id == num).first()
+        art_objs.append(art_obj)
+    # print "CUR ART OBJS: ", art_objs
+
+    art_names = []
+    art_heights = []
+    art_widths = []
+    device_codes = []
+    device_distances = []
+
+    for i in art_objs:
+        art_obj = Art.query.filter(Art.art_name == i.art_name).first()
+        
+        art_names.append(art_obj.art_name)
+        art_heights.append(art_obj.height)
+        art_widths.append(art_obj.width)
+        device_codes.append(art_obj.device_code)
+        device_distances.append(art_obj.device_distance)
+
+    data = [wall_name, 
+            center_line, 
+            wall_width,
+            art_names,
+            art_heights,
+            art_widths,
+            device_codes,
+            device_distances]
+
+    return render_template("calc_display.html", data=json.dumps(data))
+                           # wall_name = wall_name, 
+                           # center_line = center_line, 
+                           # wall_width = wall_width,
+                           # art_names =art_names,
+                           # art_heights = art_heights,
+                           # art_widths = art_widths,
+                           # device_codes = device_codes,
+                           # device_distances = device_distances)
 
 
 ######################################
@@ -226,13 +297,11 @@ def process_project_name():
     """Store new project name"""
 
     if 'email' in session:
-        print 'session: ', session
         user_obj = User.query.filter(User.email == session['email']).first()
         cur_user_id = user_obj.user_id
         new_pro = request.args.get('new_project')
 
         session['project_name'] = new_pro
-        print session
 
         cur_pro_name = Project(
             project_name = new_pro, 
@@ -242,65 +311,15 @@ def process_project_name():
         db.session.commit()
 
         project_obj = Project.query.filter(Project.project_name == session['project_name']).first()
-        print "PROJECT OBJECT: ", project_obj
+        # print "PROJECT OBJECT: ", project_obj
         cur_project_name = project_obj.project_name
-        print "PROJECT ID: ", cur_project_name
+        # print "PROJECT ID: ", cur_project_name
 
         flash("You just created a NEW project named %s!" % cur_project_name)
         return redirect('/user-profile')
 
     else:
         return redirect('/login')
-
-
-
-
-
-
-
-##################################
-  #Calc_display/ Calculations
-##################################
-
-
-@app.route('/calcdisplay/<int:wall_id>')
-def calcs(wall_id):
-    """Graphic Display of Calculations"""
-
-    return render_template("calc_display.html")
-
-
-
-
-@app.route('/calculations')
-def plain_calcs():
-    """Text only display of calculations"""
-
-    return render_template("calculations.html")
-
-
-
-
-##################################
-          #Info/ About
-##################################
-
-
-@app.route("/info")
-def display_info():
-    """General info and tips for users"""
-
-    return render_template("info.html")
-
-
-
-@app.route("/about")
-def dispay_about():
-    """General about page for users"""
-
-    return render_template("about.html")
-
-
 
 
 ##################################
@@ -314,7 +333,7 @@ def user_signup():
 
     return render_template("/register.html")
 
-#add jinja forms!
+
 @app.route("/register-process", methods=['POST'])
 def process_signup():
     """Route to process login for users."""
@@ -326,12 +345,11 @@ def process_signup():
     user = User.query.filter_by(email=entered_email).first()
 
     if request.method == "POST":
-        if user == None: # is not in User Table?
-            if entered_pw != entered_pw2:  #validate passwords
+        if user == None:
+            if entered_pw != entered_pw2:  #validate later
                 flash("Your passwords did not match")
                 return redirect("/register")
             else:
-            #update password into database
                 new_user = User(password = entered_pw, email= entered_email) 
                 db.session.add(new_user)
                 db.session.commit()
@@ -343,9 +361,6 @@ def process_signup():
         else: 
             flash("You have already signed up with that email")
             return redirect('/login')
-
-
-
 
 @app.route("/login")
 def user_login():
@@ -378,23 +393,15 @@ def process_login():
         return redirect('login')
 
 
-
 @app.route("/logout")
 def process_logout():
     """Route to process logout for users."""
 
-    
-
     session.pop('user_id', None)
     session.pop('email', None)
     flash('You successfully logged out!')
-    print "End Session: ", session
+    # print "End Session: ", session
     return redirect("/")
-
-
-
-
-
 
 
 #######################################################

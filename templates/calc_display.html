@@ -1,6 +1,21 @@
 {% extends 'base.html' %}
-{% block content %}
 
-<h1> Beautiful Display of Art on Wall Mapping! </h1>
+{% block head %}
+
+	<script src="https://code.jquery.com/jquery.js"></script>
 
 {% endblock %}
+
+{% block content %}
+
+	<h1> Beautiful Display of Art on Wall Mapping! </h1>
+
+	<script src = 'static/scriptCalc.js'> 
+		
+		console.log({{ data }})
+
+	</script>
+
+{% endblock %}
+
+

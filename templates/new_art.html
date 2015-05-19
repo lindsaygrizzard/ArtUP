@@ -1,24 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1> Art Forms Page for Saved Wall </h1>
+<h1> Art Forms Page for Saved Wall {{ wall_id }}</h1>
 
 
 <h5> Add demensions from left to right </h5>
 <p> If you need another artwork form, press my cool unexistant AJAX button </p>
 
-<form action ='/new-art-process'>
+<form action ='/new-art-process/{{ wall_id }}'>
 	<label> Name of Piece   
 	    <input type="text" name="new_art"> <br>
 	</label>
 
-<!-- 	<label> Hanging Device Type (wire returns one screw point, none returns 	corners, more options to come...)
+	<label> Hanging Device Type (wire returns one screw point, none returns corners, more options to come...)
+		<br>
 	    <input type="radio" name="device_code" value='wire'> Wire <br>
 	    <input type="radio" name="device_code" value='none'> None <br>
 	</label>
+
+
 	<label> If you answered "Wire", what is the distance from wire to top of piece?
 	    <input type="text" name="device_distance"> <br>
-	</label>  -->
+	</label> 
 
 	<label> Height 
 	    <input type="text" name="art_height"> <br>
