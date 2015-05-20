@@ -93,7 +93,7 @@ class Art(db.Model):
 	art_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
 	art_name = db.Column(db.String, nullable=True, default='Stock Artwork') 
 	device_code = db.Column(db.String, db.ForeignKey('devices.device_code'))
-	wall_id = db.Column(db.Integer, db.ForeignKey('walls.wall_id')) 
+	# wall_id = db.Coluzmn(db.Integer, db.ForeignKey('walls.wall_id')) 
 	height = db.Column(db.Integer, nullable=False) #will multiple x 1000
 	width = db.Column(db.Integer, nullable=False) #will multiple x 1000
 	device_distance = db.Column(db.Integer, nullable=True, default=0) 

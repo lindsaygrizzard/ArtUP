@@ -2,7 +2,7 @@
 {% block content %}
 
 
-<h1>Project {{ project_id }} </h1>
+<h1>Project: {{project_name}} </h1>
 
 <h5> Wall List: </h5>
 
@@ -12,7 +12,7 @@
 
 	      	{% for wall in wall_list %}
 
-			    <a href= '/calcdisplay/{{ wall.wall_id }}'>
+			    <a href= '/saved_wall_process/{{wall.wall_id}}'>
 			    {{ wall.wall_name }} 
 			    <br>
 				</a>

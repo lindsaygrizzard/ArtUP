@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1> Art Forms Page for Saved Wall {{ wall_id }}</h1>
+<h1> Art Forms Page for {{wall_name}}</h1>
 
 
 <h5> Add demensions from left to right </h5>
-<p> If you need another artwork form, press my cool unexistant AJAX button </p>
 
-<form action ='/new-art-process/{{ wall_id }}'>
+
+
+<form action ='/project/{{project_id}}/wall/{{wall_id}}/process_art_form'>
 	<label> Name of Piece   
 	    <input type="text" name="new_art"> <br>
 	</label>

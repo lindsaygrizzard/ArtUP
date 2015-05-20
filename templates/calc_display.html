@@ -1,21 +1,22 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+	<head></head>
+	<body>
+		<h1> Beautiful Display of Art on Wall Mapping! </h1>
 
-{% block head %}
+		<script type="text/javascript" src= "/static/scriptCalc.js"> </script>
+		<script>
 
-	<script src="https://code.jquery.com/jquery.js"></script>
+			var data = JSON.parse(data)
+			console.log(data)
+		</script>
+	</body>
+</html>
 
-{% endblock %}
 
-{% block content %}
 
-	<h1> Beautiful Display of Art on Wall Mapping! </h1>
+	
 
-	<script src = 'static/scriptCalc.js'> 
-		
-		console.log({{ data }})
 
-	</script>
-
-{% endblock %}
 
 

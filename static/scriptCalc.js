@@ -1,7 +1,4 @@
 
 
-alert('JavaScript is operational!')
 
-
-
-
+var x = "JavaScript Running"
