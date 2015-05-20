@@ -1,4 +1,0 @@
-
-
-
-var x = "JavaScript Running"

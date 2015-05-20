@@ -6,16 +6,70 @@
 
 		<script type="text/javascript" src= "/static/scriptCalc.js"> </script>
 		<script>
-
-			var data = JSON.parse(data)
+			var data = ({{data|tojson}})
 			console.log(data)
+
+			var wallName = data[0]
+			var centerLine = data[1]
+			var wallWidth = data[2]
+			var artNames = data[3]
+			var artHeights = data[4]
+			var artWidths = data[5]
+			var deviceCodes = data[6]
+			var deviceDistances = data[7]
+
+			//////////// MARGINS ////////////
+
+			function findTotal(width){
+				var total = 0;
+				for ( var w = 0; w < width.length; w++ ){
+				    total += width[w]; }
+				return total
+			}
+
+			totalArtWidth = findTotal(artWidths); //total art footprint
+
+			blankWall = wallWidth - totalArtWidth // total non-art footprint
+
+			// margins divided evenly 
+			consistantMargins = (blankWall / (artWidths.length + 1))
+
+			offset = consistantMargins * .30 //percentage offset for margins
+
+			midMargin = consistantMargins - offset //in between art margins
+			console.log(midMargin)
+
+			endMargin = consistantMargins + offset //margins on both ends
+			console.log(endMargin)
+
+			
+			//////////// UPPER EDGE LONGITUDE ////////////
+
+			
+			// for(var i = 0; i < artHeights.length; i ++){
+			// 	each = artHeights[i] / 2 + centerLine;
+			// 	upperX.append(each)
+			// }
+
+			// console.log(upperX)
+
+			upperX = []
+			$.each(artHeights, function(index) {
+				var top = artHeights[index] /2 + centerLine;
+				upperX.append(top)
+			});
+			console.log(upperX)
+			
+			//////////// END UPPER EDGE LONGITUDE ////////////
+
+
+
+
+
 		</script>
+
 	</body>
 </html>
-
-
-
-	
 
 
 

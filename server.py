@@ -4,6 +4,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 from model import User, Project, Wall, Wall_Art, Art, Hang_Device, connect_to_db, db 
 import json
 
+
+
 app = Flask(__name__)
 app.secret_key = "ABC"
 app.jinja_env.undefined = StrictUndefined
@@ -269,20 +271,20 @@ def calcs(wall_art_id):
     for i in art_objs:
         art_obj = Art.query.filter(Art.art_name == i.art_name).first()
         
-        art_names.append(art_obj.art_name)
+        art_names.append(str(art_obj.art_name))
         art_heights.append(art_obj.height)
         art_widths.append(art_obj.width)
-        device_codes.append(art_obj.device_code)
+        device_codes.append(str(art_obj.device_code))
         device_distances.append(art_obj.device_distance)
 
-    data = json.dumps([wall_name, 
-            center_line, 
-            wall_width,
-            art_names,
-            art_heights,
-            art_widths,
-            device_codes,
-            device_distances])
+    data = [wall_name, 
+    center_line, 
+    wall_width,
+    art_names,
+    art_heights,
+    art_widths,
+    device_codes,
+    device_distances]
 
 
     print "wall_name", wall_name
@@ -295,14 +297,6 @@ def calcs(wall_art_id):
     print 'device_distances', device_distances
 
     return render_template("calc_display.html", data = data)
-                           # wall_name = wall_name, 
-                           # center_line = center_line, 
-                           # wall_width = wall_width,
-                           # art_names =art_names,
-                           # art_heights = art_heights,
-                           # art_widths = art_widths,
-                           # device_codes = device_codes,
-                           # device_distances = device_distances)
 
 
 ######################################
