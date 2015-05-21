@@ -1,2 +1,7 @@
-venv = 'source venv/bin/activate'
+venv = 'source venv/bin/activate' PS1= "🐙 "
+
+
+
+
+
 

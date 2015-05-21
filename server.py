@@ -2,7 +2,8 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session, url_for, json, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from model import User, Project, Wall, Wall_Art, Art, Hang_Device, connect_to_db, db 
-import json
+import json 
+
 
 
 
@@ -31,7 +32,7 @@ def list_projects():
         cur_user_email = cur_user_obj.email
         projects = Project.query.filter(Project.user_id == cur_user_id).all()
 
-        return render_template("user_profile.html", 
+        return render_template("user_profile.html",
                             project_list=projects,
                             email = cur_user_email)
     else:
@@ -42,7 +43,6 @@ def list_projects():
 
 @app.route('/project/<int:project_id>')
 def show_project(project_id):
-    
     """About project/ list of walls"""
 
     print "PROJECT ID: ", project_id
@@ -52,10 +52,10 @@ def show_project(project_id):
     project_name = project_obj.project_name
     print "PROJECT NAME: ", project_name
 
-    return render_template("project.html", 
-                        wall_list=walls,
-                        project_id = project_id,
-                        project_name = project_name)
+    return render_template("project.html",
+                           wall_list=walls,
+                           project_id=project_id,
+                           project_name=project_name)
 
 
     ################################
@@ -63,7 +63,7 @@ def show_project(project_id):
     ################################
 
 
-@app.route('/project/<int:project_id>/new-wall') 
+@app.route('/project/<int:project_id>/new-wall')
 def get_wall_info(project_id):
     """Get wall information from saved project"""
 
@@ -72,8 +72,8 @@ def get_wall_info(project_id):
         cur_project_name = project_obj.project_name
         print "CURRENT PROJECT NAME: ", cur_project_name
 
-        return render_template("new_wall.html", 
-                            project_id = project_id,  
+        return render_template("new_wall.html",
+                            project_id = project_id,
                             project_name = cur_project_name)
     else:
         flash("You must log in or register to create projects")
@@ -81,26 +81,26 @@ def get_wall_info(project_id):
 
 
 
-@app.route('/project/<int:project_id>/wall_process/artform') 
+@app.route('/project/<int:project_id>/wall_process/artform')
 def process_wall_info(project_id):
     """Process wall information and show artform page"""
 
-    if 'email' in session:   
+    if 'email' in session:
         project_obj = Project.query.filter(Project.project_id == project_id).first()
         print "PROJECT OBJECT:   ", project_obj
         cur_project_id = project_obj.project_id
         print "PROJECT ID ", cur_project_id
-        
+
         new_wall_name = request.args.get("new_wall")
         wall_width = request.args.get("wall_width")
         center_line = request.args.get("center_line")
-        
+
         session['wall_name'] = new_wall_name
         print "SESSION: ", session
 
         cur_wall = Wall(
-                           wall_name = new_wall_name, 
-                           wall_width = int(wall_width), 
+                           wall_name = new_wall_name,
+                           wall_width = int(wall_width),
                            center_line= int(center_line),
                            project_id = int(cur_project_id))
 
@@ -112,7 +112,7 @@ def process_wall_info(project_id):
         wall_name = cur_wall.wall_name
 
 
-        return render_template("new_art.html", 
+        return render_template("new_art.html",
                         project_id = project_id,
                         wall_id = wall_id,
                         wall_name = new_wall_name)
@@ -128,7 +128,7 @@ def process_art_info(project_id, wall_id):
     """Process wall information for saved project and show calc_display/ more artforms"""
 
 
-    if 'email' in session:   
+    if 'email' in session:
         cur_wall_obj = Wall.query.filter(wall_id == Wall.wall_id).first()
         cur_wall_id = cur_wall_obj.wall_id
         cur_wall_name = cur_wall_obj.wall_name
@@ -149,13 +149,13 @@ def process_art_info(project_id, wall_id):
             height = int(art_height),
             width = int(art_width),
             device_code = device_code,
-            device_distance = int(device_distance)) 
+            device_distance = int(device_distance))
         db.session.add(cur_art)
         db.session.commit()
         # print "Cur Art Obj: ", cur_art
 
 
-        #get art object info just committed 
+        #get art object info just committed
         art_obj = Art.query.filter(Art.art_name == cur_art.art_name).first()
         # print "CURRENT ART ID: ", art_obj.art_id
         art_id = art_obj.art_id
@@ -176,7 +176,7 @@ def process_art_info(project_id, wall_id):
 
         submit_option = request.args.get("submit")
 
-        if submit_option == "submit and display": 
+        if submit_option == "submit and display":
             return render_template('generate.html', wall_art_id = wall_art_id) #sends to calcdisplay
 
         else:
@@ -195,11 +195,11 @@ def process_art_info(project_id, wall_id):
   #Calc_display/ Calculations
 ##################################
 
-@app.route('/saved_wall_process/<int:wall_id>') 
+@app.route('/saved_wall_process/<int:wall_id>')
 def saved_wall_process(wall_id):
     """processes and formats saved wall data"""
 
-    
+
     print "cur_wall_id: ", wall_id
     cur_wall_obj = Wall.query.filter(Wall.wall_id == wall_id).first()
     print "CURRENT WALL OBJECT: ", cur_wall_obj
@@ -223,7 +223,7 @@ def saved_wall_process(wall_id):
 def calcs(wall_art_id):
     """Graphic Display of Calculations"""
 
-    # #Query for all 
+    # #Query for all
 
     #current ref obj
     cur_ref_obj = Wall_Art.query.filter(
@@ -232,71 +232,82 @@ def calcs(wall_art_id):
 ############### format wall object info #############
 
     #current wall id
-    cur_wall_id = cur_ref_obj.wall_id 
-    # print "CUR WALL ID: ", cur_wall_id
-
+    cur_wall_id = cur_ref_obj.wall_id
     cur_wall_obj = Wall.query.filter(Wall.wall_id == cur_wall_id).first()
-    # print "CURRENT WALL OBJECT: ", cur_wall_obj
-
     ref_by_wall_obj = Wall_Art.query.filter(Wall_Art.wall_id == cur_wall_id).all()
-    # print "ALL REF OBJS BY CURRENT WALL ID: ", ref_by_wall_obj
-
     wall_name = cur_wall_obj.wall_name
     wall_width = cur_wall_obj.wall_width
     center_line = cur_wall_obj.center_line
 
-############### format art object info #############
 
-    all_art_ids = []
-    for obj in ref_by_wall_obj:
-        art_id = obj.art_id
-        all_art_ids.append(art_id)
+    art_objs = Art.query.filter(Art.art_id == Wall_Art.art_id).all()    
+    print "CUR ART OBJS: ", art_objs
+    print "CURRENT WALL OBJECT: ", cur_wall_obj
+
     
-    art_ids = []
-    [art_ids.append(item) for item in all_art_ids if item not in art_ids]
-    # print "UNIQUE ART IDS: ", art_ids
+    wall = cur_wall_obj.__dict__
+    wall.pop('_sa_instance_state')
+    print "DATA: ", wall
 
-    art_objs = []
-    for num in art_ids:
-        art_obj = Art.query.filter(Art.art_id == num).first()
-        art_objs.append(art_obj)
-    # print "CUR ART OBJS: ", art_objs
 
-    art_names = []
-    art_heights = []
-    art_widths = []
-    device_codes = []
-    device_distances = []
-
+    art = []
     for i in art_objs:
-        art_obj = Art.query.filter(Art.art_name == i.art_name).first()
+        a = i.__dict__
+        a.pop('_sa_instance_state')
+        art.append(a)
+
+
+
+
+    # all_art_ids = []
+    # for obj in ref_by_wall_obj:
+    #     art_id = obj.art_id
+    #     all_art_ids.append(art_id)
+
+    # art_ids = []
+    # [art_ids.append(item) for item in all_art_ids if item not in art_ids]
+    # # print "UNIQUE ART IDS: ", art_ids
+
+    # art_objs = []
+    # for num in art_ids:
+    #     art_obj = Art.query.filter(Art.art_id == num).first()
+    #     art_objs.append(art_obj)
+
+    # art_names = []
+    # art_heights = []
+    # art_widths = []
+    # device_codes = []
+    # device_distances = []
+
+    # for i in art_objs:
+    #     art_obj = Art.query.filter(Art.art_name == i.art_name).first()
         
-        art_names.append(str(art_obj.art_name))
-        art_heights.append(art_obj.height)
-        art_widths.append(art_obj.width)
-        device_codes.append(str(art_obj.device_code))
-        device_distances.append(art_obj.device_distance)
+    #     art_names.append(str(art_obj.art_name))
+    #     art_heights.append(art_obj.height)
+    #     art_widths.append(art_obj.width)
+    #     device_codes.append(str(art_obj.device_code))
+    #     device_distances.append(art_obj.device_distance)
 
-    data = [wall_name, 
-    center_line, 
-    wall_width,
-    art_names,
-    art_heights,
-    art_widths,
-    device_codes,
-    device_distances]
+    
+    # data = [wall_name, 
+    # center_line, 
+    # wall_width,
+    # art_names,
+    # art_heights,
+    # art_widths,
+    # device_codes,
+    # device_distances]
 
+    # print "wall_name", wall_name
+    # print "center_line", center_line
+    # print 'wall_width', wall_width
+    # print 'art_names', art_names
+    # print 'art_heights', art_heights
+    # print 'art_widths', art_widths
+    # print 'device_codes', device_codes
+    # print 'device_distances', device_distances
 
-    print "wall_name", wall_name
-    print "center_line", center_line
-    print 'wall_width', wall_width
-    print 'art_names', art_names
-    print 'art_heights', art_heights
-    print 'art_widths', art_widths
-    print 'device_codes', device_codes
-    print 'device_distances', device_distances
-
-    return render_template("calc_display.html", data = data)
+    return render_template("calc_display.html", wall =wall , art=art)
 
 
 ######################################

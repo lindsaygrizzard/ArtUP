@@ -103,10 +103,7 @@ class Art(db.Model):
 		"""Provide helpful representation when printed"""
 		return "<Art art_id: %s | art_name: %s>" % (
 										self.art_id, self.art_name)
-
-
-	
-
+   
 
 class Hang_Device(db.Model): #RENAME TO 'DEVICE'
 	"""Specifics for type of hanging devices for artworks 
