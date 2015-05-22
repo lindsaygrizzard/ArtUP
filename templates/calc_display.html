@@ -42,14 +42,22 @@
 		}
 
 		//TOP LEFT CORNER (alpha)
-		art[0].alphaCorner = {lat : endMargin, lon : art[0].upperEdge};
-		console.log('art: ', art);
+		// art[0].leftCorner = {lat : endMargin, lon : art[0].upperEdge};
+		// console.log('art: ', art);
 
 		// top left corners (beta)
-		for(var i = 0; i < art.length -1; i++){
-			x = art[0].alphaCorner.lat + art[i].width + midMargin;
-			console.log(x);
+		var p0 = endMargin //exception case
+		var p = midMargin
+		var leftCorners = [p0]
+		for(i=1; i<art.length-1; i++){
+			leftCorners[i] = leftCorners[i-1] + art[1].width + p
 		}
+		console.log('leftCorners: ',leftCorners)
+
+		// for(var i = 0; i < art.length -1; i++){
+		// 	x = art[0].alphaCorner.lat + art[i].width + midMargin;
+		// 	console.log(x);
+		// }
 
 
 
