@@ -223,89 +223,25 @@ def saved_wall_process(wall_id):
 def calcs(wall_art_id):
     """Graphic Display of Calculations"""
 
-    # #Query for all
-
     #current ref obj
     cur_ref_obj = Wall_Art.query.filter(
                 Wall_Art.wall_art_id == wall_art_id).first()
-
-############### format wall object info #############
-
-    #current wall id
     cur_wall_id = cur_ref_obj.wall_id
     cur_wall_obj = Wall.query.filter(Wall.wall_id == cur_wall_id).first()
     ref_by_wall_obj = Wall_Art.query.filter(Wall_Art.wall_id == cur_wall_id).all()
     wall_name = cur_wall_obj.wall_name
     wall_width = cur_wall_obj.wall_width
     center_line = cur_wall_obj.center_line
-
-
     art_objs = Art.query.filter(Art.art_id == Wall_Art.art_id).all()    
-    print "CUR ART OBJS: ", art_objs
-    print "CURRENT WALL OBJECT: ", cur_wall_obj
 
-    
     wall = cur_wall_obj.__dict__
     wall.pop('_sa_instance_state')
-    print "DATA: ", wall
-
 
     art = []
     for i in art_objs:
         a = i.__dict__
         a.pop('_sa_instance_state')
         art.append(a)
-
-
-
-
-    # all_art_ids = []
-    # for obj in ref_by_wall_obj:
-    #     art_id = obj.art_id
-    #     all_art_ids.append(art_id)
-
-    # art_ids = []
-    # [art_ids.append(item) for item in all_art_ids if item not in art_ids]
-    # # print "UNIQUE ART IDS: ", art_ids
-
-    # art_objs = []
-    # for num in art_ids:
-    #     art_obj = Art.query.filter(Art.art_id == num).first()
-    #     art_objs.append(art_obj)
-
-    # art_names = []
-    # art_heights = []
-    # art_widths = []
-    # device_codes = []
-    # device_distances = []
-
-    # for i in art_objs:
-    #     art_obj = Art.query.filter(Art.art_name == i.art_name).first()
-        
-    #     art_names.append(str(art_obj.art_name))
-    #     art_heights.append(art_obj.height)
-    #     art_widths.append(art_obj.width)
-    #     device_codes.append(str(art_obj.device_code))
-    #     device_distances.append(art_obj.device_distance)
-
-    
-    # data = [wall_name, 
-    # center_line, 
-    # wall_width,
-    # art_names,
-    # art_heights,
-    # art_widths,
-    # device_codes,
-    # device_distances]
-
-    # print "wall_name", wall_name
-    # print "center_line", center_line
-    # print 'wall_width', wall_width
-    # print 'art_names', art_names
-    # print 'art_heights', art_heights
-    # print 'art_widths', art_widths
-    # print 'device_codes', device_codes
-    # print 'device_distances', device_distances
 
     return render_template("calc_display.html", wall =wall , art=art)
 

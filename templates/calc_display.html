@@ -1,86 +1,62 @@
 {% extends 'base.html' %}
 
 {% block content %}
-		<h1> Beautiful Display of Art on Wall Mapping! </h1>
+	<h1> Beautiful Display of Art on Wall Mapping! </h1>
 
-		<script type="text/javascript" src= "/static/scriptCalc.js"> </script>
-		<script src="https://code.jquery.com/jquery.js"></script>
-		<script>
-			var wall = ({{wall|tojson}})
-			console.log(wall)
+	<script type="text/javascript" src= "/static/scriptCalc.js"> </script>
+	<script src="https://code.jquery.com/jquery.js"></script>
+	<script>
+		var wall = ({{wall|tojson}})
+		console.log(wall)
 
-			var art = ({{art|tojson}})
-			console.log(art)
-
-			// var wallName = data[0];
-			// var centerLine = data[1];
-			// var wallWidth = data[2];
-			// var artNames = data[3];
-			// var artHeights = data[4];
-			// var artWidths = data[5];
-			// var deviceCodes = data[6];
-			// var deviceDistances = data[7];
-
-			// wall = {'name' : wallName, 'centerline': centerLine, 
-			//  		'width' : wallWidth}
-			// console.log(wall)
-
-			// arts = []
-
-			// for 
+		var art = ({{art|tojson}})
+		console.log(art)
 
 
+		console.log(wall.wall_id)
+		
+		var totArtWidth = 0;
+		for ( var w = 0; w < art.length; w++ ){
+		    totArtWidth += art[w].width; }
+		console.log(totArtWidth);
+		
+		// total non-art footprint
+		blankWall = wall.wall_width - totArtWidth; 
+		console.log(blankWall)
 
+		// // margins divided evenly 
+		consistantMargins = (blankWall / (art.length + 1));
+		console.log(consistantMargins)
 
+		// middle and end margins
+		offset = consistantMargins * .30; //percentage offset for margins
+		midMargin = consistantMargins - offset; //in between art margins
+		console.log('midMargin: ', midMargin)
+		endMargin = consistantMargins + offset; //margins on both ends
+		console.log('endMargin: ', endMargin)
+		
+		// UPPER EDGE LONGITUDE of all arts
+		for(var i = 0; i < art.length; i ++){
+			var each = art[i].height / 2 + wall.center_line;
+			art[i].upperEdge = each
+		}
 
+		//TOP LEFT CORNER (alpha)
+		art[0].alphaCorner = {lat : endMargin, lon : art[0].upperEdge};
+		console.log('art: ', art);
 
-			// ////////////  START MARGINS ////////////
-
-			// function findTotal(width){
-			// 	var total = 0;
-			// 	for ( var w = 0; w < width.length; w++ ){
-			// 	    total += width[w]; }
-			// 	return total;
-			// }
-
-			// totalArtWidth = findTotal(artWidths); //total art footprint
-			// blankWall = wallWidth - totalArtWidth; // total non-art footprint
-			// // margins divided evenly 
-			// consistantMargins = (blankWall / (artWidths.length + 1));
-			// offset = consistantMargins * .30; //percentage offset for margins
-			// midMargin = consistantMargins - offset; //in between art margins
-			// console.log(midMargin);
-			// endMargin = consistantMargins + offset; //margins on both ends
-			// console.log(endMargin);
-			
-			// //////////// START UPPER EDGE LONGITUDE ////////////
-
-			// upperX = []; // makes array of top(upper) x axis 
-			// for(var i = 0; i < artHeights.length; i ++){
-			// 	var each = artHeights[i] / 2 + centerLine;
-			// 	upperX.push(each);
-			// }
-			// console.log(upperX)
-
-			// //////////// START TOP RIGHT CORNER ////////////
-
-			// //Top left corner
-			// var cornerAlpha = {lat : endMargin, lon : upperX[0]};
-			// console.log(cornerAlpha);
-
-			// // Find beta corners
-			// var betaCorners = []
-			// for(i=0; i<artWidths.length; i++){
-			// 	var lat = artWidths[i] + midMargin;
-			// 	betaCorners.push(lat);
-			// }	
-			// console.log(betaCorners)
+		// top left corners (beta)
+		for(var i = 0; i < art.length -1; i++){
+			x = art[0].alphaCorner.lat + art[i].width + midMargin;
+			console.log(x);
+		}
 
 
 
 
 
-		</script>
+
+	</script>
 {% endblock %}
 
 
