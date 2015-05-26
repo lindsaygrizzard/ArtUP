@@ -2,19 +2,19 @@
 <html>
 <head>
 	<title> HangUP </title>
-	<script src="scripts/main.js"></script>
-	<script src="https://code.jquery.com/jquery.js"></script>
-
 </head>
 <body>
+    <header>
+        <a href = '/'> HangUP </a> <br>
+        <a href = '/logout'>Logout </a> <br>
+        <a href = '/login'>Login </a> <br>
+        
+        {% if "email" not in session %}
+            <a href = '/register'>Register </a>
+        {% endif %}
+    </header>
 
-	<a href = '/'> HangUP </a> <br>
-	<a href = '/logout'>Logout </a> <br>
-	<a href = '/login'>Login </a> <br>
-	
-	{% if "email" not in session %}
-		<a href = '/register'>Register </a>
-	{% endif %}
+
 
 <!-- Show flashed messages -->
     {% with messages = get_flashed_messages() %}
@@ -23,7 +23,6 @@
       {% endfor %}
     {% endwith %}
 
-    <script src="https://code.jquery.com/jquery.js"></script>
 	{% block content %}
 		put content here
 	{% endblock %}

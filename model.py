@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
 # object, where we do most of our interactions (like committing, etc.)
 
-db = SQLAlchemy() 
+db = SQLAlchemy()
 
 #######################################################################
 #Model definitions
@@ -57,6 +57,7 @@ class Wall(db.Model):
 	project_id = db.Column(db.Integer, db.ForeignKey('projects.project_id')) #nullable??
 	wall_name = db.Column(db.String(64), nullable=True, default='Wall')  
 	wall_width = db.Column(db.Integer, nullable=False) #will multiple x 1000
+	wall_height = db.Column(db.Integer, nullable=False)
 	center_line = db.Column(db.Integer, default=58, nullable=True) #nullable for future customization | #will multiple x 1000
 	wall_img = db.Column(db.String(200), nullable=True)
 
@@ -94,8 +95,8 @@ class Art(db.Model):
 	art_name = db.Column(db.String, nullable=True, default='Stock Artwork') 
 	device_code = db.Column(db.String, db.ForeignKey('devices.device_code'))
 	# wall_id = db.Coluzmn(db.Integer, db.ForeignKey('walls.wall_id')) 
-	height = db.Column(db.Integer, nullable=False) #will multiple x 1000
-	width = db.Column(db.Integer, nullable=False) #will multiple x 1000
+	art_height = db.Column(db.Integer, nullable=False) #will multiple x 1000
+	art_width = db.Column(db.Integer, nullable=False) #will multiple x 1000
 	device_distance = db.Column(db.Integer, nullable=True, default=0) 
 	art_img = db.Column(db.String(200), nullable=True)
 

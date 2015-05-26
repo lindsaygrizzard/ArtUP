@@ -1,70 +1,124 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<h1> Beautiful Display of Art on Wall Mapping! </h1>
-
 	<script type="text/javascript" src= "/static/scriptCalc.js"> </script>
 	<script src="https://code.jquery.com/jquery.js"></script>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+	<!-- <link rel="stylesheet" typle="text/css" href="/static/style.css"> -->
+
+	<h1> Beautiful Display of Art on Wall Mapping! </h1>
+
+	<div class="wall">
+	<div>
+
+	</style>
+
+
+
 	<script>
-		var wall = ({{wall|tojson}})
-		console.log(wall)
+	var wall = ({{wall|tojson}})
+	var art = ({{art|tojson}})
+	var totArtWidth = 0;
+	var blankWall;
+	var consistantMargins;
+	var offset;
+	var midMargin;
+	var endMargin;
+	var p0;
+	var p;
+	var xAxis;
 
-		var art = ({{art|tojson}})
-		console.log(art)
+	// FIND TOTAL WIDTH OF ART
+	function allArtsWidths(obj){ 
+		for ( var w = 0; w < obj.length; w++ ){
+		    totArtWidth += obj[w].art_width; }}; 
+	allArtsWidths(art);
 
 
-		console.log(wall.wall_id)
-		
-		var totArtWidth = 0;
-		for ( var w = 0; w < art.length; w++ ){
-		    totArtWidth += art[w].width; }
-		console.log(totArtWidth);
-		
-		// total non-art footprint
+	// MIDDLE AND END MARGINS
+	function Margins() {
 		blankWall = wall.wall_width - totArtWidth; 
-		console.log(blankWall)
-
-		// // margins divided evenly 
 		consistantMargins = (blankWall / (art.length + 1));
-		console.log(consistantMargins)
-
-		// middle and end margins
 		offset = consistantMargins * .30; //percentage offset for margins
-		midMargin = consistantMargins - offset; //in between art margins
-		console.log('midMargin: ', midMargin)
-		endMargin = consistantMargins + offset; //margins on both ends
-		console.log('endMargin: ', endMargin)
-		
-		// UPPER EDGE LONGITUDE of all arts
-		for(var i = 0; i < art.length; i ++){
-			var each = art[i].height / 2 + wall.center_line;
-			art[i].upperEdge = each
+		midMargin = consistantMargins - offset; 
+		endMargin = consistantMargins + offset; 
+	};
+	Margins();
+
+
+	// UPPER EDGE LONGITUDE OF ALL ARTS
+	function upperX(obj) {
+		for(var i = 0; i < obj.length; i ++){
+		    var each = obj[i].art_height / 2 + wall.center_line;
+		    obj[i].upperEdge = each
+	}};
+	upperX(art);
+
+
+	//LEFT CORNER COORDINATES FOR MAPPING
+	function leftCornerCords(obj){
+		p0 = endMargin;
+		p = midMargin;
+		xAxis = [p0]
+		for(i=1; i<obj.length; i++){
+		    xAxis[i] = xAxis[i-1] + obj[i-1].art_width + p
 		}
-
-		//TOP LEFT CORNER (alpha)
-		// art[0].leftCorner = {lat : endMargin, lon : art[0].upperEdge};
-		// console.log('art: ', art);
-
-		// top left corners (beta)
-		var p0 = endMargin //exception case
-		var p = midMargin
-		var leftCorners = [p0]
-		for(i=1; i<art.length-1; i++){
-			leftCorners[i] = leftCorners[i-1] + art[1].width + p
-		}
-		console.log('leftCorners: ',leftCorners)
-
-		// for(var i = 0; i < art.length -1; i++){
-		// 	x = art[0].alphaCorner.lat + art[i].width + midMargin;
-		// 	console.log(x);
-		// }
+		for(var i = 0; i < xAxis.length; i++){
+		    obj[i].leftCorner = {lat : 0};
+		    obj[i].leftCorner.lat = xAxis[i];
+		}};
+	leftCornerCords(art)
 
 
+	//"TAC POINT" FOR USER INFO
+	function findTacPoint(obj){ 
+		for(var i = 0; i < obj.length; i++){
+		    obj[i].leftCorner.lon = obj[i].upperEdge;
+		    
+		    if (obj[i].device_code === 'none'){
+		        obj[i].userDataCord = {lat : obj[i].leftCorner.lat, 
+		                                lon : obj[i].leftCorner.lon};
+		    } else {
+		        obj[i].userDataCord = {lat : (obj[i].leftCorner.lat + 
+		        					  	obj[i].art_width/2),
+		                              lon : (obj[i].leftCorner.lon - 
+		                              	obj[i].device_distance)};
+		}}};
+	findTacPoint(art)
+	
+	
+	//Make an SVG Container and
+	// transform and scale to "invert" the inverted cartesian coordinate system
+ 	var svgContainer = d3.select(".wall").append("svg")
+ 									.attr("translate",(0,wall.wall_height))
+									.attr("scale",(1,-1))
+                                    .attr("width", wall.wall_width)
+                                    .attr("height", wall.wall_height)
+                                    .style("border", "1px dashed black");
 
+  	//Draw the art Rectangles
+ 	function plotCorners(obj){
+ 		for(i=0; i<obj.length; i ++){
+ 			var cornerX = obj[i].leftCorner.lat;
+ 			var invertedCornerY = wall.wall_height - obj[i].leftCorner.lon;
+ 			var rectangle = svgContainer.append("rect")
+                            .attr("x", cornerX)
+                            .attr("y", invertedCornerY)               
+              				.attr("width", obj[i].art_width)
+                        	.attr("height", obj[i].art_height);
+    }};
+    plotCorners(art)
 
 
 
 	</script>
+	
+
+
+
+
 {% endblock %}
 
 
