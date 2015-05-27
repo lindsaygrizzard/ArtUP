@@ -91,14 +91,20 @@ def process_wall_info(project_id):
         center_line = request.args.get("center_line")
         center_fraction = request.args.get("center_line_fraction")
         session['wall_name'] = wall_name
-        # print "PROJECT OBJECT:   ", project_obj
-        # print "PROJECT ID ", cur_project_id
-        # print "SESSION: ", session
+
+        #format integers to pass to javascript
+        adjusted_width = (int((int(wall_width) + float(width_fraction)) * 1000))
+        adjusted_height = (int((int(wall_height) + float(height_fraction)) * 1000))
+        adjusted_center = (int((int(center_line) + float(center_fraction)) * 1000))
+
+        print "adjusted_width", adjusted_width
+        print "adjusted_height", adjusted_height
+        print "adjusted_center", adjusted_center
 
         cur_wall = Wall(wall_name=wall_name,
-                        wall_width=(wall_width + width_fraction) * 1000,
-                        wall_height=(wall_height + height_fraction) * 1000,
-                        center_line=(center_line + center_fraction) * 1000,
+                        wall_width=adjusted_width,
+                        wall_height=adjusted_height,
+                        center_line=adjusted_center,
                         project_id=cur_project_id
                         )
 
@@ -129,19 +135,33 @@ def process_art_info(project_id, wall_id):
         print "WALL ID: ", wall_id
 
         new_art_name = request.args.get("new_art")
+
         art_height = request.args.get("art_height")
+        height_fraction = request.args.get("art_height_fraction")
+
         art_width = request.args.get("art_width")
+        width_fraction = request.args.get("art_width_fraction")
+
         device_code = request.args.get("device_code")
+
         device_distance = request.args.get("device_distance")
+        device_fraction = request.args.get("art_device_fraction")
 
         session['art_name'] = new_art_name
 
+        adjusted_width = (int((int(art_width) + float(width_fraction)) * 1000))
+        adjusted_height = (int((int(art_height) + float(height_fraction)) * 1000))
+        adjusted_device = (int((int(device_distance) + float(device_fraction)) * 1000))
+        print "ART adjusted_width: ", adjusted_width
+        print "ART adjusted_height: ", adjusted_height
+        print "ART adjusted_device: ", adjusted_device
+
         #save info to Art table
         cur_art = Art(art_name=new_art_name,
-                      art_height=art_height,
-                      art_width=art_width,
+                      art_height=adjusted_height,
+                      art_width=adjusted_width,
                       device_code=device_code,
-                      device_distance=device_distance)
+                      device_distance=adjusted_device)
 
         db.session.add(cur_art)
         db.session.commit()
@@ -193,9 +213,6 @@ def saved_wall_process(wall_id):
 @app.route('/calcdisplay/<int:wall_art_id>')
 def calcs(wall_art_id):
 
-    """Graphic Display of Calculations"""
-
-    #current ref obj
     cur_ref_obj = Wall_Art.query.filter(Wall_Art.wall_art_id == wall_art_id).first()
     cur_wall_id = cur_ref_obj.wall_id
     cur_wall_obj = Wall.query.filter(Wall.wall_id == cur_wall_id).first()
@@ -207,8 +224,7 @@ def calcs(wall_art_id):
     wall = cur_wall_obj.__dict__
     #pop off unwanted object
     wall.pop('_sa_instance_state')
-    print "WALL: ", wall
-    print type(wall)
+
     #FOR MVP (REMOVE ON NEXT ITERATION TO ALOW MORE ART THAN WALL)
     art_ids = []
     for obj in ref_by_wall_obj:
@@ -227,15 +243,11 @@ def calcs(wall_art_id):
             return render_template("homepage.html")
 
         else:
-            print "ART OBJECTS: ", art_objs
-            print "ART OBJECT: ", art_objs[0]
             art = []
-            print "ART: ", art
-            print type(art)
             for i in art_objs:
                 a = i.__dict__
+                a.pop('_sa_instance_state')
                 art.append(a)
-                art.pop('_sa_instance_state')
             return render_template("calc_display.html", wall=wall, art=art)
 
 

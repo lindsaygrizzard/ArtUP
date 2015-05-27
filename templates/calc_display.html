@@ -30,6 +30,23 @@
 	var p;
 	var xAxis;
 
+
+	function restoreArtFloats(art){
+		for(var i=0; i<art.length; i++){
+			art[i].art_width = art[i].art_width / 1000;
+			art[i].art_height = art[i].art_height / 1000;
+			art[i].device_distance = art[i].device_distance / 1000;
+		}
+	}
+	restoreArtFloats(art)
+	console.log(art)
+
+	wall.wall_width = wall.wall_width / 1000;
+	wall.wall_height = wall.wall_height / 1000;
+	wall.center_line = wall.center_line / 1000;
+
+	console.log(wall)
+
 	// FIND TOTAL WIDTH OF ART
 	function allArtsWidths(obj){ 
 		for ( var w = 0; w < obj.length; w++ ){
