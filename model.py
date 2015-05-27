@@ -12,114 +12,103 @@ db = SQLAlchemy()
 #######################################################################
 #Model definitions
 
+
 class User(db.Model):
-	"""User of Art Installation website"""
 
-	__tablename__ = "users"
+    """User of Art Installation website"""
 
-	user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	email = db.Column(db.String(64), nullable=False)
-	password = db.Column(db.String(64), nullable=False)
-	zipcode = db.Column(db.String(15), nullable=True)
+    __tablename__ = "users"
 
-	def __repr__(self):
-		"""Provide helpful representation when printed"""
+    user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    email = db.Column(db.String(64), nullable=False)
+    password = db.Column(db.String(64), nullable=False)
+    zipcode = db.Column(db.String(15), nullable=True)
 
-		return "<User user_id:  %s | email: %s>" % (self.user_id, self.email)
+    def __repr__(self):
 
+        """Provide helpful representation when printed"""
 
+        return "<User user_id:  %s | email: %s>" % (self.user_id, self.email)
 
 
 class Project(db.Model):
-	"""Project 'folder' for user to group multiple walls"""
 
-	__tablename__ = "projects"
+    """Project 'folder' for user to group multiple walls"""
 
-	project_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'),) #nullable?? 
-	project_name = db.Column(db.String(64), nullable=True, default='Project')
+    __tablename__ = "projects"
 
-	def __repr__(self):
-		"""Provide helpful representation when printed"""
+    project_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    project_name = db.Column(db.String(64), nullable=True, default='Project')
 
-		return "<Project project_id: %s | user_id: %s | project_name: %s>" % (
-									self.project_id, self.user_id, self.project_name)
+    def __repr__(self):
 
+        """Provide helpful representation when printed"""
 
+        return "<Project project_id: %s | user_id: %s | project_name: %s>" % (
+               self.project_id, self.user_id, self.project_name)
 
 
 class Wall(db.Model):
-	"""Virtual 'wall' for calculating horizontal margins"""
 
-	__tablename__ = "walls"
+    """Virtual 'wall' for calculating horizontal margins"""
 
-	wall_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	project_id = db.Column(db.Integer, db.ForeignKey('projects.project_id')) #nullable??
-	wall_name = db.Column(db.String(64), nullable=True, default='Wall')  
-	wall_width = db.Column(db.Integer, nullable=False) #will multiple x 1000
-	wall_height = db.Column(db.Integer, nullable=False)
-	center_line = db.Column(db.Integer, default=58, nullable=True) #nullable for future customization | #will multiple x 1000
-	wall_img = db.Column(db.String(200), nullable=True)
+    __tablename__ = "walls"
 
-	def __repr__(self):
-		"""Provide helpful representation when printed"""
+    wall_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.project_id'))
+    wall_name = db.Column(db.String(64), nullable=True, default='Wall')
+    wall_width = db.Column(db.Integer, nullable=False)
+    wall_height = db.Column(db.Integer, nullable=False)
+    center_line = db.Column(db.Integer, default=58, nullable=True)
+    wall_img = db.Column(db.String(200), nullable=True)
 
-		return "<Wall wall_id: %s | project_id: %s | wall_name: %s>" % (
-												self.wall_id, self.project_id, self.wall_name)
+    def __repr__(self):
 
+        """Provide helpful representation when printed"""
 
+        return "<Wall wall_id: %s | project_id: %s | wall_name: %s>" % (
+               self.wall_id, self.project_id, self.wall_name)
 
 
 class Wall_Art(db.Model):
-	"""Reference table to allow multiple artwork id's on several wall iterations"""
 
-	__tablename__ = "walls_art"
+    """Reference table to allow multiple artwork id's on several wall iterations"""
 
-	wall_art_id = db.Column(db.Integer, autoincrement=True, primary_key=True) #necessary???
-	wall_id = db.Column(db.Integer, db.ForeignKey('walls.wall_id')) 
-	art_id = db.Column(db.Integer, db.ForeignKey('arts.art_id'), nullable=False) 
+    __tablename__ = "walls_art"
 
-	def __repr__(self):
-		"""Provide helpful representation when printed"""
-		return "<Wall wall_art_id: %s | wall_id: %s | art_id: %s>" % (
-									self.wall_art_id, self.wall_id, self.art_id)
+    wall_art_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    wall_id = db.Column(db.Integer, db.ForeignKey('walls.wall_id'))
+    art_id = db.Column(db.Integer, db.ForeignKey('arts.art_id'), nullable=False)
+
+    def __repr__(self):
+
+        """Provide helpful representation when printed"""
+        return "<Wall wall_art_id: %s | wall_id: %s | art_id: %s>" % (
+               self.wall_art_id, self.wall_id, self.art_id)
 
 
 class Art(db.Model):
-	"""Data for individual dimensions of specific art pieces (calculating 
-		longitudinal margins)"""
 
-	__tablename__ = "arts"
+    """Data for individual dimensions of specific art pieces (calculating
+        longitudinal margins)"""
 
-	art_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	art_name = db.Column(db.String, nullable=True, default='Stock Artwork') 
-	device_code = db.Column(db.String, db.ForeignKey('devices.device_code'))
-	# wall_id = db.Coluzmn(db.Integer, db.ForeignKey('walls.wall_id')) 
-	art_height = db.Column(db.Integer, nullable=False) #will multiple x 1000
-	art_width = db.Column(db.Integer, nullable=False) #will multiple x 1000
-	device_distance = db.Column(db.Integer, nullable=True, default=0) 
-	art_img = db.Column(db.String(200), nullable=True)
+    __tablename__ = "arts"
 
-	def __repr__(self):
-		"""Provide helpful representation when printed"""
-		return "<Art art_id: %s | art_name: %s>" % (
-										self.art_id, self.art_name)
-   
+    art_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    art_name = db.Column(db.String, nullable=True, default='Stock Artwork')
+    device_code = db.Column(db.String, nullable=False, default='none')
+    art_height = db.Column(db.Integer, nullable=False)
+    art_width = db.Column(db.Integer, nullable=False)
+    device_distance = db.Column(db.Integer, nullable=True, default=0)
+    art_img = db.Column(db.String(200), nullable=True)
 
-class Hang_Device(db.Model): #RENAME TO 'DEVICE'
-	"""Specifics for type of hanging devices for artworks 
-	and measurement from device to top of piece"""
+    def __repr__(self):
 
-	__tablename__ = "devices"
+        """Provide helpful representation when printed"""
+        return "<Art art_id: %s | art_name: %s>" % (
+               self.art_id, self.art_name)
 
-	#'1' , '2', corners, cleat
-	
-	device_code = db.Column(db.String, primary_key=True) 
-
-	def __repr__(self):
-		"""Provide helpful representation when printed"""
-
-		return "<Device device_code : %s>" % (self.device_code)
 
 ###########################################################################
 #Helper Functions

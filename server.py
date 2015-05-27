@@ -16,8 +16,11 @@ def index():
 
     """Homepage."""
 
-    # print "SESSION", session
-    return render_template("homepage.html")
+    if 'email' not in session:
+        flash('You must Log In or Register before viewing projects')
+    else:
+        flash('Hello %s' % session['email'])
+    return render_template('homepage.html')
 
 
 @app.route('/user-profile')
@@ -82,17 +85,20 @@ def process_wall_info(project_id):
         cur_project_id = project_obj.project_id
         wall_name = request.args.get("new_wall")
         wall_width = request.args.get("wall_width")
+        width_fraction = request.args.get("wall_width_fraction")
         wall_height = request.args.get("wall_height")
+        height_fraction = request.args.get("wall_height_fraction")
         center_line = request.args.get("center_line")
+        center_fraction = request.args.get("center_line_fraction")
         session['wall_name'] = wall_name
         # print "PROJECT OBJECT:   ", project_obj
         # print "PROJECT ID ", cur_project_id
         # print "SESSION: ", session
 
         cur_wall = Wall(wall_name=wall_name,
-                        wall_width=wall_width,
-                        wall_height=wall_height,
-                        center_line=center_line,
+                        wall_width=(wall_width + width_fraction) * 1000,
+                        wall_height=(wall_height + height_fraction) * 1000,
+                        center_line=(center_line + center_fraction) * 1000,
                         project_id=cur_project_id
                         )
 
@@ -201,7 +207,8 @@ def calcs(wall_art_id):
     wall = cur_wall_obj.__dict__
     #pop off unwanted object
     wall.pop('_sa_instance_state')
-
+    print "WALL: ", wall
+    print type(wall)
     #FOR MVP (REMOVE ON NEXT ITERATION TO ALOW MORE ART THAN WALL)
     art_ids = []
     for obj in ref_by_wall_obj:
@@ -220,11 +227,15 @@ def calcs(wall_art_id):
             return render_template("homepage.html")
 
         else:
+            print "ART OBJECTS: ", art_objs
+            print "ART OBJECT: ", art_objs[0]
             art = []
+            print "ART: ", art
+            print type(art)
             for i in art_objs:
                 a = i.__dict__
-                a.pop('_sa_instance_state')
                 art.append(a)
+                art.pop('_sa_instance_state')
             return render_template("calc_display.html", wall=wall, art=art)
 
 

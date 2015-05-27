@@ -7,16 +7,53 @@
 	<label> New Wall Name  
 	    <input type="text" name="new_wall"> <br>
 	</label>
+
 	<label> Wall Width 
-	    <input type="text" name="wall_width"> <br>
+	    <input type="text" name="wall_width"> 
+	    <select name ="wall_width_fraction">
+	    	<option value="0.000"> 0 </option> 
+	    	<option value="0.125"> 1/8 </option> 
+	    	<option value="0.250"> 1/4 </option> 
+	    	<option value="0.375"> 3/8 </option> 
+	    	<option value="0.500"> 1/2 </option> 
+	    	<option value="0.625"> 5/8 </option> 
+	    	<option value="0.750"> 3/4 </option> 
+	    	<option value="0.875"> 7/8 </option> 
+	    </select>
+	    <br>
+
 	</label>
-	
+
 	<label> Wall Height (Approximation is fine) 
-	    <input type="text" name="wall_height"> <br>
+	    <input type="text" name="wall_height"> 
+	    <select name ="wall_height_fraction">
+	    	<option value="0.000"> 0 </option> 
+	    	<option value="0.125"> 1/8 </option> 
+	    	<option value="0.250"> 1/4 </option> 
+	    	<option value="0.375"> 3/8 </option> 
+	    	<option value="0.500"> 1/2 </option> 
+	    	<option value="0.625"> 5/8 </option> 
+	    	<option value="0.750"> 3/4 </option> 
+	    	<option value="0.875"> 7/8 </option> 
+	    </select>
+
+	    <br>
 	</label>
 
 	<label> Center Line (see tips for help)
-	    <input type="text" name="center_line"> <br>
+	    <input type="text" name="center_line">
+	    <select name="center_line_fraction">
+	    	<option value="0.000"> 0 </option> 
+	    	<option value="0.125"> 1/8 </option> 
+	    	<option value="0.250"> 1/4 </option> 
+	    	<option value="0.375"> 3/8 </option> 
+	    	<option value="0.500"> 1/2 </option> 
+	    	<option value="0.625"> 5/8 </option> 
+	    	<option value="0.750"> 3/4 </option> 
+	    	<option value="0.875"> 7/8 </option> 
+	    </select>
+
+	    <br>
 	</label>	 
 
 	<input type="submit" value="Submit">
