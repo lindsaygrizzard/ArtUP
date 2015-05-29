@@ -9,12 +9,32 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
 <!-- <link rel="stylesheet" typle="text/css" href="/static/style.css"> -->
 
+
+
+
 <h1> Beautiful Display of Art on Wall Mapping! </h1>
 
-<div class="wall">
 
-<div>
 
+<table style="width:30%">
+  <tr>
+    <td id = 'name'>Current Art</td>
+    <td id ='displayInfo'>X</td> 
+    <td id ='displayInfoY'>Y</td>
+  </tr>
+
+</table>
+
+
+
+<div class="wall"><div>
+
+
+<style>
+.displayInfo {
+	background-color: lightblue;
+}
+</style>
 
 
 
@@ -26,12 +46,13 @@
 	var totArtWidth = 0;
 	var blankWall;
 	var consistantMargins;
-	var offset;
 	var midMargin;
 	var endMargin;
 	var p0;
 	var p;
 	var xAxis;
+
+
 	function restoreArtFloats(art){
 		for(var i=0; i<art.length; i++){
 			art[i].art_width = art[i].art_width / 1000;
@@ -44,29 +65,35 @@
 	wall.wall_width = wall.wall_width / 1000;
 	wall.wall_height = wall.wall_height / 1000;
 	wall.center_line = wall.center_line / 1000;
+	wall.offset_percent = wall.offset_percent / 1000;
 	console.log(wall)
+
+
 	// FIND TOTAL WIDTH OF ART
 	function allArtsWidths(obj){ 
 		for ( var w = 0; w < obj.length; w++ ){
 		    totArtWidth += obj[w].art_width; }}; 
-	allArtsWidths(art);
+
+	
+
 	// MIDDLE AND END MARGINS
 	function Margins() {
 		blankWall = wall.wall_width - totArtWidth; 
 		consistantMargins = (blankWall / (art.length + 1));
-		offset = consistantMargins * .30; //percentage offset for margins
+		var offset = consistantMargins * wall.offset_percent;
 		midMargin = consistantMargins - offset; 
 		if (art.length === 2) {
-			endMargin = consistantMargins + offset * .5;
+			endMargin = consistantMargins + offset / 2;
 		} else { 
 			endMargin = consistantMargins + offset;
 	}};
-	Margins();
 
+
+	//ADD THIS TO FUNCTION ABOVE??
 	if (art.length === 1){
 		endMargin = consistantMargins
-		
 	}
+
 
 	// UPPER EDGE LONGITUDE OF ALL ARTS
 	function upperX(obj) {
@@ -74,7 +101,9 @@
 		    var each = obj[i].art_height / 2 + wall.center_line;
 		    obj[i].upperEdge = each
 	}};
-	upperX(art);
+
+
+
 	//LEFT CORNER COORDINATES FOR MAPPING
 	function leftCornerCords(obj){
 		p0 = endMargin;
@@ -88,7 +117,8 @@
 		    obj[i].leftCorner.X = xAxis[i];
 	}};
 
-	leftCornerCords(art)
+
+
 	//"TAC POINT" FOR USER INFO
 	function findTacPoint(obj){ 
 		for(var i = 0; i < obj.length; i++){
@@ -104,40 +134,58 @@
 		                              	obj[i].device_distance)};
 	}}};
 
-	findTacPoint(art)
 
 		
-	function dynamicRectangles(){ 
+	function dynamicRectangles(){ 	
 		var svgContainer = d3.select(".wall")
 									.append("svg")
-									.attr("translatee",(0,wall.wall_height))
-									.attr("scale",(1,-1))
+									
 	                                .attr("width", wall.wall_width)
 	                                .attr("height", wall.wall_height)
-	                                .style("border", "1px dashed black");
+	                                .style("border", "1px dashed black")
+	                                ;
 
 	        var drag = d3.behavior.drag()
-	            .on("drag", dragmove);
+	            .on("drag", dragMove)
+	         
+
 
 	        var rect = svgContainer.selectAll(".draggableRectangle").data(art).enter()
 	        		.append('rect')
 	        		.attr('class', 'draggableRectangle')
+	        		.attr('name', function(d) { return d.art_name; })
 	                 .attr('x', function(d) { return d.leftCorner.X; })
-	                 .attr('y', function(d, i) {return wall.wall_height - d.leftCorner.Y; })
+	                 .attr('y', function(d) {return wall.wall_height - d.leftCorner.Y; })
 	                 .attr('width', function(d) { return d.art_width; })
 	                 .attr('height', function(d) { return d.art_height; })
 	                 .style("fill", "red")
 	                 .call(drag);
 
-	        function dragmove(d) {
-	         d3.select(this)
-	             .attr("x", function () {return d3.event.x})
-	             .attr("y", function () {return d3.event.y});
-	        }}
-	        
+	        var images = rect.selectAll("")
+
+	        function dragMove(d) {
+		         d3.select(this)
+		             .attr("x", function () {return d3.event.x})
+		             .attr("y", function () {return d3.event.y});
+		         var X = document.getElementById("displayInfo");
+		             X.innerHTML = d3.event.x;
+		         var Y = document.getElementById("displayInfoY");
+		             Y.innerHTML = wall.wall_height -d3.event.y;
+                 var name = document.getElementById("name");
+         	    	 name.innerHTML = d.art_name;
+		        // console.log(name, d3.event.x, d3.event.y)
+	     
+	         }
+	}
+
+
+	allArtsWidths(art);
+	Margins();
+	upperX(art);
+	leftCornerCords(art)
+	findTacPoint(art)
 	dynamicRectangles()
-
-
+	 
 
 </script>
 
