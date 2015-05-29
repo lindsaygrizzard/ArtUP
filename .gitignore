@@ -1,1 +1,4 @@
 venv/
+server.pyc
+model.pyc
+artup.db

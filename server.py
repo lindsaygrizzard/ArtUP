@@ -246,7 +246,8 @@ def calcs(wall_art_id):
             art = []
             for i in art_objs:
                 a = i.__dict__
-                a.pop('_sa_instance_state')
+                if '_sa_instance_state' in a:
+                    a.pop('_sa_instance_state')
                 art.append(a)
             return render_template("calc_display.html", wall=wall, art=art)
 
