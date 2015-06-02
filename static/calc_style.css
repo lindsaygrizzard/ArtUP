@@ -1,0 +1,19 @@
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: 10px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+th, td {
+    padding: 10px;
+}
+
+.user_view_output {
+    color: orange;
+    text-align: center;
+}
+
+
+

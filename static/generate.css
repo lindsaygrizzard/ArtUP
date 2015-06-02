@@ -1,0 +1,56 @@
+body {
+  font-family: 'Raleway', sans-serif;
+  background-color: #ffedc9;
+  color: #5b5b45;
+}
+
+
+
+select {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  font-size: 13px;
+  height: auto;
+  margin: 0;
+  outline: 0;
+  padding: 5px;
+  width: 50%;
+  background-color: #c69869;
+  color: #5b5b45;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+
+
+select.offset {
+     width: 38%;
+}
+
+input[type="submit"] {
+  padding: 4px 30px 4px 30px;
+  color: #f2f4ff;
+  background-color: #5a533e;
+  font-size: 18px;
+  text-align: center;
+  font-style: normal;
+  border-radius: 5px;
+  border: 1px solid #494434;
+  border-width: 1px 1px 3px;
+  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+}
+
+input[type="submit"]:hover {
+  background-color: #5a533e;
+}
+
+
+
+@media screen and (min-width: 480px) {
+
+  form {
+    max-width: 480px;
+  }
+
+}

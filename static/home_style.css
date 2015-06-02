@@ -1,0 +1,103 @@
+body { 
+  background-color: #c67c4c;
+  background-image: url('/static/img/museum.jpg');
+  background-size: 1900px;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin-bottom: 6%;
+
+}
+
+.primary-title {
+  color: #fcf3cc;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 105px;
+  font-weight: normal;
+  line-height: 1.3;
+  padding-top: 3%;
+  text-shadow: 3px 3px 10px #4a4d68;
+}
+
+p {
+ margin-top: 3%;
+ color: #fff1e2;
+ font-weight: 300;
+ font-size: 1em;
+ font-family: 'Raleway', sans-serif;
+ font-weight: 400;
+ text-shadow: 1px 1px 8px black;
+}
+
+button {
+  background-color: #dbac6f;
+}
+
+button:hover {
+  background-color: #d69651;
+}
+
+#new-project {
+  color: #5a533e;
+  font-size: 1.75em;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+#new-project:visited {
+  color: #5a533e;
+}
+
+#new-project:hover {
+  color: #3b3f2e;
+}
+
+#new-project:active {
+  color: #2b2820;
+}
+
+
+@media (max-width: 600px) {
+  body {
+    margin-bottom: 20%;
+  }
+  .primary-title{
+    font-size: 64px;
+  }
+  p {
+    padding-top: 285px;
+    padding-bottom: 7%;
+  }
+
+}
+
+@media only screen
+  and (min-width: 600px) 
+  and (max-width: 1200px) {
+  body {
+    margin-bottom: 12%;
+  }
+  .primary-title{
+    font-size: 80px;
+  }
+  p {
+    padding-top: 220px;
+    padding-bottom: 3.5%;
+  }
+
+}
+
+@media only screen
+  and (min-width: 1200px) 
+  and (max-width: 1800px) {
+  body {
+    margin-bottom: 8%;
+  }
+  .primary-title{
+    font-size: 100px;
+  }
+  p {
+    padding-top: 200px;
+    padding-bottom: 50px;
+  }
+
+}
+

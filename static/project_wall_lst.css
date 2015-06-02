@@ -1,0 +1,62 @@
+
+body {
+  font-family: 'Raleway', sans-serif;
+  background-color: #ffedc9;
+  color: black;
+}
+button {
+  box-shadow: 1px 1px 10px #494434;
+  margin-top: 4%; 
+}
+#new-project {
+  color: #494434;
+  font-size: 30px;
+}
+
+#new-project:hover {
+  color: #c58830;
+}
+
+h4 {
+    text-align: center;
+}
+
+table {
+  margin-left: 25%;
+}
+
+th {
+  padding-bottom: 4%;
+  font-size: 28px;
+  color: #5b5b45
+}
+tr {
+  font-size: 20px;
+  text-align: left;
+  border-bottom: 1px solid #494434;
+}
+#list{
+  color: #494434;
+}
+#list:hover{
+  color: #c58830;
+}
+
+h3 {
+  margin-top: 5%;
+  margin-right: 25%;
+  text-align: right;
+}
+
+p {
+  max-width: 15%;
+  float: right;
+  text-align: justify;
+  margin-right: 25%;
+}
+
+
+
+
+
+
