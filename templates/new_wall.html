@@ -1,64 +1,82 @@
 {% extends 'base.html' %}
+
+{% block head %}
+ <link rel="stylesheet" type="text/css" href="/static/wallform.css">
+{% endblock %}
 {% block content %}
 
-<h1> New Wall Page for Saved Project: {{project_name}} </h1>
 
-<form action ="/project/{{ project_id }}/wall_process/artform">
-	<label> New Wall Name  
-	    <input type="text" name="new_wall"> <br>
-	</label>
 
-	<label> Wall Width 
-	    <input type="text" name="wall_width"> 
-	    <select name ="wall_width_fraction">
-	    	<option value="0.000"> 0 </option> 
-	    	<option value="0.125"> 1/8 </option> 
-	    	<option value="0.250"> 1/4 </option> 
-	    	<option value="0.375"> 3/8 </option> 
-	    	<option value="0.500"> 1/2 </option> 
-	    	<option value="0.625"> 5/8 </option> 
-	    	<option value="0.750"> 3/4 </option> 
-	    	<option value="0.875"> 7/8 </option> 
-	    </select>
-	    <br>
+<div class="container">
+	<div class="row">
+		<div class="col-md-1">
+			<h1 class = "title"> New Wall Page for Saved Project: {{project_name}} </h1>
 
-	</label>
-
-	<label> Wall Height (Approximation is fine) 
-	    <input type="text" name="wall_height"> 
-	    <select name ="wall_height_fraction">
-	    	<option value="0.000"> 0 </option> 
-	    	<option value="0.125"> 1/8 </option> 
-	    	<option value="0.250"> 1/4 </option> 
-	    	<option value="0.375"> 3/8 </option> 
-	    	<option value="0.500"> 1/2 </option> 
-	    	<option value="0.625"> 5/8 </option> 
-	    	<option value="0.750"> 3/4 </option> 
-	    	<option value="0.875"> 7/8 </option> 
-	    </select>
-
-	    <br>
-	</label>
-
-	<label> Center Line (see tips for help)
-	    <input type="text" name="center_line">
-	    <select name="center_line_fraction">
-	    	<option value="0.000"> 0 </option> 
-	    	<option value="0.125"> 1/8 </option> 
-	    	<option value="0.250"> 1/4 </option> 
-	    	<option value="0.375"> 3/8 </option> 
-	    	<option value="0.500"> 1/2 </option> 
-	    	<option value="0.625"> 5/8 </option> 
-	    	<option value="0.750"> 3/4 </option> 
-	    	<option value="0.875"> 7/8 </option> 
-	    </select>
-
-	    <br>
-	</label>	 
-
-	<input type="submit" value="Submit">
-</form>
-
+			<form action ="/project/{{ project_id }}/wall_process/artform">
+				<fieldset>
+					<legend> New Wall Information </legend>
+					<p><label class="name"> New Wall Name </label>
+					<input class="name_input" type="text" name="new_wall"> 
+					</p>			
+					<p><label> Offset (mid and end margin) Percentage</label>
+					    <select name ="offset_percent">
+					    	<option value="0.100"> 10% </option> 
+					    	<option value="0.200"> 20% </option> 
+					    	<option value="0.300"> 30% </option> 
+					    	<option value="0.400"> 40% </option> 
+					    	<option value="0.500"> 50% </option> 
+					    	<option value="0.600"> 60% </option> 
+					    	<option value="0.700"> 70% </option> 
+					    	<option value="0.800"> 80% </option> 
+					    	<option value="0.900"> 90% </option> 
+					    </select>
+					</p>			
+					<p><label> Wall Width </label>
+					    <input type="text" name="wall_width"> 
+					    <select name ="wall_width_fraction">
+					    	<option value="0.000"> 0 </option> 
+					    	<option value="0.125"> 1/8 </option> 
+					    	<option value="0.250"> 1/4 </option> 
+					    	<option value="0.375"> 3/8 </option> 
+					    	<option value="0.500"> 1/2 </option> 
+					    	<option value="0.625"> 5/8 </option> 
+					    	<option value="0.750"> 3/4 </option> 
+					    	<option value="0.875"> 7/8 </option> 
+					    </select>
+					</p>
+					<p><label> Wall Height (Approximation is fine) </label>
+					    <input type="text" name="wall_height"> 
+					    <select name ="wall_height_fraction">
+					    	<option value="0.000"> 0 </option> 
+					    	<option value="0.125"> 1/8 </option> 
+					    	<option value="0.250"> 1/4 </option> 
+					    	<option value="0.375"> 3/8 </option> 
+					    	<option value="0.500"> 1/2 </option> 
+					    	<option value="0.625"> 5/8 </option> 
+					    	<option value="0.750"> 3/4 </option> 
+					    	<option value="0.875"> 7/8 </option> 
+					    </select>
+					</p>
+					<p><label> Center Line (see tips for help) </label>
+					    <input type="text" name="center_line">
+					    <select name="center_line_fraction">
+					    	<option value="0.000"> 0 </option> 
+					    	<option value="0.125"> 1/8 </option> 
+					    	<option value="0.250"> 1/4 </option> 
+					    	<option value="0.375"> 3/8 </option> 
+					    	<option value="0.500"> 1/2 </option> 
+					    	<option value="0.625"> 5/8 </option> 
+					    	<option value="0.750"> 3/4 </option> 
+					    	<option value="0.875"> 7/8 </option> 
+					    </select>
+					</p>	 
+					<p><input type="submit" value="Submit">
+					</p>
+				</form>
+			</fieldset>
+		</div>
+	</div>
+</div>
 
 
 

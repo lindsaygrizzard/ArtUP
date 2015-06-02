@@ -1,23 +1,51 @@
 {% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/profile_style.css">
+{% endblock %}
+
 {% block content %}
 
+<div class="new-project">
+   <button> <a href= '/new-project' data-hover="Add New Project?"> 
+   		<span id="new-project">Add New Project?</span>
+            </a>
+    </button>
+</div>
 
-<h1>Hello  {{ email }} !</h1>
 
-	<div id="project-list" class="row">
-	    
-	    <a href= '/new-project'> <p>Add New Project?</p> <br> </a>
+<div class="help-info-title">
+    <h3> Helpful Tips </h3>
+    <p> A center line the center point at which all of your artwork will pass.
+        If you have no funiture, a good centerline is 58in. If you have funiture, make
+        sure to account for that in your centerline choice. (Add the height of the funiture piece for example) 
+    </p>
+</div> 
 
-	   		
 
-	      	{% for project in project_list %}
 
-			    <a href= '/project/{{ project.project_id }}'>
-			    {{ project.project_name }} 
-			    <br>
-				</a>
-			    
-	      	{% endfor %}
-	</div>
+<div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Projects</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% for project in project_list %}
+            <tr scope="col">
+               <td><a href = '/project/{{ project.project_id }}' 
+                id = "list" data-hover="{{ project.project_name }}">
+                {{ project.project_name }}
+                </a><td>
+            <tr>
+
+          {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+
+
 
 {% endblock %}

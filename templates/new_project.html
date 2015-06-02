@@ -1,17 +1,18 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}\
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/new_project.css">
+{% endblock %}
+
 {% block content %}
-
-<h1> New Project Page! </h1>
-
-<form action ="/new-project-process"> 
-	<label> New Project Folder Name
-	    <input type="text" name="new_project">
-	 </label>
-
-	<input type="submit" value="Submit">
-</form>
-
-
-
+    <div class="container">
+        <h1 class="test"> What would you like to call this project? </h1>
+            <form action ="/new-project-process"> 
+                <fieldset>
+                    <label> Project Name </lable>
+            	        <p><input type="text" name="new_project"></p>
+            	        <p><input type="submit" value="Submit"></p>
+                </fieldset>
+            </form>
+    </div>
 
 {% endblock %}

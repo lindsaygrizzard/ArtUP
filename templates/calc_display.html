@@ -5,7 +5,6 @@
 {% block head %}
  <link rel="stylesheet" type="text/css" href="/static/calc_style.css">
 
-<script type="text/javascript" src= "/static/scriptCalc.js"> </script>
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
@@ -25,10 +24,11 @@
 		<p><table>
 			<tr>
 			  <th>Art Name</th>
-			  <th>Origin X Corner </th>		
-			  <th>Origin X Corner </th>
-			  <th>Changed X Corner </th>		
-			  <th>Changed X Corner </th>
+			  <th>Origin X Peg </th>		
+			  <th>Origin Y Peg </th>
+			  <th>New X Peg </th>		
+			  <th>New Y Peg </th>
+			  <th>Device Type </th>
 			</tr>
 			{% for item in art %}
 			 <tr> 
@@ -38,6 +38,7 @@
 				<td id ='{{item.art_name}}_OY'> _</td>  
 				<td id ='{{item.art_name}}_X'> _</td>
 				<td id ='{{item.art_name}}_Y'> _</td>  
+				<td id ='{{item.art_name}}_D'> _</td> 
 			  </tr>
 			{% endfor %} 
 		</table>
@@ -49,8 +50,8 @@
 
 
 	<script>
-		var wall = ({{wall|tojson}})
-		var art = ({{art|tojson}})
+		var wall = ({{wall|tojson}});
+		var art = ({{art|tojson}});
 		var totArtWidth = 0;
 		var blankWall;
 		var consistantMargins;
@@ -70,7 +71,7 @@
 			}
 		}
 		
-		restoreArtFloats(art)
+		restoreArtFloats(art);
 
 
 		wall.wall_width = wall.wall_width / 1000;
@@ -79,14 +80,13 @@
 		wall.offset_percent = wall.offset_percent / 1000;
 
 
-
-
 		// FIND TOTAL WIDTH OF ART
 		function allArtsWidths(obj){ 
 			for ( var w = 0; w < obj.length; w++ ){
-			    totArtWidth += obj[w].art_width; }}; 
+			    totArtWidth += obj[w].art_width; 
+			}
+		} 
 
-		
 
 		// MIDDLE AND END MARGINS
 		function Margins() {
@@ -98,8 +98,8 @@
 				endMargin = consistantMargins + offset / 2;
 			} else { 
 				endMargin = consistantMargins + offset;
-		}};
-
+			}
+		}
 
 		//ADD THIS TO FUNCTION ABOVE??
 		if (art.length === 1){
@@ -107,46 +107,49 @@
 		}
 
 
+
 		// UPPER EDGE LONGITUDE OF ALL ARTS
 		function upperX(obj) {
 			for(var i = 0; i < obj.length; i ++){
 			    var each = obj[i].art_height / 2 + wall.center_line;
-			    obj[i].upperEdge = each
-		}};
-
+			    obj[i].upperEdge = each;
+			}
+		}
 
 
 		//LEFT CORNER COORDINATES FOR MAPPING
 		function leftCornerCords(obj){
 			p0 = endMargin;
 			p = midMargin;
-			xAxis = [p0]
+			xAxis = [p0];
 			for(i=1; i<obj.length; i++){
-			    xAxis[i] = xAxis[i-1] + obj[i-1].art_width + p
+			    xAxis[i] = xAxis[i-1] + obj[i-1].art_width + p;
 			}
 			for(var i = 0; i < xAxis.length; i++){
 			    obj[i].leftCorner = {X : 0};
 			    obj[i].leftCorner.X = xAxis[i];
-		}};
-
+			}
+		}
 
 
 		//"TAC POINT" FOR USER INFO
-		function findTacPoint(obj){ 
+		function findPegPoint(obj){ 
 			for(var i = 0; i < obj.length; i++){
 			    obj[i].leftCorner.Y = obj[i].upperEdge;
 			    obj[i].leftCorner.Y = Math.round(obj[i].leftCorner.Y * 100) / 100;
 			    obj[i].leftCorner.X = Math.round(obj[i].leftCorner.X * 100) / 100;
 
 			    if (obj[i].device_code === 'none'){
-			        obj[i].userDataCord = {X : obj[i].leftCorner.X, 
+			        obj[i].pegPoint = {X : obj[i].leftCorner.X, 
 			                                Y : obj[i].leftCorner.Y};
 			    } else {
-			        obj[i].userDataCord = {X : (obj[i].leftCorner.X + 
+			        obj[i].pegPoint = {X : (obj[i].leftCorner.X + 
 			        					  	obj[i].art_width/2),
 			                              Y : (obj[i].leftCorner.Y - 
 			                              	obj[i].device_distance)};
-		}}};
+				}
+			}
+		}
 
 
 		function dynamicRectangles(){ 	
@@ -154,69 +157,86 @@
 			scale = width * wall.wall_height / 2;
 			width = window.innerWidth;
 			scale = width * wall.wall_height
-			var svgContainer = d3.select(".wall")
+			var svg = d3.select(".wall")
 										.append("svg")
 		                                .attr("width", wall.wall_width)
 		                                .attr("height", wall.wall_height)
-		                                .style("border", "1px dashed black")
-		                                ;
+		                                .style("border", "1px dashed black");
 
-		        var drag = d3.behavior.drag()
-		            .on("drag", dragMove)
-		         
-
-
-		        var rect = svgContainer.selectAll(".draggableRectangle").data(art).enter()
-		        		.append('rect')
-		        		.attr('class', 'draggableRectangle')
-		        		.attr('name', function(d) { return d.art_name; })
-		                 .attr('x', function(d) { return d.leftCorner.X; })
-		                 .attr('y', function(d) {return wall.wall_height - d.leftCorner.Y; })
-		                 .attr('Ox', function(d) { return d.leftCorner.X; })
-		                 .attr('Oy', function(d) {return wall.wall_height - d.leftCorner.Y; })
-		                 .attr('width', function(d) { return d.art_width; })
-		                 .attr('height', function(d) { return d.art_height; })
-		                 .style("fill", "red")
-		                 .call(drag);
-		        var images = rect.selectAll("")
-
-
+	        var drag = d3.behavior.drag()
+	            .on("drag", dragMove);
 		        
+	        var rect = svg.selectAll(".draggableRectangle").data(art).enter()
+	        		.append('image')
+	        		.attr('class', 'draggableRectangle')
+	        		.attr('name', function(d) { return d.art_name; })
+	        		.attr('device', function(d) { return d.device_code})
+	                .attr('x', function(d) { return d.leftCorner.X; })
+	                .attr('y', function(d) {return wall.wall_height - d.leftCorner.Y; })
+	                .attr('Ox', function(d) { return d.leftCorner.X; })
+	                .attr('Oy', function(d) {return wall.wall_height - d.leftCorner.Y; })
+	                .attr('width', function(d) { return d.art_width; })
+	                .attr('height', function(d) { return d.art_height; })
+	                .attr("xlink:href", function(d) { return d.art_img; })
+	                .call(drag);
+	        
       			
-		        function dragMove(d) {
-			         d3.select(this)
-			             .attr("x", function () {return d3.event.x})
-			             .attr("y", function () {return d3.event.y});
-			         var X = document.getElementById(d.art_name+"_X");
-			             X.innerHTML = Math.round(d3.event.x);
-			         var Y = document.getElementById(d.art_name+"_Y");
-			             Y.innerHTML = Math.round(wall.wall_height -d3.event.y);
-			         
-		        	var X = document.getElementById(d.art_name+"_OX");
-			            X.innerHTML = d.leftCorner.X
-			        var Y = document.getElementById(d.art_name+"_OY");
-			            Y.innerHTML = wall.wall_height - d.leftCorner.Y
+            function dragMove(d) {
+            	//if art has hanging wire, math it in. Else return top left corner
+                     d3.select(this)
+                         .attr("x", function () {return d3.event.x})
+                         .attr("y", function () {return d3.event.y});
 
-	                 var name = document.getElementById(d.art_name);
-	         	    	 name.innerHTML = d.art_name;
-		         }
+                     var name = document.getElementById(d.art_name);
+                             name.innerHTML = d.art_name;
+
+                     if(d.device_code === "none"){ ;
+                            var X = document.getElementById(d.art_name+"_X");
+                                X.innerHTML = Math.round(d3.event.x);
+                     } else { ;
+                            var X = document.getElementById(d.art_name+"_X");
+                                X.innerHTML = Math.round(d3.event.x + (d.art_width/2));
+                     }
+                     if(d.device_code === "none") { 
+                            var Y = document.getElementById(d.art_name+"_Y");
+                                Y.innerHTML = Math.round(wall.wall_height -d3.event.y);
+                     } else { ;
+                            var Y = document.getElementById(d.art_name+"_Y");
+                                Y.innerHTML = Math.round((wall.wall_height -d3.event.y) - 
+                                                                            d.device_distance);
+                     }
+                    var X = document.getElementById(d.art_name+"_OX");
+                        X.innerHTML = d.leftCorner.X
+                    var Y = document.getElementById(d.art_name+"_OY");
+                        Y.innerHTML = d.leftCorner.Y
+
+		            var device = document.getElementById(d.art_name+"_D");
+		                    if(d.device_code === "none") { 
+		                    	device.innerHTML = "None (Use Top Left Corner)";
+		                } else {
+		                	device.innerHTML = "Wire (Data is Screw Point)";
+		                }
+             }
 
 
 		}
 
 
+
 		allArtsWidths(art);
 		Margins();
 		upperX(art);
-		leftCornerCords(art)
-		findTacPoint(art)
-		dynamicRectangles()
+		leftCornerCords(art);
+		findPegPoint(art);
+		dynamicRectangles();
 		 
-
 </script>
 
-
-
+<style> 
+/*	.draggableRectangle {
+		background-image: url("http://cdn9.staztic.com/app/a/2750/2750835/famous-painting-puzzle-20130625-l-48x48.png");
+	}*/
+</style>
 
 
 {% endblock %}

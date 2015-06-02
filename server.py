@@ -90,22 +90,26 @@ def process_wall_info(project_id):
         height_fraction = request.args.get("wall_height_fraction")
         center_line = request.args.get("center_line")
         center_fraction = request.args.get("center_line_fraction")
+        offset_percent = request.args.get("offset_percent")
         session['wall_name'] = wall_name
 
         #format integers to pass to javascript
         adjusted_width = (int((int(wall_width) + float(width_fraction)) * 1000))
         adjusted_height = (int((int(wall_height) + float(height_fraction)) * 1000))
         adjusted_center = (int((int(center_line) + float(center_fraction)) * 1000))
+        adjusted_offset = (int(float(offset_percent) * 1000))
 
         print "adjusted_width", adjusted_width
         print "adjusted_height", adjusted_height
         print "adjusted_center", adjusted_center
+        print "offset_percent", offset_percent
 
         cur_wall = Wall(wall_name=wall_name,
                         wall_width=adjusted_width,
                         wall_height=adjusted_height,
                         center_line=adjusted_center,
-                        project_id=cur_project_id
+                        project_id=cur_project_id,
+                        offset_percent=adjusted_offset
                         )
 
         db.session.add(cur_wall)
@@ -147,6 +151,8 @@ def process_art_info(project_id, wall_id):
         device_distance = request.args.get("device_distance")
         device_fraction = request.args.get("art_device_fraction")
 
+        art_img = request.args.get("img")
+
         session['art_name'] = new_art_name
 
         adjusted_width = (int((int(art_width) + float(width_fraction)) * 1000))
@@ -161,7 +167,8 @@ def process_art_info(project_id, wall_id):
                       art_height=adjusted_height,
                       art_width=adjusted_width,
                       device_code=device_code,
-                      device_distance=adjusted_device)
+                      device_distance=adjusted_device,
+                      art_img=art_img)
 
         db.session.add(cur_art)
         db.session.commit()
@@ -312,6 +319,10 @@ def process_signup():
     entered_pw = request.form['password']
     entered_pw2 = request.form['password2']
 
+    print "entered_email", entered_email
+    print "entered_pw", entered_pw
+    print "entered_pw2", entered_pw2
+
     user = User.query.filter_by(email=entered_email).first()
 
     if request.method == "POST":
@@ -355,8 +366,7 @@ def process_login():
     if user:
         if entered_pw == user.password:
             session['email'] = request.form['email']
-            flash('You successfully logged in %s!' % session['email'])
-            return redirect("/")
+            return redirect("/user-profile")
         else:
             flash("That is not the correct password!")
             return redirect('/login')
