@@ -12,30 +12,52 @@
 <!-- <link rel="stylesheet" typle="text/css" href="/static/style.css"> -->
 {% endblock %}
 
-
 {% block content %}
 
 
+	<div class="user_view_wall">
+		<p>
+			<table>
+				<tr>
+				 	<th id ='wall-name'> Wall Name </th>
+				 	<th id ='wall-width'> Wall Width</th>
+				 	<th>Original End Margins</th>
+				 	{% if art|length != 1 %}
+				 		<th>Original Mid Margins</th>
+				 	{% endif %}		
+				 </tr>
+				 <tr>
+				  	<td id ='wall-name'> {{wall.wall_name}} </td>
+				  	<td id ='wall-width'> {{wall.wall_width / 1000}}</td>
+				  	<td id ='EMO'> _</td>
+				  	<td id ='MMO'> _</td>
 
-	<div class="user_view">
+				  </tr>
+			</table>
+		<p>
+	<div class="user_view_art">
 		<p><table>
 			<tr>
-			  <th>Art Name</th>
-			  <th>Origin X Peg </th>		
-			  <th>Origin Y Peg </th>
-			  <th>New X Peg </th>		
-			  <th>New Y Peg </th>
-			  <th>Device Type </th>
+			    <th>Art Name</th>
+			    <th>Origin X Peg </th>		
+			    <th>Origin Y Peg </th>	
+			    <th>New X Peg </th>	
+			    <th>New Y Peg </th>
+			    <th>Device Type </th>
+			    <th>Left End Margin </th>		
+			    <th>Right End Margin </th>	
 			</tr>
 			{% for item in art %}
 			 <tr> 
 				<td class="user_view_output" id="{{ item.art_name }}"> 
 					{{ item.art_name }} </td>
 				<td id ='{{item.art_name}}_OX'> _</td>
-				<td id ='{{item.art_name}}_OY'> _</td>  
+				<td id ='{{item.art_name}}_OY'> _</td>
 				<td id ='{{item.art_name}}_X'> _</td>
 				<td id ='{{item.art_name}}_Y'> _</td>  
 				<td id ='{{item.art_name}}_D'> _</td> 
+				<td id ='{{item.art_name}}_LEM'> _</td>  
+				<td id ='{{item.art_name}}_REM'> _</td> 
 			  </tr>
 			{% endfor %} 
 		</table>
@@ -64,18 +86,18 @@
 
 		function restoreArtFloats(art){
 			for(var i=0; i<art.length; i++){
-				art[i].art_width = art[i].art_width / 500;
-				art[i].art_height =art[i].art_height / 500;
-				art[i].device_distance = art[i].device_distance / 500;
+				art[i].art_width = art[i].art_width / 1000;
+				art[i].art_height =art[i].art_height / 1000;
+				art[i].device_distance = art[i].device_distance / 1000;
 			}
 		}
 		
 		restoreArtFloats(art);
 
 
-		wall.wall_width = wall.wall_width / 500;
-		wall.wall_height = wall.wall_height / 500;
-		wall.center_line = wall.center_line / 500;
+		wall.wall_width = wall.wall_width / 1000;
+		wall.wall_height = wall.wall_height / 1000;
+		wall.center_line = wall.center_line / 1000;
 		wall.offset_percent = wall.offset_percent / 1000;
 
 
@@ -95,16 +117,13 @@
 			midMargin = consistantMargins - offset; 
 			if (art.length === 2) {
 				endMargin = consistantMargins + offset / 2;
+			} else if (art.length === 1){
+				endMargin = consistantMargins;
+				midMargin = 0;
 			} else { 
 				endMargin = consistantMargins + offset;
 			}
 		}
-
-		//ADD THIS TO FUNCTION ABOVE??
-		if (art.length === 1){
-			endMargin = consistantMargins
-		}
-
 
 
 		// UPPER EDGE LONGITUDE OF ALL ARTS
@@ -172,6 +191,11 @@
 	        		.attr('device', function(d) { return d.device_code})
 	                .attr('x', function(d) { return d.leftCorner.X; })
 	                .attr('y', function(d) {return wall.wall_height - d.leftCorner.Y; })
+
+	                ///////////
+	                .attr('LEM', function(d) {return wall.wall_height - d.leftCorner.Y; })
+	                //////////
+
 	                .attr('Ox', function(d) { return d.leftCorner.X; })
 	                .attr('Oy', function(d) {return wall.wall_height - d.leftCorner.Y; })
 	                .attr('width', function(d) { return d.art_width; })
@@ -183,11 +207,16 @@
             	//if art has hanging wire, math it in. Else return top left corner
                      d3.select(this)
                          .attr("x", function () {return d3.event.x})
-                         .attr("y", function () {return d3.event.y});
+                         .attr("y", function () {return d3.event.y})
+
+                         ///////////
+                         .attr("LEM", function () {return d3.event.LEM});
+                         ///////////
 
                      var name = document.getElementById(d.art_name);
                              name.innerHTML = d.art_name;
-
+                     
+                     //drag output
                      if(d.device_code === "none"){ ;
                             var X = document.getElementById(d.art_name+"_X");
                                 X.innerHTML = Math.round(d3.event.x);
@@ -203,17 +232,39 @@
                                 Y.innerHTML = Math.round((wall.wall_height -d3.event.y) - 
                                                                             d.device_distance);
                      }
-                    var X = document.getElementById(d.art_name+"_OX");
-                        X.innerHTML = d.leftCorner.X 
-                    var Y = document.getElementById(d.art_name+"_OY");
-                        Y.innerHTML = d.leftCorner.Y 
+                     var leftMargin = document.getElementById(d.art_name+"_LEM");
+                     	leftMargin.innerHTML = Math.round( d.leftCorner.X -d3.event.LEM * 1000) /1000;
+
+
+                     //original data output
+                     if(d.device_code === "none"){ ;
+                            var XO = document.getElementById(d.art_name+"_OX");
+                                XO.innerHTML = Math.round(d.leftCorner.X * 1000) /1000;
+                     } else { ;
+                            var XO = document.getElementById(d.art_name+"_OX");
+                                XO.innerHTML = Math.round((d.leftCorner.X + d.art_width/2) * 1000) / 1000;
+                     }
+
+                     if(d.device_code === "none") { 
+                            var YO = document.getElementById(d.art_name+"_OY");
+                                YO.innerHTML = Math.round(d.leftCorner.Y * 1000) /1000 ;
+                     } else { ;
+                            var YO = document.getElementById(d.art_name+"_OY");
+                                YO.innerHTML = Math.round((d.leftCorner.Y - d.device_distance) * 1000) /1000;
+                     }
 
 		            var device = document.getElementById(d.art_name+"_D");
 		                    if(d.device_code === "none") { 
-		                    	device.innerHTML = "None (Use Top Left Corner)";
+		                    	device.innerHTML = "Use Left Corner";
 		                } else {
-		                	device.innerHTML = "Wire (Data is Screw Point)";
+		                	device.innerHTML = "Wire";
 		                }
+		            //Original Margins    
+		            var endMarginOrigin = document.getElementById("EMO");
+		            	endMarginOrigin.innerHTML = Math.round(endMargin * 1000) /1000;
+
+		            var midMarginOrigin = document.getElementById("MMO");
+		            	midMarginOrigin.innerHTML = Math.round(midMargin * 1000) /1000;
              }
 
 
