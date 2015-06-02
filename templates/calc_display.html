@@ -17,9 +17,6 @@
 
 
 
-
-<h3> Beautiful Display of Art on Wall Mapping! </h3>
-
 	<div class="user_view">
 		<p><table>
 			<tr>
@@ -44,7 +41,7 @@
 		</table>
 	</div>
 
-	<div class="wall"><div>
+<div class="wall"><div>
 
 
 
@@ -61,22 +58,24 @@
 		var p;
 		var xAxis;
 		var offset;
+		var width = window.innerWidth
+		var delta = window.innerWidth/wall.wall_width * wall.wall_height
 
 
 		function restoreArtFloats(art){
 			for(var i=0; i<art.length; i++){
-				art[i].art_width = art[i].art_width / 1000;
-				art[i].art_height =art[i].art_height / 1000
-				art[i].device_distance = art[i].device_distance / 1000;
+				art[i].art_width = art[i].art_width / 500;
+				art[i].art_height =art[i].art_height / 500;
+				art[i].device_distance = art[i].device_distance / 500;
 			}
 		}
 		
 		restoreArtFloats(art);
 
 
-		wall.wall_width = wall.wall_width / 1000;
-		wall.wall_height = wall.wall_height / 1000;
-		wall.center_line = wall.center_line / 1000;
+		wall.wall_width = wall.wall_width / 500;
+		wall.wall_height = wall.wall_height / 500;
+		wall.center_line = wall.center_line / 500;
 		wall.offset_percent = wall.offset_percent / 1000;
 
 
@@ -179,8 +178,7 @@
 	                .attr('height', function(d) { return d.art_height; })
 	                .attr("xlink:href", function(d) { return d.art_img; })
 	                .call(drag);
-	        
-      			
+
             function dragMove(d) {
             	//if art has hanging wire, math it in. Else return top left corner
                      d3.select(this)
@@ -206,9 +204,9 @@
                                                                             d.device_distance);
                      }
                     var X = document.getElementById(d.art_name+"_OX");
-                        X.innerHTML = d.leftCorner.X
+                        X.innerHTML = d.leftCorner.X 
                     var Y = document.getElementById(d.art_name+"_OY");
-                        Y.innerHTML = d.leftCorner.Y
+                        Y.innerHTML = d.leftCorner.Y 
 
 		            var device = document.getElementById(d.art_name+"_D");
 		                    if(d.device_code === "none") { 
@@ -221,8 +219,6 @@
 
 		}
 
-
-
 		allArtsWidths(art);
 		Margins();
 		upperX(art);
@@ -231,12 +227,6 @@
 		dynamicRectangles();
 		 
 </script>
-
-<style> 
-/*	.draggableRectangle {
-		background-image: url("http://cdn9.staztic.com/app/a/2750/2750835/famous-painting-puzzle-20130625-l-48x48.png");
-	}*/
-</style>
 
 
 {% endblock %}

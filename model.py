@@ -62,6 +62,7 @@ class Wall(db.Model):
     wall_height = db.Column(db.Integer, nullable=False)
     center_line = db.Column(db.Integer, default=58, nullable=True)
     wall_img = db.Column(db.String(200), nullable=True)
+    offset_percent = db.Column(db.String(64), default=3000, nullable=True)
 
     def __repr__(self):
 
@@ -100,7 +101,7 @@ class Art(db.Model):
     device_code = db.Column(db.String, nullable=False, default='none')
     art_height = db.Column(db.Integer, nullable=False)
     art_width = db.Column(db.Integer, nullable=False)
-    device_distance = db.Column(db.Integer, nullable=True, default=0)
+    device_distance = db.Column(db.Integer, default=0, nullable=True)
     art_img = db.Column(db.String(200), nullable=True)
 
     def __repr__(self):

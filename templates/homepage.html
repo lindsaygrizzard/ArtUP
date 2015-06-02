@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/home_style.css">
+{% endblock %}
+
 {% block content %}
 
-<h1> Homepage </h1>
-
-
-<!-- <a href = '/new-project'> Make new project! </a>
-
-<br> -->
-
-<a href = '/user-profile'> See your profile/ past projects/ make new </a>
+<div class = "primary-content">
+    <h1 class="primary-title">ArtUp</h1>
+    <p>Hang art easier and with less mess</p>
+    <button><a id="new-project" href = '/user-profile'> Make New Project </a></button>
+</div>
 
 
 {% endblock %}

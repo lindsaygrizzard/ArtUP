@@ -13,7 +13,6 @@
     </button>
 </div>
 
-
 <div class="help-info-title">
     <h3> Helpful Tips </h3>
     <p> A center line the center point at which all of your artwork will pass.
@@ -24,26 +23,26 @@
 
 
 
-<div class="container">
-    <table>
-      <thead>
-        <tr>
-          <th scope="col">Projects</th>
-        </tr>
-      </thead>
-      <tbody>
-          {% for project in project_list %}
-            <tr scope="col">
-               <td><a href = '/project/{{ project.project_id }}' 
-                id = "list" data-hover="{{ project.project_name }}">
-                {{ project.project_name }}
-                </a><td>
-            <tr>
 
-          {% endfor %}
-      </tbody>
-    </table>
-</div>
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Projects</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for project in project_list %}
+        <tr scope="col">
+           <td><a href = '/project/{{ project.project_id }}' 
+            id = "list" data-hover="{{ project.project_name }}">
+            {{ project.project_name }}
+            </a><td>
+        <tr>
+
+      {% endfor %}
+  </tbody>
+</table>
+
 
 
 

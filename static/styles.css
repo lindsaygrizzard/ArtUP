@@ -1,1 +1,90 @@
+/* Base Styles -------------------- */
+* {
+  box-sizing: border-box;
+}
+
+
+.head-nav::before,
+.head-nav::after {
+  display: inline-block;
+  opacity: 0;
+  -webkit-transition: -webkit-transform 0.3s, opacity 0.2s;
+  -moz-transition: -moz-transform 0.3s, opacity 0.2s;
+  transition: transform 0.3s, opacity 0.2s;
+}
+
+.head-nav::before {
+  margin-right: 10px;
+  content: '[';
+  -webkit-transform: translateX(20px);
+  -moz-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+.head-nav::after {
+  margin-left: 10px;
+  content: ']';
+  -webkit-transform: translateX(-20px);
+  -moz-transform: translateX(-20px);
+  transform: translateX(-20px);
+}
+
+.head-nav:hover::before,
+.head-nav:hover::after,
+.head-nav:focus::before,
+.head-nav:focus::after {
+  opacity: 1;
+  -webkit-transform: translateX(0px);
+  -moz-transform: translateX(0px);
+  transform: translateX(0px);
+}
+
+
+
+
+header a {
+    display: inline-block;
+    padding: 20pxa 5%;
+    font-size: 15px;
+}
+
+header {
+  background-color: #5A533E;
+  padding: 15px 0;
+}
+
+body {
+    text-align: center;
+}
+
+a:link {
+  color: rgb(255, 169, 73);
+  text-decoration: none;
+}
+
+a:visited {
+  color: #fcc19f;
+}
+
+a:hover {
+  color: rgba(255, 169, 73, .4);
+}
+
+a:active {
+  color: #D9693F;
+}
+
+@media (max-width: 600px) {
+    a:link { font-size: 12px;
+             padding: 10px 4%;}
+}
+
+@media only screen
+  and (min-width: 600px) 
+  and (max-width: 1200px){
+    a:link { font-size: 12px;
+             padding: 10px 4%;}
+}
+
+
 

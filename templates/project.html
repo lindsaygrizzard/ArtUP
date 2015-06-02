@@ -1,23 +1,52 @@
 {% extends 'base.html' %}
+
+{% block head %} 
+<link rel="stylesheet" href="/static/project_wall_lst.css">
+{% endblock %}
+
 {% block content %}
 
+<div class="new-project">
+   <button> <a href= '/project/{{ project_id }}/new-wall' data-hover="Add New Wall?"> 
+        <span id="new-project">Add New Wall?</span>
+            </a>
+    </button>
+    <h4>For  {{project_name}} Project</h4>
+</div>
 
-<h1>Project: {{project_name}} </h1>
 
-<h5> Wall List: </h5>
 
-	<div id="wall-list" class="row">
 
-	<a href= '/project/{{ project_id }}/new-wall'> <p>Add New Wall?</p> <br> </a>
+<div class="help-info-title">
+    <h3> Helpful Tips </h3>
+    <p> The "margin offset" is the difference between your end margins and margins 
+        between each piece of art. If you want your pieces to be grouped closer together, 
+        increase the percentage. If you arn't sure, try 30%.
+    </p>
+</div> 
 
-	      	{% for wall in wall_list %}
 
-			    <a href= '/saved_wall_process/{{wall.wall_id}}'>
-			    {{ wall.wall_name }} 
-			    <br>
-				</a>
-			    
-	      	{% endfor %} 
-	</div>
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Wall List:</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for wall in wall_list %}
+        <tr scope="col">
+           <td>
+                <a id="list" href= '/saved_wall_process/{{wall.wall_id}}'>
+                {{ wall.wall_name }}
+                </a>
+            <td>
+        {% endfor %} 
+        
+        <tr>
+  </tbody>
+</table>
 
 {% endblock %}
+
+
+

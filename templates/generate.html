@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
+
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/generate.css">
+{% endblock %}
+
+
 {% block content %}
-
-
 <form action ='/calcdisplay/{{wall_art_id}}'>
 
 	<input type="submit" value="CALCULATE">
 </form>
-
-
 {% endblock %}

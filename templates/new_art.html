@@ -1,80 +1,83 @@
 {% extends 'base.html' %}
+
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/art_forms.css">
+{% endblock %}
+
+
 {% block content %}
 
-<h1> Art Forms Page for {{wall_name}}</h1>
-project = {{project_id}}
-<br>
-wall = {{wall_id}}
 
+
+<h3> Art Forms Page for {{wall_name}} Walls</h3>
 
 <h5> Add demensions from left to right </h5>
 
+<div class="container">
+    <form action ='/project/{{project_id}}/wall/{{wall_id}}/process_art_form'>
+        <fieldset>
+        	<label> Name of Piece</label>
+        	    <input type="text" name="new_art"> <br>
 
+                <label> *Hanging Device Type </label>
+                <p>
+            	    <input type="radio" name="device_code" value='wire'> Wire
+            	    <input type="radio" name="device_code" value='none'> None 
+                </p>
 
-<form action ='/project/{{project_id}}/wall/{{wall_id}}/process_art_form'>
-	<label> Name of Piece   
-	    <input type="text" name="new_art"> <br>
-	</label>
+                <label> Device Distance</label>
+           		<input type="text" name="device_distance"> 
+           		<select name="art_device_fraction">
+           			<option value="0.000"> 0 </option> 
+           			<option value="0.125"> 1/8 </option> 
+           			<option value="0.250"> 1/4 </option> 
+           			<option value="0.375"> 3/8 </option> 
+           			<option value="0.500"> 1/2 </option> 
+           			<option value="0.625"> 5/8 </option> 
+           			<option value="0.750"> 3/4 </option> 
+           			<option value="0.875"> 7/8 </option> 
+           		</select>
+           		<br>
+  
+                <label> Height </label>
+        	    <input type="text" name="art_height"> 
+        	    <select name="art_height_fraction">
+        	    	<option value="0.000"> 0 </option> 
+        	    	<option value="0.125"> 1/8 </option> 
+        	    	<option value="0.250"> 1/4 </option> 
+        	    	<option value="0.375"> 3/8 </option> 
+        	    	<option value="0.500"> 1/2 </option> 
+        	    	<option value="0.625"> 5/8 </option> 
+        	    	<option value="0.750"> 3/4 </option> 
+        	    	<option value="0.875"> 7/8 </option> 
+        	    </select>
+        	    <br>
 
-	<label> Hanging Device Type (wire returns one screw point, none returns corners, more options to come...)
-		<br>
-	    <input type="radio" name="device_code" value='wire'> Wire <br>
-	    <input type="radio" name="device_code" value='none'> None <br>
-	</label>
+                <label> Width </label> 
+        	    <input type="text" name="art_width"> 
+        	    <select name="art_width_fraction">
+        	    	<option value="0.000"> 0 </option> 
+        	    	<option value="0.125"> 1/8 </option> 
+        	    	<option value="0.250"> 1/4 </option> 
+        	    	<option value="0.375"> 3/8 </option> 
+        	    	<option value="0.500"> 1/2 </option> 
+        	    	<option value="0.625"> 5/8 </option> 
+        	    	<option value="0.750"> 3/4 </option> 
+        	    	<option value="0.875"> 7/8 </option> 
+        	    </select>
+        	    <br>
 
+            <label> Image? (copy image url into field) <br>
+        	    <input type="text" name="img"> 
+        	</label>  <br>
+            <input type="submit" name="submit" value="next form">
+            <input type="submit" name="submit" value="submit and display">
+        </fieldset>
+    </form>
+    <p><a class="help" target="_blank" href ="help_page.html"><p> *See help </a></p>
+</div>
 
-	<label> If you answered "Wire", what is the distance from wire to top of piece?
-   		<input type="text" name="device_distance"> 
-   		<select name="art_device_fraction">
-   			<option value="0.000"> 0 </option> 
-   			<option value="0.125"> 1/8 </option> 
-   			<option value="0.250"> 1/4 </option> 
-   			<option value="0.375"> 3/8 </option> 
-   			<option value="0.500"> 1/2 </option> 
-   			<option value="0.625"> 5/8 </option> 
-   			<option value="0.750"> 3/4 </option> 
-   			<option value="0.875"> 7/8 </option> 
-   		</select>
-   		<br>
-	</label> 
-
-
-	<label> Height 
-	    <input type="text" name="art_height"> 
-	    <select name="art_height_fraction">
-	    	<option value="0.000"> 0 </option> 
-	    	<option value="0.125"> 1/8 </option> 
-	    	<option value="0.250"> 1/4 </option> 
-	    	<option value="0.375"> 3/8 </option> 
-	    	<option value="0.500"> 1/2 </option> 
-	    	<option value="0.625"> 5/8 </option> 
-	    	<option value="0.750"> 3/4 </option> 
-	    	<option value="0.875"> 7/8 </option> 
-	    </select>
-	    <br>
-	</label>
-	<label> Width 
-	    <input type="text" name="art_width"> 
-	    <select name="art_width_fraction">
-	    	<option value="0.000"> 0 </option> 
-	    	<option value="0.125"> 1/8 </option> 
-	    	<option value="0.250"> 1/4 </option> 
-	    	<option value="0.375"> 3/8 </option> 
-	    	<option value="0.500"> 1/2 </option> 
-	    	<option value="0.625"> 5/8 </option> 
-	    	<option value="0.750"> 3/4 </option> 
-	    	<option value="0.875"> 7/8 </option> 
-	    </select>
-	    <br>
-	</label> 
-
-	<label> Image? (copy image url into field) <br>
-	    <input type="text" name="img"> 
-	</label>  <br>
-
-	<input type="submit" name="submit" value="next form">
-	<input type="submit" name="submit" value="submit and display">
-</form>
 
 
 {% endblock %}
