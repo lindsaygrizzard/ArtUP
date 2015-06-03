@@ -13,7 +13,9 @@
 {% endblock %}
 
 {% block content %}
+<div class="wall">
 
+</div>
 
 	<div class="user_view_wall">
 		<p>
@@ -63,7 +65,6 @@
 		</table>
 	</div>
 
-<div class="wall"><div>
 
 
 
@@ -209,9 +210,14 @@
                          .attr("x", function () {return d3.event.x})
                          .attr("y", function () {return d3.event.y})
 
-                         ///////////
-                         .attr("LEM", function () {return d3.event.LEM});
-                         ///////////
+                     debugger
+                    var image = d3.selectAll("image")
+
+                    var leftEndMargin = d3.min(image[0], function(d) {
+                      return d.x.animVal.value })
+
+                    var RightEndMargin = d3.max(image[0], function(d) {
+                      return d.x.animVal.value + d.width.animVal.value });
 
                      var name = document.getElementById(d.art_name);
                              name.innerHTML = d.art_name;
