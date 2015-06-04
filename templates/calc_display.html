@@ -4,11 +4,9 @@
 
 {% block head %}
  <link rel="stylesheet" type="text/css" href="/static/calc_style.css">
-
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+
 <!-- <link rel="stylesheet" typle="text/css" href="/static/style.css"> -->
 {% endblock %}
 
@@ -24,15 +22,17 @@
 				 	<th id ='wall-name'> Wall Name </th>
 				 	<th id ='wall-width'> Wall Width</th>
 				 	<th>Original End Margins</th>
-				 	{% if art|length != 1 %}
-				 		<th>Original Mid Margins</th>
-				 	{% endif %}		
+				 	<th>Original Mid Margins</th>
+				 	<th>Dragged Left End Margin </th>		
+				 	<th>Dragged Right End Margin </th>		
 				 </tr>
 				 <tr>
 				  	<td id ='wall-name'> {{wall.wall_name}} </td>
 				  	<td id ='wall-width'> {{wall.wall_width / 1000}}</td>
 				  	<td id ='EMO'> _</td>
 				  	<td id ='MMO'> _</td>
+				  	<td id ='LEM'> _</td>  
+				  	<td id ='REM'> _</td> 	
 
 				  </tr>
 			</table>
@@ -43,11 +43,10 @@
 			    <th>Art Name</th>
 			    <th>Origin X Peg </th>		
 			    <th>Origin Y Peg </th>	
-			    <th>New X Peg </th>	
-			    <th>New Y Peg </th>
+			    <th>Dragged X Peg </th>	
+			    <th>Dragged Y Peg </th>
 			    <th>Device Type </th>
-			    <th>Left End Margin </th>		
-			    <th>Right End Margin </th>	
+
 			</tr>
 			{% for item in art %}
 			 <tr> 
@@ -58,8 +57,6 @@
 				<td id ='{{item.art_name}}_X'> _</td>
 				<td id ='{{item.art_name}}_Y'> _</td>  
 				<td id ='{{item.art_name}}_D'> _</td> 
-				<td id ='{{item.art_name}}_LEM'> _</td>  
-				<td id ='{{item.art_name}}_REM'> _</td> 
 			  </tr>
 			{% endfor %} 
 		</table>
@@ -83,6 +80,10 @@
 		var offset;
 		var width = window.innerWidth
 		var delta = window.innerWidth/wall.wall_width * wall.wall_height
+		var decimal;
+		var temp ;
+		var roundTemp;
+		var output;
 
 
 		function restoreArtFloats(art){
@@ -170,6 +171,72 @@
 			}
 		}
 
+		
+		//ORIGINAL CALCULATION DATA
+		function originalOutput(){
+            for(i=0; i<art.length; i++) { 
+            	 //Find X origin X coords
+            	var XO = document.getElementById(art[i].art_name+"_OX");
+	             	if(art[i].device_code === "none"){ ;
+	                        decimal = Math.round(art[i].leftCorner.X * 1000) /1000;
+	                        temp = decimal * 8;
+	                        roundTemp = Math.ceil(temp);
+	                        output = roundTemp/8;
+	                        XO.innerHTML = output
+
+		             } else { 
+		                    decimal = Math.round((art[i].leftCorner.X + art[i].art_width/2) * 1000) / 1000;
+		                    temp = decimal * 8;
+		                    roundTemp = Math.ceil(temp);
+		                    output = roundTemp/8;
+		                    XO.innerHTML = output
+		             }
+	             //Find Y origin X coord
+	             var YO = document.getElementById(art[i].art_name+"_OY");
+		             if(art[i].device_code === "none") { 
+		                        decimal= Math.round(art[i].leftCorner.Y * 1000) /1000 ;
+		                        temp = decimal * 8;
+		                        roundTemp = Math.ceil(temp);
+		                        output = roundTemp/8;
+		                        YO.innerHTML = output
+		             } else { ;
+		                        decimal = Math.round((art[i].leftCorner.Y - art[i].device_distance) * 1000) /1000;
+		                        temp = decimal * 8;
+		                        roundTemp = Math.ceil(temp);
+		                        output = roundTemp/8;
+		                        YO.innerHTML = output
+		             }
+	            var device = document.getElementById(art[i].art_name+"_D");
+	                    if(art[i].device_code === "none") { 
+	                    	device.innerHTML = "Use Left Corner";
+	                } else {
+	                	device.innerHTML = "Wire";
+	                }
+            }
+            //Original Margins    
+            var endMarginOrigin = document.getElementById("EMO");
+            	decimal = Math.round(endMargin * 1000) /1000;
+            	temp = decimal * 8;
+            	roundTemp = Math.ceil(temp);
+            	output = roundTemp/8;
+            	endMarginOrigin.innerHTML = output;
+
+            var midMarginOrigin = document.getElementById("MMO");
+            	decimal = Math.round(midMargin * 1000) /1000;
+            	temp = decimal * 8;
+            	roundTemp = Math.ceil(temp);
+            	output = roundTemp/8;
+            	midMarginOrigin.innerHTML = output;
+//////////////////////////////
+//////////////////////////////
+//////////////////////////////
+            // var background = document.getElementById("wall_img");
+            // 	background.innerHTML = "<img src="+wall.wall_img+">";
+//////////////////////////////
+//////////////////////////////
+//////////////////////////////
+		}
+
 
 		function dynamicRectangles(){ 	
 			width = window.innerWidth / 2;
@@ -177,14 +244,14 @@
 			width = window.innerWidth;
 			scale = width * wall.wall_height
 			var svg = d3.select(".wall")
-										.append("svg")
-		                                .attr("width", wall.wall_width)
-		                                .attr("height", wall.wall_height)
-		                                .style("border", "1px dashed black");
-
+								.append("svg")
+                                .attr("width", wall.wall_width)
+                                .attr("height", wall.wall_height)
+                                .attr("id", "wall_img")
+                                .style("border", "1px dashed black");
+            
 	        var drag = d3.behavior.drag()
 	            .on("drag", dragMove);
-		        
 	        var rect = svg.selectAll(".draggableRectangle").data(art).enter()
 	        		.append('image')
 	        		.attr('class', 'draggableRectangle')
@@ -192,11 +259,6 @@
 	        		.attr('device', function(d) { return d.device_code})
 	                .attr('x', function(d) { return d.leftCorner.X; })
 	                .attr('y', function(d) {return wall.wall_height - d.leftCorner.Y; })
-
-	                ///////////
-	                .attr('LEM', function(d) {return wall.wall_height - d.leftCorner.Y; })
-	                //////////
-
 	                .attr('Ox', function(d) { return d.leftCorner.X; })
 	                .attr('Oy', function(d) {return wall.wall_height - d.leftCorner.Y; })
 	                .attr('width', function(d) { return d.art_width; })
@@ -204,31 +266,32 @@
 	                .attr("xlink:href", function(d) { return d.art_img; })
 	                .call(drag);
 
+
             function dragMove(d) {
             	//if art has hanging wire, math it in. Else return top left corner
                      d3.select(this)
                          .attr("x", function () {return d3.event.x})
                          .attr("y", function () {return d3.event.y})
-
-                     debugger
-                    var image = d3.selectAll("image")
-
-                    var leftEndMargin = d3.min(image[0], function(d) {
-                      return d.x.animVal.value })
-
-                    var RightEndMargin = d3.max(image[0], function(d) {
-                      return d.x.animVal.value + d.width.animVal.value });
-
                      var name = document.getElementById(d.art_name);
                              name.innerHTML = d.art_name;
-                     
-                     //drag output
+                     var image = d3.selectAll("image");
+                     //smallest x cord (to find most left art work)
+                     var minXValue = d3.min(image[0], function(d) {
+                       return d.x.animVal.value; }) //returns smallest x value
+                     var leftEndMargin = document.getElementById("LEM");
+                     	leftEndMargin.innerHTML = Math.round(minXValue);
+                     //largest x cord (to find most right art work)
+                     var maxXValue = d3.max(image[0], function(d) {
+                       return d.x.animVal.value + d.width.animVal.value; });
+                     var rightEndMargin = document.getElementById("REM");
+                     	rightEndMargin.innerHTML = Math.round(wall.wall_width - maxXValue);
+
                      if(d.device_code === "none"){ ;
                             var X = document.getElementById(d.art_name+"_X");
                                 X.innerHTML = Math.round(d3.event.x);
                      } else { ;
                             var X = document.getElementById(d.art_name+"_X");
-                                X.innerHTML = Math.round(d3.event.x + (d.art_width/2));
+                                X.innerHTML = Math.round(d3.event.x);
                      }
                      if(d.device_code === "none") { 
                             var Y = document.getElementById(d.art_name+"_Y");
@@ -237,43 +300,8 @@
                             var Y = document.getElementById(d.art_name+"_Y");
                                 Y.innerHTML = Math.round((wall.wall_height -d3.event.y) - 
                                                                             d.device_distance);
-                     }
-                     var leftMargin = document.getElementById(d.art_name+"_LEM");
-                     	leftMargin.innerHTML = Math.round( d.leftCorner.X -d3.event.LEM * 1000) /1000;
-
-
-                     //original data output
-                     if(d.device_code === "none"){ ;
-                            var XO = document.getElementById(d.art_name+"_OX");
-                                XO.innerHTML = Math.round(d.leftCorner.X * 1000) /1000;
-                     } else { ;
-                            var XO = document.getElementById(d.art_name+"_OX");
-                                XO.innerHTML = Math.round((d.leftCorner.X + d.art_width/2) * 1000) / 1000;
-                     }
-
-                     if(d.device_code === "none") { 
-                            var YO = document.getElementById(d.art_name+"_OY");
-                                YO.innerHTML = Math.round(d.leftCorner.Y * 1000) /1000 ;
-                     } else { ;
-                            var YO = document.getElementById(d.art_name+"_OY");
-                                YO.innerHTML = Math.round((d.leftCorner.Y - d.device_distance) * 1000) /1000;
-                     }
-
-		            var device = document.getElementById(d.art_name+"_D");
-		                    if(d.device_code === "none") { 
-		                    	device.innerHTML = "Use Left Corner";
-		                } else {
-		                	device.innerHTML = "Wire";
-		                }
-		            //Original Margins    
-		            var endMarginOrigin = document.getElementById("EMO");
-		            	endMarginOrigin.innerHTML = Math.round(endMargin * 1000) /1000;
-
-		            var midMarginOrigin = document.getElementById("MMO");
-		            	midMarginOrigin.innerHTML = Math.round(midMargin * 1000) /1000;
+                     } 	
              }
-
-
 		}
 
 		allArtsWidths(art);
@@ -281,6 +309,7 @@
 		upperX(art);
 		leftCornerCords(art);
 		findPegPoint(art);
+		originalOutput()
 		dynamicRectangles();
 		 
 </script>

@@ -18,16 +18,16 @@
     <form action ='/project/{{project_id}}/wall/{{wall_id}}/process_art_form'>
         <fieldset>
         	<label> Name of Piece</label>
-        	    <input type="text" name="new_art"> <br>
+        	    <input type="text" name="new_art" > <br>
 
                 <label> *Hanging Device Type </label>
                 <p>
-            	    <input type="radio" name="device_code" value='wire'> Wire
+            	    <input type="radio" name="device_code" value='wire' checked="checked"> Wire
             	    <input type="radio" name="device_code" value='none'> None 
                 </p>
 
                 <label> Device Distance</label>
-           		<input type="text" name="device_distance"> 
+           		<input type="text" name="device_distance" value="5">  
            		<select name="art_device_fraction">
            			<option value="0.000"> 0 </option> 
            			<option value="0.125"> 1/8 </option> 
@@ -41,7 +41,7 @@
            		<br>
   
                 <label> Height </label>
-        	    <input type="text" name="art_height"> 
+        	    <input type="text" name="art_height" value="25"> 
         	    <select name="art_height_fraction">
         	    	<option value="0.000"> 0 </option> 
         	    	<option value="0.125"> 1/8 </option> 
@@ -55,7 +55,7 @@
         	    <br>
 
                 <label> Width </label> 
-        	    <input type="text" name="art_width"> 
+        	    <input type="text" name="art_width" value="25"> 
         	    <select name="art_width_fraction">
         	    	<option value="0.000"> 0 </option> 
         	    	<option value="0.125"> 1/8 </option> 
@@ -69,7 +69,7 @@
         	    <br>
 
             <label> Image? (copy image url into field) <br>
-        	    <input type="text" name="img"> 
+        	    <input type="text" name="img" value="http://www.clker.com/cliparts/H/M/h/Z/t/5/just-black-frame-md.png"> 
         	</label>  <br>
             <input type="submit" name="submit" value="next form">
             <input type="submit" name="submit" value="submit and display">

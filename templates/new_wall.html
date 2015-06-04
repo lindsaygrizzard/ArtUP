@@ -11,7 +11,7 @@
 			<form action ="/project/{{ project_id }}/wall_process/artform">
 				<fieldset>
 					<p><label class="name"> Wall Name </label>
-					<input class="name_input" type="text" name="new_wall"> 
+					<input class="name_input" type="text" name="new_wall" value="Wall Name">
 					</p>			
 					<p><label> *Margin Offset 
 					    <select class="offset" name ="offset_percent">
@@ -27,7 +27,7 @@
 					    </select></label>
 					</p>			
 					<p><label> Wall Width </label>
-					    <input type="text" name="wall_width"> 
+					    <input type="text" name="wall_width" value="200"> 
 					    <select name ="wall_width_fraction">
 					    	<option value="0.000"> 0 </option> 
 					    	<option value="0.125"> 1/8 </option> 
@@ -40,7 +40,7 @@
 					    </select>
 					</p>
 					<p><label> **Wall Height </label>
-					    <input type="text" name="wall_height"> 
+					    <input type="text" name="wall_height" value="100"> 
 					    <select name ="wall_height_fraction">
 					    	<option value="0.000"> 0 </option> 
 					    	<option value="0.125"> 1/8 </option> 
@@ -52,7 +52,7 @@
 					    	<option value="0.875"> 7/8 </option> 
 					    </select>
 						<label> *Center Line </label>
-					    <input type="text" name="center_line">
+					    <input type="text" name="center_line" value="60">
 					    <select name="center_line_fraction">
 					    	<option value="0.000"> 0 </option> 
 					    	<option value="0.125"> 1/8 </option> 
@@ -63,7 +63,10 @@
 					    	<option value="0.750"> 3/4 </option> 
 					    	<option value="0.875"> 7/8 </option> 
 					    </select>
-					</p>	 
+				        <label> Image? (copy image url into field) <br>
+				    	    <input type="text" name="wall_img" value="http://www.clker.com/cliparts/H/M/h/Z/t/5/just-black-frame-md.png"> 
+				    	</label>  <br>
+						</p>	 
 					<p><input type="submit" value="Submit">
 					</p>
 				</form>

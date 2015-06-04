@@ -2,6 +2,7 @@
 
 {% block head %} 
 <link rel="stylesheet" href="/static/project_wall_lst.css">
+<script src="https://code.jquery.com/jquery.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -34,17 +35,30 @@
   </thead>
   <tbody>
       {% for wall in wall_list %}
-        <tr scope="col">
-           <td>
-                <a id="list" href= '/saved_wall_process/{{wall.wall_id}}'>
-                {{ wall.wall_name }}
-                </a>
-            <td>
-        {% endfor %} 
+        <tr scope="col" id="{{wall.wall_id}}">
+          <td>
+            <a id="list" href= '/saved_wall_process/{{wall.wall_id}}'>
+              {{ wall.wall_name }} 
+            </a> 
+            <button type="button" class="wall_item" data-id="{{wall.wall_id}}">Remove
+            </button>
+          <td>
+      {% endfor %} 
         
-        <tr>
+      <tr>
   </tbody>
 </table>
+
+<script>
+  $('.wall_item').on('click', function(evt){
+      var wall_id = $($(this).context).data().id;
+      var url = '/remove_wall/'+wall_id;
+      $.post(url, function(data){
+      $("#"+data.wall_id).remove();
+      });
+  });
+
+</script>
 
 {% endblock %}
 

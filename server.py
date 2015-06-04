@@ -1,5 +1,5 @@
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, redirect, request, flash, session
+from flask import Flask, render_template, redirect, request, flash, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from model import User, Project, Wall, Wall_Art, Art, connect_to_db, db
 
@@ -41,21 +41,43 @@ def list_projects():
         return render_template('homepage.html')
 
 
-@app.route('/project/<int:project_id>')
+
+# @app.route('/remove_project/<int:project_id>', methods=["GET", "POST"])
+# def delete_project(project_id):
+#     #query to delete row from db
+
+#     project_obj = Project.query.filter(Project.project_id == project_id).first()
+#     db.session.delete(project_obj)
+#     db.session.commit()
+#     print "AJAX project ID", project_id
+
+#     return jsonify({'project_id':project_id})
+
+
+@app.route('/project/<int:project_id>', methods=["GET", "POST"])
 def show_project(project_id):
 
     """About project/ list of walls"""
-
     walls = Wall.query.filter(Wall.project_id == project_id).all()
     project_obj = Project.query.filter(project_id == Project.project_id).first()
     project_name = project_obj.project_name
-    # print "PROJECT ID: ", project_id
-     # print "PROJECT OBJ: ", project_obj
-    # print "PROJECT NAME: ", project_name
+
     return render_template("project.html",
                            wall_list=walls,
                            project_id=project_id,
                            project_name=project_name)
+
+
+@app.route('/remove_wall/<int:wall_id>', methods=["GET", "POST"])
+def delete_wall(wall_id):
+    #query to delete row from db
+
+    wall_obj = Wall.query.filter(Wall.wall_id == wall_id).first()
+    db.session.delete(wall_obj)
+    db.session.commit()
+    print "AJAX WALL ID", wall_id
+
+    return jsonify({'wall_id':wall_id})
 
 
 @app.route('/project/<int:project_id>/new-wall')
@@ -91,6 +113,7 @@ def process_wall_info(project_id):
         center_line = request.args.get("center_line")
         center_fraction = request.args.get("center_line_fraction")
         offset_percent = request.args.get("offset_percent")
+        wall_img = request.args.get("wall_img")
         session['wall_name'] = wall_name
 
         #format integers to pass to javascript
@@ -109,7 +132,8 @@ def process_wall_info(project_id):
                         wall_height=adjusted_height,
                         center_line=adjusted_center,
                         project_id=cur_project_id,
-                        offset_percent=adjusted_offset
+                        offset_percent=adjusted_offset,
+                        wall_img=wall_img
                         )
 
         db.session.add(cur_wall)
@@ -220,6 +244,8 @@ def saved_wall_process(wall_id):
 @app.route('/calcdisplay/<int:wall_art_id>')
 def calcs(wall_art_id):
 
+    """Query and pass all calculating information """
+
     cur_ref_obj = Wall_Art.query.filter(Wall_Art.wall_art_id == wall_art_id).first()
     cur_wall_id = cur_ref_obj.wall_id
     cur_wall_obj = Wall.query.filter(Wall.wall_id == cur_wall_id).first()
@@ -256,6 +282,7 @@ def calcs(wall_art_id):
                 if '_sa_instance_state' in a:
                     a.pop('_sa_instance_state')
                 art.append(a)
+                print "Art LIST: ", art
             return render_template("calc_display.html", wall=wall, art=art)
 
 
