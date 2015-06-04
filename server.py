@@ -70,7 +70,8 @@ def show_project(project_id):
 
 @app.route('/remove_wall/<int:wall_id>', methods=["GET", "POST"])
 def delete_wall(wall_id):
-    #query to delete row from db
+    
+    """ Delete unwanted walls from db"""
 
     wall_obj = Wall.query.filter(Wall.wall_id == wall_id).first()
     db.session.delete(wall_obj)
