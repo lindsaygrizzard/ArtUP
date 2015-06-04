@@ -7,268 +7,287 @@
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
 
+<style> 
+.bgimage {
+    background: url("{{wall.wall_img}}") no-repeat center center; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+</style>
+
 <!-- <link rel="stylesheet" typle="text/css" href="/static/style.css"> -->
 {% endblock %}
 
 {% block content %}
-<div class="wall">
-
+<div class="wall"> 
 </div>
+    <div class="user_view_wall">
+        <p>
+            <table>
+                <tr>
+                    <th id ='wall-name'> Wall Name </th>
+                    <th id ='wall-width'> Wall Width</th>
+                    <th>Original End Margins</th>
+                    <th>Original Mid Margins</th>
+                    <th>Dragged Left End Margin </th>       
+                    <th>Dragged Right End Margin </th>      
+                 </tr>
+                 <tr>
+                    <td id ='wall-name'> {{wall.wall_name}} </td>
+                    <td id ='wall-width'> {{wall.wall_width / 1000}}</td>
+                    <td id ='EMO'> _</td>
+                    <td id ='MMO'> _</td>
+                    <td id ='LEM'> _</td>  
+                    <td id ='REM'> _</td>   
 
-	<div class="user_view_wall">
-		<p>
-			<table>
-				<tr>
-				 	<th id ='wall-name'> Wall Name </th>
-				 	<th id ='wall-width'> Wall Width</th>
-				 	<th>Original End Margins</th>
-				 	<th>Original Mid Margins</th>
-				 	<th>Dragged Left End Margin </th>		
-				 	<th>Dragged Right End Margin </th>		
-				 </tr>
-				 <tr>
-				  	<td id ='wall-name'> {{wall.wall_name}} </td>
-				  	<td id ='wall-width'> {{wall.wall_width / 1000}}</td>
-				  	<td id ='EMO'> _</td>
-				  	<td id ='MMO'> _</td>
-				  	<td id ='LEM'> _</td>  
-				  	<td id ='REM'> _</td> 	
+                  </tr>
+            </table>
+        <p>
+    <div class="user_view_art">
+        <p><table>
+            <tr>
+                <th>Art Name</th>
+                <th>Origin X Peg </th>      
+                <th>Origin Y Peg </th>  
+                <th>Dragged X Peg </th> 
+                <th>Dragged Y Peg </th>
+                <th>Device Type </th>
 
-				  </tr>
-			</table>
-		<p>
-	<div class="user_view_art">
-		<p><table>
-			<tr>
-			    <th>Art Name</th>
-			    <th>Origin X Peg </th>		
-			    <th>Origin Y Peg </th>	
-			    <th>Dragged X Peg </th>	
-			    <th>Dragged Y Peg </th>
-			    <th>Device Type </th>
-
-			</tr>
-			{% for item in art %}
-			 <tr> 
-				<td class="user_view_output" id="{{ item.art_name }}"> 
-					{{ item.art_name }} </td>
-				<td id ='{{item.art_name}}_OX'> _</td>
-				<td id ='{{item.art_name}}_OY'> _</td>
-				<td id ='{{item.art_name}}_X'> _</td>
-				<td id ='{{item.art_name}}_Y'> _</td>  
-				<td id ='{{item.art_name}}_D'> _</td> 
-			  </tr>
-			{% endfor %} 
-		</table>
-	</div>
-
+            </tr>
+            {% for item in art %}
+             <tr> 
+                <td class="user_view_output" id="{{ item.art_name }}"> 
+                    {{ item.art_name }} </td>
+                <td id ='{{item.art_name}}_OX'> _</td>
+                <td id ='{{item.art_name}}_OY'> _</td>
+                <td id ='{{item.art_name}}_X'> _</td>
+                <td id ='{{item.art_name}}_Y'> _</td>  
+                <td id ='{{item.art_name}}_D'> _</td> 
+              </tr>
+            {% endfor %} 
+        </table>
+    </div>
 
 
 
 
-	<script>
-		var wall = ({{wall|tojson}});
-		var art = ({{art|tojson}});
-		var totArtWidth = 0;
-		var blankWall;
-		var consistantMargins;
-		var midMargin;
-		var endMargin;
-		var p0;
-		var p;
-		var xAxis;
-		var offset;
-		var width = window.innerWidth
-		var delta = window.innerWidth/wall.wall_width * wall.wall_height
-		var decimal;
-		var temp ;
-		var roundTemp;
-		var output;
+
+    <script>
+        var wall = ({{wall|tojson}});
+        var art = ({{art|tojson}});
+        var totArtWidth = 0;
+        var blankWall;
+        var consistantMargins;
+        var midMargin;
+        var endMargin;
+        var p0;
+        var p;
+        var xAxis;
+        var offset;
+        var width = window.innerWidth * 1.75;
+        var delta = window.innerWidth/wall.wall_width * wall.wall_height;
+        var decimal;
+        var temp ;
+        var roundTemp;
+        var output;
 
 
-		function restoreArtFloats(art){
-			for(var i=0; i<art.length; i++){
-				art[i].art_width = art[i].art_width / 1000;
-				art[i].art_height =art[i].art_height / 1000;
-				art[i].device_distance = art[i].device_distance / 1000;
-			}
-		}
-		
-		restoreArtFloats(art);
+        function restoreArtFloats(art){
+            for(var i=0; i<art.length; i++){
+                art[i].art_width = art[i].art_width / 1000 * width / delta;
+                art[i].art_height =art[i].art_height / 1000 * width / delta;
+                art[i].device_distance = art[i].device_distance / 1000 * width / delta;
+            }
+        }
+        
+        restoreArtFloats(art);
 
 
-		wall.wall_width = wall.wall_width / 1000;
-		wall.wall_height = wall.wall_height / 1000;
-		wall.center_line = wall.center_line / 1000;
-		wall.offset_percent = wall.offset_percent / 1000;
+        wall.wall_width = wall.wall_width / 1000 * width / delta;
+        wall.wall_height = wall.wall_height / 1000 * width / delta;
+        wall.center_line = wall.center_line / 1000 * width / delta;
+        wall.offset_percent = wall.offset_percent / 1000;
 
 
-		// FIND TOTAL WIDTH OF ART
-		function allArtsWidths(obj){ 
-			for ( var w = 0; w < obj.length; w++ ){
-			    totArtWidth += obj[w].art_width; 
-			}
-		} 
+        // FIND TOTAL WIDTH OF ART
+        function allArtsWidths(obj){ 
+            for ( var w = 0; w < obj.length; w++ ){
+                totArtWidth += obj[w].art_width; 
+            }
+        } 
 
 
-		// MIDDLE AND END MARGINS
-		function Margins() {
-			blankWall = wall.wall_width - totArtWidth; 
-			consistantMargins = (blankWall / (art.length + 1));
-			offset = consistantMargins * wall.offset_percent;
-			midMargin = consistantMargins - offset; 
-			if (art.length === 2) {
-				endMargin = consistantMargins + offset / 2;
-			} else if (art.length === 1){
-				endMargin = consistantMargins;
-				midMargin = 0;
-			} else { 
-				endMargin = consistantMargins + offset;
-			}
-		}
+        // MIDDLE AND END MARGINS
+        function Margins() {
+            blankWall = wall.wall_width - totArtWidth ; 
+            consistantMargins = (blankWall / (art.length + 1));
+            offset = consistantMargins * wall.offset_percent;
+            midMargin = consistantMargins - offset; 
+            if (art.length === 2) {
+                endMargin = consistantMargins + offset / 2;
+            } else if (art.length === 1){
+                endMargin = consistantMargins;
+                midMargin = 0;
+            } else { 
+                endMargin = consistantMargins + offset;
+            }
+        }
 
 
-		// UPPER EDGE LONGITUDE OF ALL ARTS
-		function upperX(obj) {
-			for(var i = 0; i < obj.length; i ++){
-			    var each = obj[i].art_height / 2 + wall.center_line;
-			    obj[i].upperEdge = each;
-			}
-		}
+        // UPPER EDGE LONGITUDE OF ALL ARTS
+        function upperX(obj) {
+            for(var i = 0; i < obj.length; i ++){
+                var each = obj[i].art_height / 2 + wall.center_line;
+                obj[i].upperEdge = each;
+            }
+        }
 
 
-		//LEFT CORNER COORDINATES FOR MAPPING
-		function leftCornerCords(obj){
-			p0 = endMargin;
-			p = midMargin;
-			xAxis = [p0];
-			for(i=1; i<obj.length; i++){
-			    xAxis[i] = xAxis[i-1] + obj[i-1].art_width + p;
-			}
-			for(var i = 0; i < xAxis.length; i++){
-			    obj[i].leftCorner = {X : 0};
-			    obj[i].leftCorner.X = xAxis[i];
-			}
-		}
+        //LEFT CORNER COORDINATES FOR MAPPING
+        function leftCornerCords(obj){
+            p0 = endMargin;
+            p = midMargin;
+            xAxis = [p0];
+            for(i=1; i<obj.length; i++){
+                xAxis[i] = xAxis[i-1] + obj[i-1].art_width + p;
+            }
+            for(var i = 0; i < xAxis.length; i++){
+                obj[i].leftCorner = {X : 0};
+                obj[i].leftCorner.X = xAxis[i];
+            }
+        }
 
 
-		//"TAC POINT" FOR USER INFO
-		function findPegPoint(obj){ 
-			for(var i = 0; i < obj.length; i++){
-			    obj[i].leftCorner.Y = obj[i].upperEdge;
-			    obj[i].leftCorner.Y = Math.round(obj[i].leftCorner.Y * 100) / 100;
-			    obj[i].leftCorner.X = Math.round(obj[i].leftCorner.X * 100) / 100;
+        //"TAC POINT" FOR USER INFO
+        function findPegPoint(obj){ 
+            for(var i = 0; i < obj.length; i++){
+                obj[i].leftCorner.Y = obj[i].upperEdge;
+                obj[i].leftCorner.Y = Math.round(obj[i].leftCorner.Y * 100) / 100;
+                obj[i].leftCorner.X = Math.round(obj[i].leftCorner.X * 100) / 100;
 
-			    if (obj[i].device_code === 'none'){
-			        obj[i].pegPoint = {X : obj[i].leftCorner.X, 
-			                                Y : obj[i].leftCorner.Y};
-			    } else {
-			        obj[i].pegPoint = {X : (obj[i].leftCorner.X + 
-			        					  	obj[i].art_width/2),
-			                              Y : (obj[i].leftCorner.Y - 
-			                              	obj[i].device_distance)};
-				}
-			}
-		}
+                if (obj[i].device_code === 'none'){
+                    obj[i].pegPoint = {X : obj[i].leftCorner.X, 
+                                            Y : obj[i].leftCorner.Y};
+                } else {
+                    obj[i].pegPoint = {X : (obj[i].leftCorner.X + 
+                                            obj[i].art_width/2),
+                                          Y : (obj[i].leftCorner.Y - 
+                                            obj[i].device_distance)};
+                }
+            }
+        }
 
-		
-		//ORIGINAL CALCULATION DATA
-		function originalOutput(){
+        
+        //ORIGINAL CALCULATION DATA
+        function originalOutput(){
             for(i=0; i<art.length; i++) { 
-            	 //Find X origin X coords
-            	var XO = document.getElementById(art[i].art_name+"_OX");
-	             	if(art[i].device_code === "none"){ ;
-	                        decimal = Math.round(art[i].leftCorner.X * 1000) /1000;
-	                        temp = decimal * 8;
-	                        roundTemp = Math.ceil(temp);
-	                        output = roundTemp/8;
-	                        XO.innerHTML = output
+                 //Find X origin X coords
+                var XO = document.getElementById(art[i].art_name+"_OX");
+                    if(art[i].device_code === "none"){ ;
+                            decimal = Math.round((art[i].leftCorner.X * 1000) / width * delta) / 1000;
+                            temp = decimal * 8;
+                            roundTemp = Math.ceil(temp);
+                            output = roundTemp/8;
+                            XO.innerHTML = output
 
-		             } else { 
-		                    decimal = Math.round((art[i].leftCorner.X + art[i].art_width/2) * 1000) / 1000;
-		                    temp = decimal * 8;
-		                    roundTemp = Math.ceil(temp);
-		                    output = roundTemp/8;
-		                    XO.innerHTML = output
-		             }
-	             //Find Y origin X coord
-	             var YO = document.getElementById(art[i].art_name+"_OY");
-		             if(art[i].device_code === "none") { 
-		                        decimal= Math.round(art[i].leftCorner.Y * 1000) /1000 ;
-		                        temp = decimal * 8;
-		                        roundTemp = Math.ceil(temp);
-		                        output = roundTemp/8;
-		                        YO.innerHTML = output
-		             } else { ;
-		                        decimal = Math.round((art[i].leftCorner.Y - art[i].device_distance) * 1000) /1000;
-		                        temp = decimal * 8;
-		                        roundTemp = Math.ceil(temp);
-		                        output = roundTemp/8;
-		                        YO.innerHTML = output
-		             }
-	            var device = document.getElementById(art[i].art_name+"_D");
-	                    if(art[i].device_code === "none") { 
-	                    	device.innerHTML = "Use Left Corner";
-	                } else {
-	                	device.innerHTML = "Wire";
-	                }
+                     } else { 
+                            decimal = Math.round(((art[i].leftCorner.X + art[i].art_width/2) * 1000) / width * delta) / 1000;
+                            temp = decimal * 8;
+                            roundTemp = Math.ceil(temp);
+                            output = roundTemp/8;
+                            XO.innerHTML = output
+                     }
+                 //Find Y origin X coord
+                 var YO = document.getElementById(art[i].art_name+"_OY");
+                     if(art[i].device_code === "none") { 
+                                decimal= Math.round((art[i].leftCorner.Y * 1000) / width * delta) /1000;
+                                temp = decimal * 8;
+                                roundTemp = Math.ceil(temp);
+                                output = roundTemp/8;
+                                YO.innerHTML = output
+                     } else { ;
+                                decimal = Math.round(((art[i].leftCorner.Y - art[i].device_distance) * 1000) / width * delta) /1000;
+                                temp = decimal * 8;
+                                roundTemp = Math.ceil(temp);
+                                output = roundTemp/8;
+                                YO.innerHTML = output
+                     }
+                var device = document.getElementById(art[i].art_name+"_D");
+                        if(art[i].device_code === "none") { 
+                            device.innerHTML = "Use Left Corner";
+                    } else {
+                        device.innerHTML = "Wire";
+                    }
             }
             //Original Margins    
             var endMarginOrigin = document.getElementById("EMO");
-            	decimal = Math.round(endMargin * 1000) /1000;
-            	temp = decimal * 8;
-            	roundTemp = Math.ceil(temp);
-            	output = roundTemp/8;
-            	endMarginOrigin.innerHTML = output;
+                decimal = Math.round(((endMargin * 1000) /1000) / width * delta);
+                temp = decimal * 8;
+                roundTemp = Math.ceil(temp);
+                output = roundTemp/8;
+                endMarginOrigin.innerHTML = output;
 
             var midMarginOrigin = document.getElementById("MMO");
-            	decimal = Math.round(midMargin * 1000) /1000;
-            	temp = decimal * 8;
-            	roundTemp = Math.ceil(temp);
-            	output = roundTemp/8;
-            	midMarginOrigin.innerHTML = output;
-//////////////////////////////
-//////////////////////////////
-//////////////////////////////
-            // var background = document.getElementById("wall_img");
-            // 	background.innerHTML = "<img src="+wall.wall_img+">";
-//////////////////////////////
-//////////////////////////////
-//////////////////////////////
-		}
+                decimal = Math.round(((midMargin * 1000) /1000) / width * delta);
+                temp = decimal * 8;
+                roundTemp = Math.ceil(temp);
+                output = roundTemp/8;
+                midMarginOrigin.innerHTML = output;
+        }
 
 
-		function dynamicRectangles(){ 	
-			width = window.innerWidth / 2;
-			scale = width * wall.wall_height / 2;
-			width = window.innerWidth;
-			scale = width * wall.wall_height
-			var svg = d3.select(".wall")
-								.append("svg")
+        function dynamicRectangles(){   
+            width = window.innerWidth / 2;
+            scale = width * wall.wall_height / 2;
+            width = window.innerWidth;
+            scale = width * wall.wall_height
+
+            var drag = d3.behavior.drag()
+                .on("drag", dragMove);
+
+            var svg = d3.select(".wall")
+                                .append("svg")
                                 .attr("width", wall.wall_width)
                                 .attr("height", wall.wall_height)
-                                .attr("id", "wall_img")
+                                .attr("class", "bgimage")
                                 .style("border", "1px dashed black");
-            
-	        var drag = d3.behavior.drag()
-	            .on("drag", dragMove);
-	        var rect = svg.selectAll(".draggableRectangle").data(art).enter()
-	        		.append('image')
-	        		.attr('class', 'draggableRectangle')
-	        		.attr('name', function(d) { return d.art_name; })
-	        		.attr('device', function(d) { return d.device_code})
-	                .attr('x', function(d) { return d.leftCorner.X; })
-	                .attr('y', function(d) {return wall.wall_height - d.leftCorner.Y; })
-	                .attr('Ox', function(d) { return d.leftCorner.X; })
-	                .attr('Oy', function(d) {return wall.wall_height - d.leftCorner.Y; })
-	                .attr('width', function(d) { return d.art_width; })
-	                .attr('height', function(d) { return d.art_height; })
-	                .attr("xlink:href", function(d) { return d.art_img; })
-	                .call(drag);
+        
+            var rect = svg.selectAll(".draggableRectangle").data(art).enter()
+                    .append('image')
+                    .attr('class', 'draggableRectangle')
+                    .attr('name', function(d) { return d.art_name; })
+                    .attr('device', function(d) { return d.device_code})
+                    .attr('x', function(d) { return d.leftCorner.X; })
+                    .attr('y', function(d) {return wall.wall_height - d.leftCorner.Y; })
+                    .attr('Ox', function(d) { return d.leftCorner.X; })
+                    .attr('Oy', function(d) {return wall.wall_height - d.leftCorner.Y; })
+                    .attr('width', function(d) { return d.art_width; })
+                    .attr('height', function(d) { return d.art_height; })
+                    .attr("xlink:href", function(d) { return d.art_img; })
+                    .call(drag);
+
+            var line = svg.append("line")
+                        .attr("x1", wall.wall_width/2)
+                        .attr("y1", wall.wall_height)
+                        .attr("x2", wall.wall_width/2)
+                        .attr("y2", 0)
+                        .attr("stroke-width", 1)
+                        .attr("stroke", "red");
+
+            var line = svg.append("line")
+                        .attr("x1", 0)
+                        .attr("y1", wall.wall_height - wall.center_line)
+                        .attr("x2", wall.wall_width)
+                        .attr("y2", wall.wall_height - wall.center_line)
+                        .attr("stroke-width", 1)
+                        .attr("stroke", "red");
 
 
             function dragMove(d) {
-            	//if art has hanging wire, math it in. Else return top left corner
+                //if art has hanging wire, math it in. Else return top left corner
                      d3.select(this)
                          .attr("x", function () {return d3.event.x})
                          .attr("y", function () {return d3.event.y})
@@ -279,40 +298,41 @@
                      var minXValue = d3.min(image[0], function(d) {
                        return d.x.animVal.value; }) //returns smallest x value
                      var leftEndMargin = document.getElementById("LEM");
-                     	leftEndMargin.innerHTML = Math.round(minXValue);
+                        leftEndMargin.innerHTML = Math.round((minXValue) / width * delta);
                      //largest x cord (to find most right art work)
                      var maxXValue = d3.max(image[0], function(d) {
                        return d.x.animVal.value + d.width.animVal.value; });
                      var rightEndMargin = document.getElementById("REM");
-                     	rightEndMargin.innerHTML = Math.round(wall.wall_width - maxXValue);
+                        rightEndMargin.innerHTML = Math.round((wall.wall_width - maxXValue) / width * delta);
 
                      if(d.device_code === "none"){ ;
                             var X = document.getElementById(d.art_name+"_X");
-                                X.innerHTML = Math.round(d3.event.x);
+                                X.innerHTML = Math.round((d3.event.x)/ width * delta);
                      } else { ;
                             var X = document.getElementById(d.art_name+"_X");
-                                X.innerHTML = Math.round(d3.event.x);
+                                X.innerHTML = Math.round((d3.event.x)/ width * delta);
                      }
                      if(d.device_code === "none") { 
                             var Y = document.getElementById(d.art_name+"_Y");
-                                Y.innerHTML = Math.round(wall.wall_height -d3.event.y);
+                                Y.innerHTML = Math.round((wall.wall_height -d3.event.y) / width * delta);
                      } else { ;
                             var Y = document.getElementById(d.art_name+"_Y");
-                                Y.innerHTML = Math.round((wall.wall_height -d3.event.y) - 
-                                                                            d.device_distance);
-                     } 	
+                                Y.innerHTML = Math.round(((wall.wall_height -d3.event.y) - 
+                                                                            d.device_distance) / width * delta);
+                     }  
              }
-		}
+        }
 
-		allArtsWidths(art);
-		Margins();
-		upperX(art);
-		leftCornerCords(art);
-		findPegPoint(art);
-		originalOutput()
-		dynamicRectangles();
-		 
+        allArtsWidths(art);
+        Margins();
+        upperX(art);
+        leftCornerCords(art);
+        findPegPoint(art);
+        originalOutput()
+        dynamicRectangles();
+         
 </script>
+
 
 
 {% endblock %}
