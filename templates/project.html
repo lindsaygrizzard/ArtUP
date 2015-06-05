@@ -34,7 +34,7 @@
     </tr>
   </thead>
   <tbody>
-      {% for wall in wall_list %}
+      {% for wall in wall_list|reverse %}
         <tr scope="col" id="{{wall.wall_id}}">
           <td>
             <a id="list" href= '/saved_wall_process/{{wall.wall_id}}'>

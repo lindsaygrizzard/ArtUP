@@ -4,6 +4,7 @@
 
 {% block head %}
  <link rel="stylesheet" type="text/css" href="/static/calc_style.css">
+ <script type="text/javascript" src="/../static/fraction.js"></script>
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
 
@@ -14,6 +15,10 @@
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+}
+
+line {
+    opacity: 0.2;
 }
 
 </style>
@@ -38,7 +43,7 @@
                  <tr>
                     <td id ='wall-name'> {{wall.wall_name}} </td>
                     <td id ='wall-width'> {{wall.wall_width / 1000}}</td>
-                    <td id ='EMO'> _</td>
+                    <td id ='EMO'> _ </td>
                     <td id ='MMO'> _</td>
                     <td id ='LEM'> _</td>  
                     <td id ='REM'> _</td>   
@@ -87,28 +92,29 @@
         var p;
         var xAxis;
         var offset;
-        var width = window.innerWidth * 1.75;
-        var delta = window.innerWidth/wall.wall_width * wall.wall_height;
+        var width = window.innerWidth * .85;
+        var delta = width/ (wall.wall_width /1000);
         var decimal;
         var temp ;
         var roundTemp;
         var output;
+        var fraction;
 
 
         function restoreArtFloats(art){
             for(var i=0; i<art.length; i++){
-                art[i].art_width = art[i].art_width / 1000 * width / delta;
-                art[i].art_height =art[i].art_height / 1000 * width / delta;
-                art[i].device_distance = art[i].device_distance / 1000 * width / delta;
+                art[i].art_width = art[i].art_width / 1000 * delta;
+                art[i].art_height =art[i].art_height / 1000 * delta;
+                art[i].device_distance = art[i].device_distance / 1000 * delta;
             }
         }
         
         restoreArtFloats(art);
 
 
-        wall.wall_width = wall.wall_width / 1000 * width / delta;
-        wall.wall_height = wall.wall_height / 1000 * width / delta;
-        wall.center_line = wall.center_line / 1000 * width / delta;
+        wall.wall_width = wall.wall_width / 1000 * delta;
+        wall.wall_height = wall.wall_height / 1000 * delta;
+        wall.center_line = wall.center_line / 1000 * delta;
         wall.offset_percent = wall.offset_percent / 1000;
 
 
@@ -136,7 +142,6 @@
             }
         }
 
-
         // UPPER EDGE LONGITUDE OF ALL ARTS
         function upperX(obj) {
             for(var i = 0; i < obj.length; i ++){
@@ -144,7 +149,6 @@
                 obj[i].upperEdge = each;
             }
         }
-
 
         //LEFT CORNER COORDINATES FOR MAPPING
         function leftCornerCords(obj){
@@ -187,33 +191,33 @@
                  //Find X origin X coords
                 var XO = document.getElementById(art[i].art_name+"_OX");
                     if(art[i].device_code === "none"){ ;
-                            decimal = Math.round((art[i].leftCorner.X * 1000) / width * delta) / 1000;
+                            decimal = Math.round(art[i].leftCorner.X) / delta;
                             temp = decimal * 8;
                             roundTemp = Math.ceil(temp);
                             output = roundTemp/8;
-                            XO.innerHTML = output
+                            XO.innerHTML = fraction(output) +" in";
 
                      } else { 
-                            decimal = Math.round(((art[i].leftCorner.X + art[i].art_width/2) * 1000) / width * delta) / 1000;
+                            decimal = Math.round(art[i].leftCorner.X + art[i].art_width/2) / delta;
                             temp = decimal * 8;
                             roundTemp = Math.ceil(temp);
                             output = roundTemp/8;
-                            XO.innerHTML = output
+                            XO.innerHTML = fraction(output) +" in";
                      }
                  //Find Y origin X coord
                  var YO = document.getElementById(art[i].art_name+"_OY");
                      if(art[i].device_code === "none") { 
-                                decimal= Math.round((art[i].leftCorner.Y * 1000) / width * delta) /1000;
+                                decimal= Math.round(art[i].leftCorner.Y) / delta ;
                                 temp = decimal * 8;
                                 roundTemp = Math.ceil(temp);
                                 output = roundTemp/8;
-                                YO.innerHTML = output
+                                YO.innerHTML = fraction(output) +" in";
                      } else { ;
-                                decimal = Math.round(((art[i].leftCorner.Y - art[i].device_distance) * 1000) / width * delta) /1000;
+                                decimal = Math.round(art[i].leftCorner.Y - art[i].device_distance) / delta;
                                 temp = decimal * 8;
                                 roundTemp = Math.ceil(temp);
                                 output = roundTemp/8;
-                                YO.innerHTML = output
+                                YO.innerHTML = fraction(output) +" in";
                      }
                 var device = document.getElementById(art[i].art_name+"_D");
                         if(art[i].device_code === "none") { 
@@ -224,18 +228,18 @@
             }
             //Original Margins    
             var endMarginOrigin = document.getElementById("EMO");
-                decimal = Math.round(((endMargin * 1000) /1000) / width * delta);
+                decimal = Math.round(endMargin) / delta;
                 temp = decimal * 8;
                 roundTemp = Math.ceil(temp);
                 output = roundTemp/8;
-                endMarginOrigin.innerHTML = output;
+                endMarginOrigin.innerHTML = fraction(output) +" in";
 
             var midMarginOrigin = document.getElementById("MMO");
-                decimal = Math.round(((midMargin * 1000) /1000) / width * delta);
+                decimal = Math.round(midMargin) / delta;
                 temp = decimal * 8;
                 roundTemp = Math.ceil(temp);
                 output = roundTemp/8;
-                midMarginOrigin.innerHTML = output;
+                midMarginOrigin.innerHTML = fraction(output);
         }
 
 
@@ -274,7 +278,7 @@
                         .attr("y1", wall.wall_height)
                         .attr("x2", wall.wall_width/2)
                         .attr("y2", 0)
-                        .attr("stroke-width", 1)
+                        .attr("stroke-width", 2)
                         .attr("stroke", "red");
 
             var line = svg.append("line")
@@ -282,7 +286,7 @@
                         .attr("y1", wall.wall_height - wall.center_line)
                         .attr("x2", wall.wall_width)
                         .attr("y2", wall.wall_height - wall.center_line)
-                        .attr("stroke-width", 1)
+                        .attr("stroke-width", 2)
                         .attr("stroke", "red");
 
 
@@ -291,37 +295,46 @@
                      d3.select(this)
                          .attr("x", function () {return d3.event.x})
                          .attr("y", function () {return d3.event.y})
+
                      var name = document.getElementById(d.art_name);
                              name.innerHTML = d.art_name;
+
                      var image = d3.selectAll("image");
                      //smallest x cord (to find most left art work)
+
                      var minXValue = d3.min(image[0], function(d) {
                        return d.x.animVal.value; }) //returns smallest x value
                      var leftEndMargin = document.getElementById("LEM");
-                        leftEndMargin.innerHTML = Math.round((minXValue) / width * delta);
+                        leftEndMargin.innerHTML = Math.round(minXValue / delta)+" in";
+
                      //largest x cord (to find most right art work)
                      var maxXValue = d3.max(image[0], function(d) {
                        return d.x.animVal.value + d.width.animVal.value; });
                      var rightEndMargin = document.getElementById("REM");
-                        rightEndMargin.innerHTML = Math.round((wall.wall_width - maxXValue) / width * delta);
+                        rightEndMargin.innerHTML = Math.round((wall.wall_width - maxXValue) / delta)+" in";
+
 
                      if(d.device_code === "none"){ ;
                             var X = document.getElementById(d.art_name+"_X");
-                                X.innerHTML = Math.round((d3.event.x)/ width * delta);
+                                X.innerHTML = Math.round(d3.event.x / delta);
                      } else { ;
                             var X = document.getElementById(d.art_name+"_X");
-                                X.innerHTML = Math.round((d3.event.x)/ width * delta);
+                                X.innerHTML = Math.round((d3.event.x + d.art_width/2) / delta)+" in";
                      }
                      if(d.device_code === "none") { 
                             var Y = document.getElementById(d.art_name+"_Y");
-                                Y.innerHTML = Math.round((wall.wall_height -d3.event.y) / width * delta);
+                                Y.innerHTML = Math.round((wall.wall_height -d3.event.y)/ delta)+" in";
                      } else { ;
                             var Y = document.getElementById(d.art_name+"_Y");
                                 Y.innerHTML = Math.round(((wall.wall_height -d3.event.y) - 
-                                                                            d.device_distance) / width * delta);
-                     }  
+                                                                            d.device_distance)/ delta)+" in";
+                     }
+
              }
         }
+
+
+
 
         allArtsWidths(art);
         Margins();
@@ -331,7 +344,24 @@
         originalOutput()
         dynamicRectangles();
          
+
+        function HCF(u, v) { 
+            var U = u, V = v
+            while (true) {
+                if (!(U%=V)) return V
+                if (!(V%=U)) return U 
+            } 
+        }
+
+
+
+
+
+
 </script>
+
+
+
 
 
 
