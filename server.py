@@ -42,16 +42,16 @@ def list_projects():
 
 
 
-# @app.route('/remove_project/<int:project_id>', methods=["GET", "POST"])
-# def delete_project(project_id):
-#     #query to delete row from db
+@app.route('/remove_project/<int:project_id>', methods=["GET", "POST"])
+def delete_project(project_id):
+    #query to delete row from db
 
-#     project_obj = Project.query.filter(Project.project_id == project_id).first()
-#     db.session.delete(project_obj)
-#     db.session.commit()
-#     print "AJAX project ID", project_id
+    project_obj = Project.query.filter(Project.project_id == project_id).first()
+    db.session.delete(project_obj)
+    db.session.commit()
+    print "AJAX project ID", project_id
 
-#     return jsonify({'project_id':project_id})
+    return jsonify({'project_id':project_id})
 
 
 @app.route('/project/<int:project_id>', methods=["GET", "POST"])
@@ -164,18 +164,13 @@ def process_art_info(project_id, wall_id):
         print "WALL ID: ", wall_id
 
         new_art_name = request.args.get("new_art")
-
         art_height = request.args.get("art_height")
         height_fraction = request.args.get("art_height_fraction")
-
         art_width = request.args.get("art_width")
         width_fraction = request.args.get("art_width_fraction")
-
         device_code = request.args.get("device_code")
-
         device_distance = request.args.get("device_distance")
         device_fraction = request.args.get("art_device_fraction")
-
         art_img = request.args.get("img")
 
         session['art_name'] = new_art_name
@@ -259,7 +254,6 @@ def calcs(wall_art_id):
     #pop off unwanted object
     wall.pop('_sa_instance_state')
 
-    #FOR MVP (REMOVE ON NEXT ITERATION TO ALOW MORE ART THAN WALL)
     art_ids = []
     for obj in ref_by_wall_obj:
         art_id = obj.art_id
@@ -272,7 +266,6 @@ def calcs(wall_art_id):
     for i in art_objs:
         art_widths.append(art_obj.art_width)
         if sum(art_widths) >= wall_width:
-            db.session.delete(cur_ref_obj)
             flash("Art width exceeds wall space")
             return render_template("homepage.html")
 
@@ -315,8 +308,6 @@ def process_project_name():
 
         project_obj = Project.query.filter(Project.project_name == session['project_name']).first()
         cur_project_name = project_obj.project_name
-        # print "PROJECT OBJECT: ", project_obj
-        # print "PROJECT ID: ", cur_project_name
 
         flash("You just created a NEW project named %s!" % cur_project_name)
         return redirect('/user-profile')
