@@ -11,7 +11,7 @@
 			<form action ="/project/{{ project_id }}/wall_process/artform">
 				<fieldset>
 					<p><label class="name"> Wall Name </label>
-					<input class="name_input" type="text" name="new_wall" value="Wall Name">
+					<input class="name_input" type="text" name="new_wall">
 					</p>			
 					<p><label> *Margin Offset 
 					    <select class="offset" name ="offset_percent">
@@ -27,7 +27,7 @@
 					    </select></label>
 					</p>			
 					<p><label> Wall Width </label>
-					    <input type="text" name="wall_width" value="200"> 
+					    <input type="text" name="wall_width" value="350"> 
 					    <select name ="wall_width_fraction">
 					    	<option value="0.000"> 0 </option> 
 					    	<option value="0.125"> 1/8 </option> 
@@ -64,7 +64,7 @@
 					    	<option value="0.875"> 7/8 </option> 
 					    </select>
 				        <label> Image? (copy image url into field) <br>
-				    	    <input type="text" name="wall_img" value="http://www.clker.com/cliparts/H/M/h/Z/t/5/just-black-frame-md.png"> 
+				    	    <input type="text" name="wall_img" value="https://c1.staticflickr.com/1/216/478083244_b417c1badd_b.jpg"> 
 				    	</label>  <br>
 						</p>	 
 					<p><input type="submit" value="Submit">

@@ -31,19 +31,33 @@
     </tr>
   </thead>
   <tbody>
-      {% for project in project_list %}
-        <tr scope="col">
+      {% for project in project_list|reverse  %}
+        <tr id="{{project.project_id}}" scope="col">
            <td><a href = '/project/{{ project.project_id }}' 
             id = "list" data-hover="{{ project.project_name }}">
             {{ project.project_name }}
-            </a><td>
+            </a>
+            <button type="button" class="project_item" data-id="{{project.project_id}}">     
+                Remove
+            </button>
+            <td>
         <tr>
 
       {% endfor %}
   </tbody>
 </table>
 
+<script>
 
+  $('.project_item').on('click', function(evt){
+      var project_id = $($(this).context).data().id;
+      var url = '/remove_project/'+project_id;
+      $.post(url, function(data){
+        $("#"+data.project_id).remove();
+      });
+  });
+
+</script>
 
 
 
