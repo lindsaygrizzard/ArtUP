@@ -97,6 +97,7 @@ class Art(db.Model):
     __tablename__ = "arts"
 
     art_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    wall_id = db.Column(db.Integer, db.ForeignKey('walls.wall_id'))
     art_name = db.Column(db.String, nullable=True, default='Stock Artwork')
     device_code = db.Column(db.String, nullable=False, default='none')
     art_height = db.Column(db.Integer, nullable=False)

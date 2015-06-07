@@ -41,6 +41,20 @@ def list_projects():
         return render_template('homepage.html')
 
 
+@app.route('/project/<int:project_id>', methods=["GET", "POST"])
+def show_project(project_id):
+
+    """About project/ list of walls"""
+    walls = Wall.query.filter(Wall.project_id == project_id).all()
+    project_obj = Project.query.filter(project_id == Project.project_id).first()
+    project_name = project_obj.project_name
+    print "CURRENT PROJECT NAME: ", project_name
+
+    return render_template("project.html",
+                           wall_list=walls,
+                           project_id=project_id,
+                           project_name=project_name)
+
 
 @app.route('/remove_project/<int:project_id>', methods=["GET", "POST"])
 def delete_project(project_id):
@@ -50,35 +64,57 @@ def delete_project(project_id):
     db.session.delete(project_obj)
     db.session.commit()
     print "AJAX project ID", project_id
+    return jsonify({'project_id': project_id})
 
-    return jsonify({'project_id':project_id})
+
+@app.route('/new-project')
+def project_name():
+
+    """List new project name"""
+
+    return render_template("new_project.html")
 
 
-@app.route('/project/<int:project_id>', methods=["GET", "POST"])
-def show_project(project_id):
+@app.route('/new-project-process')
+def process_project_name():
 
-    """About project/ list of walls"""
-    walls = Wall.query.filter(Wall.project_id == project_id).all()
-    project_obj = Project.query.filter(project_id == Project.project_id).first()
-    project_name = project_obj.project_name
+    """Store new project name"""
 
-    return render_template("project.html",
-                           wall_list=walls,
-                           project_id=project_id,
-                           project_name=project_name)
+    if 'email' in session:
+        user_obj = User.query.filter(User.email == session['email']).first()
+        cur_user_id = user_obj.user_id
+        new_pro = request.args.get('new_project')
+
+        session['project_name'] = new_pro
+
+        cur_pro_name = Project(project_name=new_pro,
+                               user_id=cur_user_id)
+
+        db.session.add(cur_pro_name)
+        db.session.commit()
+
+        print "CURRENT PROJECT NAME: ", cur_pro_name.project_name
+
+        flash("You just created a NEW project named %s!" % cur_pro_name.project_name)
+        return redirect('/user-profile')
+
+    else:
+        return redirect('/login')
 
 
 @app.route('/remove_wall/<int:wall_id>', methods=["GET", "POST"])
 def delete_wall(wall_id):
-    
+
     """ Delete unwanted walls from db"""
 
     wall_obj = Wall.query.filter(Wall.wall_id == wall_id).first()
+    print "WALL OBJ ", wall_obj
+
     db.session.delete(wall_obj)
     db.session.commit()
     print "AJAX WALL ID", wall_id
 
-    return jsonify({'wall_id':wall_id})
+    return jsonify({'wall_id': wall_id})
 
 
 @app.route('/project/<int:project_id>/new-wall')
@@ -89,7 +125,9 @@ def get_wall_info(project_id):
     if 'email' in session:
         project_obj = Project.query.filter(Project.project_id == project_id).first()
         cur_project_name = project_obj.project_name
-        # print "CURRENT PROJECT NAME: ", cur_project_name
+
+        print "CURRENT PROJECT NAME FOR NEW WALL: ", cur_project_name
+
         return render_template("new_wall.html",
                                project_id=project_id,
                                project_name=cur_project_name)
@@ -143,6 +181,9 @@ def process_wall_info(project_id):
         wall_id = cur_wall.wall_id
         wall_name = cur_wall.wall_name
 
+        print "CURRENT PROJECT NAME FOR  ART FORM: ", project_obj.project_name
+        print "CURRENT WALL NAME FOR  ART FORM: ", wall_name
+
         return render_template("new_art.html",
                                project_id=project_id,
                                wall_id=wall_id,
@@ -159,9 +200,8 @@ def process_art_info(project_id, wall_id):
 
     if 'email' in session:
         cur_wall_obj = Wall.query.filter(wall_id == Wall.wall_id).first()
-        cur_wall_id = cur_wall_obj.wall_id
         cur_wall_name = cur_wall_obj.wall_name
-        print "WALL ID: ", wall_id
+        print "CURRENT WALL NAME: ", cur_wall_name
 
         new_art_name = request.args.get("new_art")
         art_height = request.args.get("art_height")
@@ -173,6 +213,7 @@ def process_art_info(project_id, wall_id):
         device_fraction = request.args.get("art_device_fraction")
         art_img = request.args.get("img")
 
+        print "NEW ART NAME: ", new_art_name
         session['art_name'] = new_art_name
 
         adjusted_width = (int((int(art_width) + float(width_fraction)) * 1000))
@@ -183,7 +224,8 @@ def process_art_info(project_id, wall_id):
         print "ART adjusted_device: ", adjusted_device
 
         #save info to Art table
-        cur_art = Art(art_name=new_art_name,
+        cur_art = Art(wall_id=wall_id,
+                      art_name=new_art_name,
                       art_height=adjusted_height,
                       art_width=adjusted_width,
                       device_code=device_code,
@@ -197,19 +239,10 @@ def process_art_info(project_id, wall_id):
         art_obj = Art.query.filter(Art.art_name == cur_art.art_name).first()
         art_id = art_obj.art_id
 
-        new_wall_art = Wall_Art(art_id=art_id,
-                                wall_id=cur_wall_id)
-
-        db.session.add(new_wall_art)
-        db.session.commit()
-
-        wall_art_obj = Wall_Art.query.filter(Wall_Art.art_id == art_id).first()
-        wall_art_id = wall_art_obj.art_id
-
         submit_option = request.args.get("submit")
         if submit_option == "submit and display":
             return render_template('generate.html',
-                                   wall_art_id=wall_art_id)
+                                   wall_id=wall_id)
 
         else:
             return render_template('new_art.html',
@@ -226,94 +259,43 @@ def saved_wall_process(wall_id):
 
     """processes and formats saved wall data"""
 
-    cur_wall_art_obj = Wall_Art.query.filter(Wall_Art.wall_id == wall_id).first()
-    cur_wall_art_id = cur_wall_art_obj.wall_art_id
+    cur_wall_obj = Art.query.filter(Art.wall_id == wall_id).first()
+    cur_wall_id = cur_wall_obj.wall_id
 
-    if cur_wall_art_obj is None:
+    if cur_wall_obj is None:
         flash("No art found, make new wall")
         return redirect('/')
     else:
         return render_template('generate.html',
-                               wall_art_id=cur_wall_art_id)
+                               wall_id=cur_wall_id)
 
 
-@app.route('/calcdisplay/<int:wall_art_id>')
-def calcs(wall_art_id):
+@app.route('/calcdisplay/<int:wall_id>')
+def calcs(wall_id):
 
     """Query and pass all calculating information """
 
-    cur_ref_obj = Wall_Art.query.filter(Wall_Art.wall_art_id == wall_art_id).first()
-    cur_wall_id = cur_ref_obj.wall_id
+    cur_wall_id = wall_id
     cur_wall_obj = Wall.query.filter(Wall.wall_id == cur_wall_id).first()
-    ref_by_wall_obj = Wall_Art.query.filter(Wall_Art.wall_id == cur_wall_id).all()
-    wall_width = cur_wall_obj.wall_width
-    art_objs = Art.query.filter(Art.art_id == Wall_Art.art_id).all()
+    print "cur_wall_obj: ", cur_wall_obj
+    art_objs = Art.query.filter(Art.wall_id == cur_wall_id).all()
+    print "art Objs: ", art_objs
 
     #prep for javascript
     wall = cur_wall_obj.__dict__
     #pop off unwanted object
     wall.pop('_sa_instance_state')
 
-    art_ids = []
-    for obj in ref_by_wall_obj:
-        art_id = obj.art_id
-        art_ids.append(art_id)
-    art_objs = []
-    for num in art_ids:
-        art_obj = Art.query.filter(Art.art_id == num).first()
-        art_objs.append(art_obj)
-    art_widths = []
+    art = []
     for i in art_objs:
-        art_widths.append(art_obj.art_width)
-        if sum(art_widths) >= wall_width:
-            flash("Art width exceeds wall space")
-            return render_template("homepage.html")
-
-        else:
-            art = []
-            for i in art_objs:
-                a = i.__dict__
-                if '_sa_instance_state' in a:
-                    a.pop('_sa_instance_state')
-                art.append(a)
-                print "Art LIST: ", art
-            return render_template("calc_display.html", wall=wall, art=art)
+        a = i.__dict__
+        if '_sa_instance_state' in a:
+            a.pop('_sa_instance_state')
+        art.append(a)
+        print "Art LIST: ", art
+    return render_template("calc_display.html", wall=wall, art=art)
 
 
-@app.route('/new-project')
-def project_name():
-
-    """List new project name"""
-
-    return render_template("new_project.html")
-
-
-@app.route('/new-project-process')
-def process_project_name():
-
-    """Store new project name"""
-
-    if 'email' in session:
-        user_obj = User.query.filter(User.email == session['email']).first()
-        cur_user_id = user_obj.user_id
-        new_pro = request.args.get('new_project')
-
-        session['project_name'] = new_pro
-
-        cur_pro_name = Project(project_name=new_pro,
-                               user_id=cur_user_id)
-
-        db.session.add(cur_pro_name)
-        db.session.commit()
-
-        project_obj = Project.query.filter(Project.project_name == session['project_name']).first()
-        cur_project_name = project_obj.project_name
-
-        flash("You just created a NEW project named %s!" % cur_project_name)
-        return redirect('/user-profile')
-
-    else:
-        return redirect('/login')
 
 
 ##################################
