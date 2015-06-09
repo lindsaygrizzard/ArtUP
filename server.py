@@ -61,8 +61,8 @@ def delete_project(project_id):
     #query to delete row from db
 
     project_obj = Project.query.filter(Project.project_id == project_id).first()
-    db.session.delete(project_obj)
-    db.session.commit()
+    # db.session.delete(project_obj)
+    # db.session.commit()
     print "AJAX project ID", project_id
     return jsonify({'project_id': project_id})
 
@@ -84,11 +84,13 @@ def process_project_name():
         user_obj = User.query.filter(User.email == session['email']).first()
         cur_user_id = user_obj.user_id
         new_pro = request.args.get('new_project')
+        project_disc = request.args.get('project_disc')
 
         session['project_name'] = new_pro
 
         cur_pro_name = Project(project_name=new_pro,
-                               user_id=cur_user_id)
+                               user_id=cur_user_id,
+                               project_disc=project_disc)
 
         db.session.add(cur_pro_name)
         db.session.commit()
@@ -109,9 +111,11 @@ def delete_wall(wall_id):
 
     wall_obj = Wall.query.filter(Wall.wall_id == wall_id).first()
     print "WALL OBJ ", wall_obj
+    art_objs = Art.query.filter(Art.wall_id == wall_id).all()
+    print "ART OBJS THAT NEED TO BE DELECTED: ", art_objs
 
-    db.session.delete(wall_obj)
-    db.session.commit()
+    # db.session.delete(wall_obj)
+    # db.session.commit()
     print "AJAX WALL ID", wall_id
 
     return jsonify({'wall_id': wall_id})
@@ -145,6 +149,7 @@ def process_wall_info(project_id):
         project_obj = Project.query.filter(Project.project_id == project_id).first()
         cur_project_id = project_obj.project_id
         wall_name = request.args.get("new_wall")
+        wall_disc = request.args.get("wall_disc")
         wall_width = request.args.get("wall_width")
         width_fraction = request.args.get("wall_width_fraction")
         wall_height = request.args.get("wall_height")
@@ -167,6 +172,7 @@ def process_wall_info(project_id):
         print "offset_percent", offset_percent
 
         cur_wall = Wall(wall_name=wall_name,
+                        wall_disc=wall_disc,
                         wall_width=adjusted_width,
                         wall_height=adjusted_height,
                         center_line=adjusted_center,
