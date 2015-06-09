@@ -39,43 +39,41 @@
   transform: translateX(0px);
 }
 
-
-
-
-header a {
-    display: inline-block;
-    padding: 20px 5%;
-    font-size: 15px;
-}
-
 header {
-  background-color: #5A533E;
-  padding: 15px 0;
+  background-color: #2b596b;
+  width: 100%;
 }
 
 body {
     text-align: center;
 }
 
-a:link {
-  color: rgb(255, 169, 73);
+.head-nav:link {
+  color: white;
   text-decoration: none;
+  font-size: 16px;
 }
 
-a:visited {
-  color: #fcc19f;
+.head-nav:visited {
+  color: white;
 }
 
-a:hover {
-  color: rgba(255, 169, 73, .4);
+header a {
+    display: inline-block;
+    padding: 1% 5%;
+    font-size: 15px;
 }
 
-a:active {
+.head-nav:hover {
+  color: white;
+}
+
+.head-nav:active {
   color: #D9693F;
 }
 
 @media (max-width: 600px) {
-    a:link { font-size: 12px;
+    .head-nav:link { font-size: 12px;
              padding: 10px 4%;}
 }
 

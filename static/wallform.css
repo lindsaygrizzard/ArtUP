@@ -1,6 +1,6 @@
 body {
   font-family: 'Raleway', sans-serif;
-  background-color: #ffedc9;
+  background-color: #5b8aa3;
   color: #5b5b45;
 }
 
@@ -21,7 +21,6 @@ label {
 .container {
   max-width: 450px;
   min-width: 250px;
-  max-height: 510px;
   margin: 4% auto 15% auto;
   background: #d6a877;
   border-radius: 2px;
@@ -29,6 +28,7 @@ label {
 }
 
 input[type="text"] {
+  text-align: center;
   background: rgba(255,255,255,0.1);
   border: none;
   font-size: 13px;
@@ -68,7 +68,7 @@ select.offset {
 input[type="submit"] {
   padding: 8px 30px 8px 30px;
   color: #f2f4ff;
-  background-color: #5a533e;
+  background-color: #2b596b;
   font-size: 18px;
   text-align: center;
   font-style: normal;
@@ -80,7 +80,7 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-  background-color: #4a4f37;
+  background-color: #5b8aa3;
 }
 
 a.help {

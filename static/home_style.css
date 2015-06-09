@@ -1,63 +1,96 @@
 body { 
-  background-color: #c67c4c;
-  background-image: url('/static/img/museum.jpg');
-  background-size: 1900px;
+  background-color: #427089;
+  background-image: url('/static/img/museum_flat.jpg');
+  /*background-image: url('/static/img/museum.jpg');*/
   background-repeat: no-repeat;
-  background-position: center;
-  margin-bottom: 6%;
+  /*background-position: cover;*/
+  background-size: 100%;
+
+}
+/*
+body{
+  background-image: url('/static/img/museum_flat.jpg');
+  background-color: #c67c4c;
+  transition: background-color .8s ease-in,
+              background-image  .8s ease-in;
+}*/
+
+.head-nav:link, .head-nav:visited {
+  color: rgb(191,101,32);
 
 }
 
+div.alert {
+  margin: 10px 10%;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: none;
+  color: #ddf5ff;
+}
+
 .primary-title {
-  color: #fcf3cc;
+  color: #ddf5ff;
+  margin-top: 10%;
+  margin-bottom: 10%;
   font-family: 'Roboto Condensed', sans-serif;
   font-size: 105px;
   font-weight: normal;
   line-height: 1.3;
-  padding-top: 3%;
-  text-shadow: 3px 3px 10px #4a4d68;
 }
 
-p {
- margin-top: 3%;
- color: #fff1e2;
+p.hang-it {
+ padding: 1%;
+ color: #ddf5ff;
  font-weight: 300;
  font-size: 1em;
  font-family: 'Raleway', sans-serif;
  font-weight: 400;
- text-shadow: 1px 1px 8px black;
+
 }
 
 button {
-  background-color: #dbac6f;
+  font-family: 'Roboto Condensed', sans-serif;
+  display: inline-block;
+  width: 240px;
+  color: #fff;
+  border: 1px solid red;
+  text-align: center;
+  outline: none;
+  text-decoration: none;
+  background-color: rgb(191,101,32); 
+  border-color: rgba(255, 255, 255, 0.4) ;
+  transition: background-color 0.2s ease-out,
+              border-color 0.2s ease-out;
 }
 
-button:hover {
-  background-color: #d69651;
+button:hover, button:active {
+  background-color: orange; /* fallback */
+  background-color: rgba(255, 255, 255, 0.4);
+  border-color: #fff; /* fallback */
+  border-color: rgba(255, 255, 255, 0.4);
+  transition: background-color 0.3s ease-in,
+              border-color 0.3s ease-in;
 }
+
 
 #new-project {
-  color: #5a533e;
-  font-size: 1.75em;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 24px;
   font-family: 'Roboto Condensed', sans-serif;
 }
 
-#new-project:visited {
-  color: #5a533e;
-}
+
 
 #new-project:hover {
-  color: #3b3f2e;
-}
-
-#new-project:active {
-  color: #2b2820;
+  color: #fcf5e8; 
+  text-decoration: none;
 }
 
 
-@media (max-width: 600px) {
+
+
+@media (max-width: 800px) {
   body {
-    margin-bottom: 20%;
+    background-image: none; 
   }
   .primary-title{
     font-size: 64px;
@@ -73,6 +106,7 @@ button:hover {
   and (min-width: 600px) 
   and (max-width: 1200px) {
   body {
+    background-color: #427089;
     margin-bottom: 12%;
   }
   .primary-title{
@@ -89,7 +123,6 @@ button:hover {
   and (min-width: 1200px) 
   and (max-width: 1800px) {
   body {
-    margin-bottom: 8%;
   }
   .primary-title{
     font-size: 100px;

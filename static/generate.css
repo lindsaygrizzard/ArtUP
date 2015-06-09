@@ -1,50 +1,39 @@
 body {
-  font-family: 'Raleway', sans-serif;
-  background-color: #ffedc9;
+  font-family: 'Roboto Condensed', sans-serif;  background-color: #5b8aa3;
   color: #5b5b45;
 }
 
 
-
-select {
-  background: rgba(255,255,255,0.1);
-  border: none;
-  font-size: 13px;
-  height: auto;
-  margin: 0;
-  outline: 0;
-  padding: 5px;
-  width: 50%;
-  background-color: #c69869;
-  color: #5b5b45;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.03) inset;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-
-
-select.offset {
-     width: 38%;
-}
 
 input[type="submit"] {
-  padding: 4px 30px 4px 30px;
-  color: #f2f4ff;
-  background-color: #5a533e;
-  font-size: 18px;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 35px;
+  margin-top: 2%;
+  display: inline-block;
+  padding: 5% 15%;
+  color: #fff;
+  border: 1px solid red;
   text-align: center;
-  font-style: normal;
-  border-radius: 5px;
-  border: 1px solid #494434;
-  border-width: 1px 1px 3px;
-  box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+  outline: none;
+  text-decoration: none;
+  background-color: rgb(191,101,32);
+  border-color: rgba(255, 255, 255, 0.4);
+  transition: background-color 0.2s ease-out,
+              border-color 0.2s ease-out;
 }
 
-input[type="submit"]:hover {
-  background-color: #5a533e;
+input[type="submit"]:hover, input[type="submit"]:hover :active {
+  background-color: #fff; /* fallback */
+  background-color: rgba(255, 255, 255, 0.4);
+  border-color: #fff; /* fallback */
+  border-color: rgba(255, 255, 255, 0.4);
+  transition: background-color 0.3s ease-in,
+              border-color 0.3s ease-in;
 }
 
+.generate {
+  margin: 15% 30%;
+}
 
 
 @media screen and (min-width: 480px) {

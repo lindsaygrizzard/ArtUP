@@ -1,6 +1,6 @@
 body {
   font-family: 'Raleway', sans-serif;
-  background-color: #ffedc9;
+  background-color: #5b8aa3;
   color: #5b5b45;
 }
 
@@ -30,9 +30,8 @@ p {
 .container {
   max-width: 450px;
   min-width: 250px;
-  max-height: 510px;
-  padding: 2% auto 10% auto;
   background: #d6a877;
+  padding-bottom: 2%;
   border-radius: 2px;
   box-shadow: 1px 1px 10px  #494434;
 }
@@ -73,9 +72,9 @@ select.offset {
 }
 
 input[type="submit"] {
-  padding: 4px 30px 4px 30px;
+  padding: 1% 30px 1% 30px;
   color: #f2f4ff;
-  background-color: #5a533e;
+  background-color: #2b596b;
   font-size: 18px;
   text-align: center;
   font-style: normal;
@@ -86,15 +85,15 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-  background-color: #4a4f37;
+  background-color: #5b8aa3;
 }
 
-a.help {
+.help {
     color: black;
     font-size: 18px;
-    margin-top: 20px;
 }
-a.help:hover {
+
+.help:hover {
     color: #c69869;
 }
 
