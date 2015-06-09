@@ -63,7 +63,7 @@ h3{
 .para-hints {
   width: 50%;
   margin: 0 auto;
-  font-size: 16px;
+  font-size: 18px;
   color: rgb(112,51,4);
 }
 
@@ -97,7 +97,7 @@ td {
 }
 
 .project-name {
-  font-size: 16px;
+  font-size: 20px;
   padding: 1%;
   width: 170px;
   margin: 6% 20px 4% 0;

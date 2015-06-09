@@ -1,5 +1,5 @@
 header {
-    background-color: grey; 
+    background-color: rgba(83,88,91,0.8); 
 }
 
 body {
@@ -12,8 +12,8 @@ body {
 
 
 table {
-    color: #ddd;
-    background-color: grey;
+    color: #f9fbfc;
+    background-color: rgba(83,88,91,0.8);
 }
 
 .user_vie_art {
@@ -23,14 +23,18 @@ table {
 table, th, td {
     border: 1px solid #777;
     border-collapse: collapse;
-    font-size: 10px;
+    font-size: 14px;
     text-align: center;
     margin: 0 auto;
 }
 
 th, td {
+    font-family: 'Roboto Condensed', sans-serif;
     padding: 7px;
+}
 
+th {
+    color: #d4d5d6;
 }
 
 .user_view_output {

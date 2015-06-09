@@ -1,9 +1,8 @@
 body {
-  font-family: 'Roboto Condensed', sans-serif;  background-color: #5b8aa3;
+  font-family: 'Roboto Condensed', sans-serif;  
+  background-color: #5b8aa3;
   color: #5b5b45;
 }
-
-
 
 input[type="submit"] {
   font-family: 'Roboto Condensed', sans-serif;

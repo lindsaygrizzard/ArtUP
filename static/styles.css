@@ -59,6 +59,7 @@ body {
 }
 
 header a {
+    font-family: 'Roboto Condensed', sans-serif;
     display: inline-block;
     padding: 1% 5%;
     font-size: 15px;
