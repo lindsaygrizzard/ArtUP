@@ -7,50 +7,57 @@
 
 {% block content %}
 
-<div class="new-project">
-   <button> <a href= '/project/{{ project_id }}/new-wall' data-hover="Add New Wall?"> 
-        <span id="new-project">Add New Wall?</span>
-            </a>
-    </button>
-    <h4>For  {{project_name}} Project</h4>
+
+  <div class="new-wall">
+      <a href= '/project/{{ project_id }}/new-wall' data-hover="Add New Wall?"> 
+        <button class="ghost-button">
+          Add New Wall?
+        </button>
+      </a>
+      <h4 class="project-info"> In {{project_name}} Project</h4>
+  </div>
+
+
+
+
+  <div class="help-info-title">
+      <h3> Helpful Tips </h3>
+      <p class="para-hints"> The "margin offset" is the difference between your end margins and margins 
+          between each piece of art. If you want your pieces to be grouped closer together, 
+          increase the percentage. If you arn't sure, try 30%.
+      </p>
+  </div> 
+
+<div class="table">
+  <table>
+    <thead>
+      <tr>
+        <th colspan="2">Your Current Walls</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for wall in wall_list|reverse %}
+          <tr id="{{wall.wall_id}}">
+            <td>
+              <a class="project-name" id="list" href= '/saved_wall_process/{{wall.wall_id}}'>
+                {{ wall.wall_name }} 
+              </a> 
+              <br>
+              {{ wall.wall_disc }}
+            </td>
+            <td>
+              <div class="project_item" type="button" id="remove-button" data-id="{{wall.wall_id}}">
+                  Remove
+              </div>
+            </td>
+        {% endfor %} 
+        <tr>
+    </tbody>
+  </table>
 </div>
 
-
-
-
-<div class="help-info-title">
-    <h3> Helpful Tips </h3>
-    <p> The "margin offset" is the difference between your end margins and margins 
-        between each piece of art. If you want your pieces to be grouped closer together, 
-        increase the percentage. If you arn't sure, try 30%.
-    </p>
-</div> 
-
-
-<table>
-  <thead>
-    <tr>
-      <th scope="col">Wall List:</th>
-    </tr>
-  </thead>
-  <tbody>
-      {% for wall in wall_list|reverse %}
-        <tr scope="col" id="{{wall.wall_id}}">
-          <td>
-            <a id="list" href= '/saved_wall_process/{{wall.wall_id}}'>
-              {{ wall.wall_name }} 
-            </a> 
-            <button type="button" class="wall_item" data-id="{{wall.wall_id}}">Remove
-            </button>
-          <td>
-      {% endfor %} 
-        
-      <tr>
-  </tbody>
-</table>
-
 <script>
-  $('.wall_item').on('click', function(evt){
+  $('.project_item').on('click', function(evt){
       var wall_id = $($(this).context).data().id;
       var url = '/remove_wall/'+wall_id;
       $.post(url, function(data){

@@ -6,46 +6,56 @@
 
 {% block content %}
 
-<div class="new-project">
-   <button> <a href= '/new-project' data-hover="Add New Project?"> 
-   		<span id="new-project">Add New Project?</span>
-            </a>
-    </button>
+<div class="container">
+  <div class="new-project">
+    <a href= '/new-project' class="new-project" data-hover="Add New Project?"> 
+        <button class="ghost-button"> 
+     		   Add New Project? 
+      </button>
+    </a>  
+  </div>
+
+  <div class="help-info">
+    <div class="help-info-title">
+      <h3> Helpful Tips </h3>
+    </div>
+      <p class="para-hints"> A center line the center point at which all of your artwork will pass.
+          If you have no funiture, a good centerline is 58in. If you have funiture, make
+          sure to account for that in your centerline choice. (Add the height of the funiture piece for example) 
+      </p>
+  </div> 
+
+
+
+
+  <table>
+    <thead>
+      <tr>
+          <th colspan="2">Your Projects</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for project in project_list|reverse  %}
+          <tr id="{{project.project_id}}" scope="col">
+             <td>
+                  <a class="project-name" href = '/project/{{ project.project_id }}' id = "list" data-hover="{{ project.project_name }}">
+                      {{ project.project_name }}
+                  </a>
+                    <div class="discription">
+                        {{ project.project_disc }}
+                  </div>
+              </td>
+              <td>
+                  <div class="project_item" id="remove-button" type="button"  data-id="{{project.project_id}}"> 
+                       Remove
+                  </div>
+              <td>
+          </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+  
 </div>
-
-<div class="help-info-title">
-    <h3> Helpful Tips </h3>
-    <p> A center line the center point at which all of your artwork will pass.
-        If you have no funiture, a good centerline is 58in. If you have funiture, make
-        sure to account for that in your centerline choice. (Add the height of the funiture piece for example) 
-    </p>
-</div> 
-
-
-
-
-<table>
-  <thead>
-    <tr>
-      <th scope="col">Projects</th>
-    </tr>
-  </thead>
-  <tbody>
-      {% for project in project_list|reverse  %}
-        <tr id="{{project.project_id}}" scope="col">
-           <td><a href = '/project/{{ project.project_id }}' 
-            id = "list" data-hover="{{ project.project_name }}">
-            {{ project.project_name }}
-            </a>
-            <button type="button" class="project_item" data-id="{{project.project_id}}">     
-                Remove
-            </button>
-            <td>
-        <tr>
-
-      {% endfor %}
-  </tbody>
-</table>
 
 <script>
 

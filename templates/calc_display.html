@@ -81,7 +81,7 @@
         var p;
         var xAxis;
         var offset;
-        var limit = window.innerWidth * .90;
+        var limit = window.innerWidth * .60;
         var delta = limit/ (wall.wall_width /1000);
         var decimal;
         var temp ;
@@ -95,7 +95,7 @@
         //constrain display size if wall length > wall width
         if (window.innerHeight < (wall.wall_height/ 1000 * delta)){
             console.log("WALL HEIGHT IS BIGGER THAN WALL INNER HEIGHT");
-            limit = window.innerHeight * 0.95;
+            limit = window.innerHeight * 0.60;
             delta = limit/ (wall.wall_height/1000);
         }
 
