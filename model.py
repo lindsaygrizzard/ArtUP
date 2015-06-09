@@ -40,6 +40,7 @@ class Project(db.Model):
     project_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     project_name = db.Column(db.String(64), nullable=True, default='Project')
+    project_disc = db.Column(db.String(64), nullable=True, default='My Project')
 
     def __repr__(self):
 
@@ -63,6 +64,7 @@ class Wall(db.Model):
     center_line = db.Column(db.Integer, default=58, nullable=True)
     wall_img = db.Column(db.String(200), nullable=True)
     offset_percent = db.Column(db.String(64), default=3000, nullable=True)
+    wall_disc = db.Column(db.String(64), nullable=True, default='My Wall')
 
     def __repr__(self):
 
