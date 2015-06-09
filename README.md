@@ -12,6 +12,8 @@ JavaScript, jQuery, D3, AJAX, Python, Flask, Jinja, SQLAlchemy, SQLite, HTML, CS
 
 ![artup_app_demo](https://cloud.githubusercontent.com/assets/10122766/8068509/1b84ef9a-0ea9-11e5-887e-d05e1d206b28.gif)
 
+![artup_app_demo](http://im.ezgif.com/tmp/ezgif-2947627776.gif)
+
 
 <h4> Creating a Project/ Viewing a saved project folder </h4>
 Each User can create multiple project repositories. These 'folders' can be used by galleries for an exhibition or the
