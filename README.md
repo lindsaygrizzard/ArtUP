@@ -1,5 +1,5 @@
 # ArtUP
-ArtUP is a art hanging application and repository that allows professional galleries 
+ArtUP is an art hanging application and repository that allows professional galleries 
 and the DIY weekend warrior alike to mathematically generate virtual art installations. 
 Users have the freedom to alter the standard generated output and track their changes. 
 Hanging art work properly can be time consuming and lead to damaged walls if not done 
