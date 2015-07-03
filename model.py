@@ -125,11 +125,11 @@ def connect_to_db(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://localhost/artup"
     db.app = app
     db.init_app(app)
-    # with app.app_context():
-    #         # Extensions like Flask-SQLAlchemy now know what the "current" app
-    #         # is while within this block. Therefore, you can now run........
-    #         db.create_all()
-    # return app
+    with app.app_context():
+            # Extensions like Flask-SQLAlchemy now know what the "current" app
+            # is while within this block. Therefore, you can now run........
+            db.create_all()
+    return app
 
 
 if __name__ == "__main__":

@@ -398,13 +398,12 @@ def process_logout():
 
 if __name__ == "__main__":
 
-    # PORT = int(os.environ.get("PORT", 8000))
     app.debug = True
     connect_to_db(app)
     app.run()
-    # We have to set debug=True here, since it has to be True at the point
-    # that we invoke the DebugToolbarExtension
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+
+    connect_to_db(app)
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
