@@ -6,7 +6,7 @@ import os
 
 
 app = Flask(__name__)
-SECRET_KEY = os.environ.get("FLASK_SECRET_KEY", "ABCDEF")
+app.secret_key = "ABC"
 app.jinja_env.undefined = StrictUndefined
 
 #########################################
@@ -394,23 +394,16 @@ def process_logout():
     return redirect("/")
 
 
-@app.route("/error")
-def error():
-    raise Exception("Error!")
-
 #######################################################
 
 if __name__ == "__main__":
-    PORT = int(os.environ.get("PORT", 5000))
 
-    DEBUG = "NO_DEBUG" not in os.environ
-
+    app.debug = True
     connect_to_db(app)
     app.run()
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
     connect_to_db(app)
-    app.run(debug=DEBUG, host="0.0.0.0", port=PORT)
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
