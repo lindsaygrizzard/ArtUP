@@ -122,7 +122,8 @@ class Art(db.Model):
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://localhost/artup"
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL",
+                              "postgresql:///lindsaygrizzard")
     db.app = app
     db.init_app(app)
     with app.app_context():
