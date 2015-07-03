@@ -397,7 +397,7 @@ def process_logout():
 #######################################################
 
 if __name__ == "__main__":
-    PORT = int(os.environ.get("PORT", 5432))
+    PORT = int(os.environ.get("PORT", 5000))
 
     app.debug = True
     connect_to_db(app)
