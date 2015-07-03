@@ -1,7 +1,8 @@
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
-from model import User, Project, Wall, Wall_Art, Art, connect_to_db, db
+from model import User, Project, Wall, Art, connect_to_db, db
+import os
 
 
 app = Flask(__name__)
@@ -396,12 +397,14 @@ def process_logout():
 #######################################################
 
 if __name__ == "__main__":
+
+    # PORT = int(os.environ.get("PORT", 8000))
+    app.debug = True
+    connect_to_db(app)
+    app.run()
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-    app.debug = False
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-
-    connect_to_db(app)
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)

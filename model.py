@@ -2,6 +2,8 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
+# import os
+
 
 # This is the connection to the SQLite database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -120,10 +122,14 @@ class Art(db.Model):
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
-    # Configure to use our SQLite database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///artup.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://localhost/artup"
     db.app = app
     db.init_app(app)
+    # with app.app_context():
+    #         # Extensions like Flask-SQLAlchemy now know what the "current" app
+    #         # is while within this block. Therefore, you can now run........
+    #         db.create_all()
+    # return app
 
 
 if __name__ == "__main__":
