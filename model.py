@@ -2,7 +2,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
-# import os
+import os
 
 
 # This is the connection to the SQLite database; we're getting this through
@@ -122,7 +122,8 @@ class Art(db.Model):
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://lindsaygrizzard/artup"
+    DATABASE_URL = os.environ.get("SQLALCHEMY_DATABASE_URL")
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
     db.app = app
     db.init_app(app)
     with app.app_context():
