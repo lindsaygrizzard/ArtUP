@@ -43,3 +43,41 @@ Using the D3 drag feature and in depth DOM manipulation, the user can drag each 
 This process keeps track of the left and right margins regardless of which piece is moved for easy design balance. 
 
 ![screen shot 2015-06-09 at 1 17 24 pm](https://cloud.githubusercontent.com/assets/10122766/8068633/fcec57f2-0ea9-11e5-9f2b-af276aeb843d.png)
+
+
+
+
+
+###Setup
+* Clone or fork this repo:
+```
+https://github.com/bpownow/artup.git
+```
+
+* Create and activate a virtual environment inside your project directory: 
+```
+virtualenv env
+source env/bin/activate
+```
+
+* Install requirements.txt:
+```
+pip install -r requirements.txt
+```
+
+* Create the database for sqlite3
+```
+touch artup.db;
+```
+
+* Back in your virtual environment, run the following to set up the tables in your sqlite3 database:
+```
+python -i model.py
+db.create_all()
+```
+
+* Run the app:
+```
+python server.py
+```
+
