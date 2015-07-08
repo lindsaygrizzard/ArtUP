@@ -46,6 +46,8 @@ This process keeps track of the left and right margins regardless of which piece
 
 
 
+
+
 ###Setup
 * Clone or fork this repo:
 ```
@@ -63,20 +65,24 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-* Create the database for sqlite3
+* Set up [Foreman] (http://ddollar.github.io/foreman/) to [source .env] (http://mauricio.github.io/2014/02/09/foreman-and-environment-variables.html).
+
+* Run Postgres server in a separate shell window. If you don't have Postgres, see [Postgres.app] (http://postgresapp.com/).
+
+* Create the database in Postgres
 ```
-touch artup.db;
+CREATE DATABASE artup;
 ```
 
-* Back in your virtual environment, run the following to set up the tables in your sqlite3 database:
+* Back in your virtual environment, run the following to set up the tables in your Postgres database:
 ```
-python -i model.py
+foreman run python -i model.py
 db.create_all()
 ```
 
 * Run the app:
 ```
-python server.py
+foreman run python server.py
 ```
 
 * Navigate to `localhost:5000` on your browser.
