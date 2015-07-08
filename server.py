@@ -5,9 +5,11 @@ from model import User, Project, Wall, Art, connect_to_db, db
 import os
 
 
+SECRET_KEY = os.environ.get("SECRET_KEY", "BaseConfig")
+
 app = Flask(__name__)
-app.config.from_object(os.environ['APP_SETTINGS'])
-print os.environ['APP_SETTINGS']
+
+app.config['SECRET_KEY'] = SECRET_KEY
 
 app.jinja_env.undefined = StrictUndefined
 
@@ -398,17 +400,13 @@ def process_logout():
 
 #######################################################
 
-@app.route("/error")
-def error():
-    raise Exception("Error!")
-
 if __name__ == "__main__":
-    PORT = int(os.environ.get("PORT", 8000))
+    app.debug = False
+    app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
+    PORT = int(os.environ.get("PORT", 5000))
+    DEBUG = "NO_DEBUG" not in os.environ
 
     connect_to_db(app)
 
-    # DebugToolbarExtension(app)
-
-    app.run(host="0.0.0.0", port=PORT)
-
+    app.run(debug=DEBUG, host="0.0.0.0", port=PORT)
 
