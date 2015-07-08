@@ -8,7 +8,7 @@ before ever drilling into the wall.
 
 <h4> Technology Stack </h4>
 
-JavaScript, jQuery, D3, AJAX, Python, Flask, Jinja, SQLAlchemy, SQLite, HTML, CSS
+JavaScript, jQuery, D3, AJAX, Python, Flask, Jinja, SQLAlchemy, PostgreSQL, HTML, CSS
 
 ![artup_app_demo](https://cloud.githubusercontent.com/assets/10122766/8068509/1b84ef9a-0ea9-11e5-887e-d05e1d206b28.gif)
 
