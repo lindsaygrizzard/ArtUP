@@ -46,8 +46,6 @@ This process keeps track of the left and right margins regardless of which piece
 
 
 
-
-
 ###Setup
 * Clone or fork this repo:
 ```
@@ -81,3 +79,4 @@ db.create_all()
 python server.py
 ```
 
+* Navigate to `localhost:5000` on your browser.
