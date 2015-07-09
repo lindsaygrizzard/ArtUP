@@ -122,7 +122,7 @@ class Art(db.Model):
 def connect_to_db(app):
     """Connect the database to our Flask app."""
     DATABASE_URL = os.environ.get("DATABASE_URL",
-                              'postgresql://lindsaygrizzard')
+                              'postgresql://localhost/artup')
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 
     db.app = app
@@ -134,9 +134,4 @@ if __name__ == "__main__":
     from server import app
     connect_to_db(app)
     print "Connected to DB."
-
-
-
-
-
 
