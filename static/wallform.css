@@ -21,7 +21,8 @@ label {
 .container {
   max-width: 450px;
   min-width: 250px;
-  margin: 4% auto 15% auto;
+  height: 675px;
+  margin: 4% auto 0% auto;
   background: #d6a877;
   border-radius: 2px;
   box-shadow: 1px 1px 10px  #494434;

@@ -3,7 +3,7 @@ header {
 }
 
 body {
-    background-color: black;
+    background-color: rgba(83,88,91,0.8);
 }
 
 .wall {
@@ -21,7 +21,7 @@ table {
 }
 
 table, th, td {
-    border: 1px solid #777;
+    border: 1px solid rgb(83,88,91);
     border-collapse: collapse;
     font-size: 14px;
     text-align: center;
