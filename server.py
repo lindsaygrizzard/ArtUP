@@ -403,7 +403,7 @@ def process_logout():
 if __name__ == "__main__":
     app.debug = False
     app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
-    PORT = int(os.environ.get("PORT", 5000))
+    PORT = int(os.environ.get("PORT", 3000))
     DEBUG = "NO_DEBUG" not in os.environ
 
     connect_to_db(app)
