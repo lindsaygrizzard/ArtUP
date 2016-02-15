@@ -1,5 +1,5 @@
 # ArtUP
-ArtUP is a art hanging application and repository that allows professional galleries 
+ArtUP is an art hanging application and repository that allows professional galleries 
 and the DIY weekend warrior alike to mathematically generate virtual art installations. 
 Users have the freedom to alter the standard generated output and track their changes. 
 Hanging art work properly can be time consuming and lead to damaged walls if not done 
@@ -8,12 +8,9 @@ before ever drilling into the wall.
 
 <h4> Technology Stack </h4>
 
-JavaScript, jQuery, D3, AJAX, Python, Flask, Jinja, SQLAlchemy, SQLite, HTML, CSS
+JavaScript, jQuery, D3, AJAX, Python, Flask, Jinja, SQLAlchemy, PostgreSQL, HTML, CSS
 
 ![artup_app_demo](https://cloud.githubusercontent.com/assets/10122766/8068509/1b84ef9a-0ea9-11e5-887e-d05e1d206b28.gif)
-
-![artup_app_demo](http://im.ezgif.com/tmp/ezgif-2947627776.gif)
-
 
 <h4> Creating a Project/ Viewing a saved project folder </h4>
 Each User can create multiple project repositories. These 'folders' can be used by galleries for an exhibition or the
@@ -44,5 +41,132 @@ multiple calculations in js to render a user friendly and representative interac
 
 Using the D3 drag feature and in depth DOM manipulation, the user can drag each art piece to their desired location.
 This process keeps track of the left and right margins regardless of which piece is moved for easy design balance. 
+<br>
+```javascript
+
+function dynamicRectangles(){
+    var drag = d3.behavior.drag()
+        .on("drag", dragMove);
+
+    var svg = d3.select(".wall")
+                        .append("svg")
+                        .attr("width", wall.wall_width)
+                        .attr("height", wall.wall_height)
+                        .attr("class", "bgimage")
+                        .style("border", "1px dashed black");
+                        
+    var rect = svg.selectAll(".draggableRectangle").data(art).enter()
+            .append('image')
+            .attr('class', 'draggableRectangle')
+            .attr('name', function(d) { return d.art_name; })
+            .attr('device', function(d) { return d.device_code; })
+            .attr('x', function(d) { return d.leftCorner.X; })
+            .attr('y', function(d) {return wall.wall_height - d.leftCorner.Y; })
+            .attr('Ox', function(d) { return d.leftCorner.X; })
+            .attr('Oy', function(d) {return wall.wall_height - d.leftCorner.Y; })
+            .attr('width', function(d) { return d.art_width; })
+            .attr('height', function(d) { return d.art_height; })
+            .attr("xlink:href", function(d) { return d.art_img; })
+            .attr("style", "outline: 1px solid rgba(0,0,0,0.1);")
+            .call(drag);
+
+    var line = svg.append("line")
+                .attr("x1", wall.wall_width/2)
+                .attr("y1", wall.wall_height)
+                .attr("x2", wall.wall_width/2)
+                .attr("y2", 0)
+                .attr("stroke-width", 2)
+                .attr("stroke", "rgba(255,0,0,0.1)");
+
+    line = svg.append("line")
+                .attr("x1", 0)
+                .attr("y1", wall.wall_height - wall.center_line)
+                .attr("x2", wall.wall_width)
+                .attr("y2", wall.wall_height - wall.center_line)
+                .attr("stroke-width", 2)
+                .attr("stroke", "rgba(255,0,0,0.1)");
+
+
+    function dragMove(d) {
+        //if art has hanging wire, math it in. Else return top left corner
+             d3.select(this)
+                 .attr("x", function () {return d3.event.x;})
+                 .attr("y", function () {return d3.event.y;});
+
+             var name = document.getElementById(d.art_name);
+                     name.innerHTML = d.art_name;
+
+             var image = d3.selectAll("image");
+
+             //smallest x cord (to find most left art work)
+             var minXValue = d3.min(image[0], function(d) {
+               return d.x.animVal.value; }) //returns smallest x value
+             var leftEndMargin = document.getElementById("LEM");
+                leftEndMargin.innerHTML = Math.round(minXValue / delta)+" in";
+
+             //largest x cord (to find most right art work)
+             var maxXValue = d3.max(image[0], function(d) {
+               return d.x.animVal.value + d.width.animVal.value; });
+             var rightEndMargin = document.getElementById("REM");
+                rightEndMargin.innerHTML = Math.round((wall.wall_width - maxXValue) / delta)+" in";
+
+
+             if(d.device_code === "none"){
+                    var X = document.getElementById(d.art_id+"_X");
+                        X.innerHTML = Math.round(d3.event.x / delta);
+             } else {
+                    var X = document.getElementById(d.art_id+"_X");
+                        X.innerHTML = Math.round((d3.event.x + d.art_width/2) / delta)+" in";
+             }
+             if(d.device_code === "none") {
+                    var Y = document.getElementById(d.art_id+"_Y");
+                        Y.innerHTML = Math.round((wall.wall_height -d3.event.y)/ delta)+" in";
+             } else {
+                    var Y = document.getElementById(d.art_id+"_Y");
+                        Y.innerHTML = Math.round(((wall.wall_height -d3.event.y) -
+                                                                    d.device_distance)/ delta)+" in";
+             }
+     }
+}
+
+
+```
 
 ![screen shot 2015-06-09 at 1 17 24 pm](https://cloud.githubusercontent.com/assets/10122766/8068633/fcec57f2-0ea9-11e5-9f2b-af276aeb843d.png)
+
+
+
+
+
+###Setup
+* Clone or fork this repo:
+```
+https://github.com/bpownow/artup.git
+```
+
+* Create and activate a virtual environment inside your project directory: 
+```
+virtualenv env
+source env/bin/activate
+```
+
+* Install requirements.txt:
+```
+pip install -r requirements.txt
+```
+
+* Back in your virtual environment, run the following to set up the tables in your Postgres database:
+```
+python -i model.py
+db.create_all()
+```
+
+* Run the app:
+```
+python server.py
+```
+
+* Navigate to `localhost:5000` on your browser.
+
+
+

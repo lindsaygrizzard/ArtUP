@@ -1,0 +1,20 @@
+Metadata-Version: 1.1
+Name: Flask-DebugToolbar
+Version: 0.10.0
+Summary: A toolbar overlay for debugging Flask applications.
+Home-page: http://flask-debugtoolbar.rtfd.org/
+Author: Matt Good
+Author-email: matt@matt-good.net
+License: BSD
+Description: 
+        
+        
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
