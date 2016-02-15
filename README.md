@@ -155,7 +155,7 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-* Back in your virtual environment, run the following to set up the tables in your Postgres database:
+* Back in your virtual environment, run the following to set up the tables in your sqlite database:
 ```
 python -i model.py
 db.create_all()
